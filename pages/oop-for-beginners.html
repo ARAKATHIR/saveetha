@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OOP for Beginners</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--tx:#1d2233;--mu:#5d6580;--ac:#6c4cf1;--ac2:#ff7a59;--ok:#12a27a;--bd:#e3e6f0;--code:#1d2233;--codetx:#d6e1ff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12141d;--card:#1b1f2d;--tx:#eef0f8;--mu:#a0a8c4;--bd:#2c3248;--code:#0c0e15}}
+:root[data-theme="dark"]{--bg:#12141d;--card:#1b1f2d;--tx:#eef0f8;--mu:#a0a8c4;--bd:#2c3248;--code:#0c0e15}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+.w{max-width:860px;margin:0 auto;padding:0 18px}
+header{background:linear-gradient(135deg,#6c4cf1,#ff7a59);color:#fff;padding:48px 0 40px;text-align:center}
+header h1{margin:0 0 8px;font-size:clamp(28px,6vw,44px)}header p{margin:0;opacity:.92}
+nav{position:sticky;top:env(safe-area-inset-top,0px);background:var(--card);border-bottom:1px solid var(--bd);z-index:5;overflow-x:auto;white-space:nowrap}
+nav a{display:inline-block;padding:12px 14px;color:var(--mu);text-decoration:none;font-weight:600;font-size:14px}
+nav a:hover{color:var(--ac)}
+section{padding:36px 0 8px}
+h2{font-size:26px;margin:0 0 6px}.sub{color:var(--mu);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:18px;margin-bottom:16px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.two{grid-template-columns:1fr}}
+.tag{display:inline-block;background:var(--ac);color:#fff;border-radius:99px;padding:2px 10px;font-size:12px;font-weight:700}
+.tag.o{background:var(--ac2)}
+button{font:inherit;cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:12px;padding:8px 14px;font-weight:600}
+button:hover{border-color:var(--ac)}
+button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+button.go{background:var(--ac2);color:#fff;border-color:var(--ac2)}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+pre{background:var(--code);color:var(--codetx);border-radius:12px;padding:14px;overflow-x:auto;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;margin:10px 0 0}
+input,select{font:inherit;padding:8px 10px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);max-width:100%}
+.obj{display:inline-block;border-radius:14px;padding:10px 14px;margin:6px 6px 0 0;color:#fff;font-weight:700;animation:pop .3s}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.ex{font-size:42px}
+.big{font-size:20px;font-weight:700;min-height:34px;color:var(--ac)}
+.q{font-weight:700;margin:0 0 8px}.res{font-weight:700;margin-top:8px}
+footer{text-align:center;color:var(--mu);padding:30px 0 40px;font-size:14px}
+</style></head><body>
+<header><div class="w"><h1>🧩 Object-Oriented Programming</h1><p>A friendly start before you meet C++. Click, tap and play!</p></div></header>
+<nav><div class="w"><a href="#what">What is OOP?</a><a href="#concepts">Basic Concepts</a><a href="#langs">Languages</a><a href="#apps">Applications</a><a href="#quiz">Quiz</a></div></nav>
+<div class="w">
+
+<section id="what"><h2>1. What is the OOP paradigm?</h2>
+<p class="sub">A <b>paradigm</b> is just a style of thinking about how to write programs.</p>
+<div class="two">
+<div class="card"><span class="tag o">Procedural style</span><p><b>Think: a recipe.</b> A list of steps (functions) run one after another. Data floats around separately. Example: C.</p></div>
+<div class="card"><span class="tag">Object-oriented style</span><p><b>Think: real-world things.</b> Bundle data and the actions on that data into one unit called an <b>object</b>. Example: C++.</p></div>
+</div>
+<div class="card"><b>Why use OOP?</b> Code is organised, reusable, easier to fix, and safer, because data is protected inside objects. Big programs stay manageable.</div>
+</section>
+
+<section id="concepts"><h2>2. Basic Concepts</h2>
+<p class="sub">Tap a concept to learn it.</p>
+<div class="row" id="tabs"></div>
+<div class="card" id="cbox"></div>
+
+<div class="card"><h3 style="margin-top:0">🛠 Try it: Class → Objects</h3>
+<p>A <b>class</b> is a blueprint. An <b>object</b> is a real thing built from it. Make some cars from one <code>Car</code> class!</p>
+<div class="row"><input id="cn" placeholder="Car name" value="Zippy" size="10">
+<select id="cc"><option value="#e5484d">Red</option><option value="#2f80ed">Blue</option><option value="#12a27a">Green</option><option value="#f5a524">Orange</option></select>
+<button class="go" onclick="mk()">Create object</button></div>
+<div id="objs"></div><pre id="cd">Car c1("Zippy", "Red");</pre></div>
+
+<div class="card"><h3 style="margin-top:0">🎭 Try it: Polymorphism</h3>
+<p>One command, <code>speak()</code>, but each animal answers its own way.</p>
+<div class="row"><button onclick="sp('🐶','Woof!','Dog')">🐶 Dog</button><button onclick="sp('🐱','Meow!','Cat')">🐱 Cat</button><button onclick="sp('🐮','Moo!','Cow')">🐮 Cow</button></div>
+<div class="big" id="spk">Pick an animal…</div><pre id="spc">animal-&gt;speak();</pre></div>
+</section>
+
+<section id="langs"><h2>3. Object-Oriented Languages</h2>
+<p class="sub">Filter them. <b>Pure</b> = everything is an object. <b>Hybrid</b> = supports OOP and other styles.</p>
+<div class="row" id="lf"></div><div class="two" id="ll"></div>
+<div class="card">🎯 You will learn <b>C++</b>: a hybrid language, born as "C with Classes" by Bjarne Stroustrup.</div>
+</section>
+
+<section id="apps"><h2>4. Applications of OOP</h2>
+<p class="sub">Tap a card to see where OOP is used.</p>
+<div class="two" id="al"></div>
+</section>
+
+<section id="quiz"><h2>5. Quick Quiz</h2><div class="card" id="qb"></div></section>
+</div>
+<footer>You are ready for C++ classes! 🚀</footer>
+
+<script>
+const C=[
+{n:"Object",i:"📦",a:"A real thing: your phone, a dog, a bank account.",t:"An object has <b>data</b> (colour, price) and <b>actions</b> (call, ring). It is one instance made from a class.",c:"Car myCar;  // an object"},
+{n:"Class",i:"📐",a:"A blueprint or cookie cutter.",t:"A class describes what its objects will have and do. It uses no memory for data until you create objects.",c:"class Car {\n public:\n  string color;\n  void drive();\n};"},
+{n:"Encapsulation",i:"💊",a:"A medicine capsule: contents are protected inside.",t:"Wrapping data and functions together and hiding the data (private) so only safe methods can change it.",c:"class Account {\n  private: int balance;\n  public: void deposit(int x);\n};"},
+{n:"Abstraction",i:"📺",a:"A TV remote: you press buttons, not touch circuits.",t:"Show only what is necessary and hide the complicated details.",c:"car.start(); // how? hidden!"},
+{n:"Inheritance",i:"🧬",a:"Children inherit traits from parents.",t:"A new class (child) reuses the features of an existing class (parent). Less repeated code.",c:"class Dog : public Animal {\n  // gets Animal's features\n};"},
+{n:"Polymorphism",i:"🎭",a:"One word, many forms: 'play' a game, guitar, video.",t:"Same function name behaves differently depending on the object.",c:"virtual void speak();\n// Dog and Cat override it"},
+{n:"Message passing & Dynamic binding",i:"✉️",a:"Asking a friend to do something by sending a request.",t:"Objects talk by calling each other's functions (message passing). Dynamic binding picks the right function while the program runs.",c:"obj1.sendMoney(obj2, 100);"}];
+const $=id=>document.getElementById(id);
+function tab(k){$("tabs").innerHTML=C.map((x,j)=>`<button class="${j==k?'on':''}" onclick="tab(${j})">${x.i} ${x.n.split(' ')[0]}</button>`).join("");const x=C[k];
+$("cbox").innerHTML=`<h3 style="margin-top:0"><span class="ex">${x.i}</span> ${x.n}</h3><p><b>Real life:</b> ${x.a}</p><p>${x.t}</p><pre>${x.c}</pre>`}
+tab(0);
+let n=0;function mk(){n++;const nm=$("cn").value||"Car",s=$("cc"),col=s.options[s.selectedIndex].text;
+$("objs").insertAdjacentHTML("beforeend",`<span class="obj" style="background:${s.value}">🚗 ${nm}</span>`);
+$("cd").textContent=`Car c${n}("${nm}", "${col}");`}
+function sp(e,s,d){$("spk").textContent=e+" "+s;$("spc").textContent=`Animal* a = new ${d}();\na->speak();  // prints "${s}"`}
+const L=[["Java","Pure-ish","Everything lives in classes. Used for apps and servers."],["C#","Hybrid","Windows apps and games (Unity)."],["Python","Hybrid","Beginner friendly, supports OOP and more."],["C++","Hybrid","Fast. Games, systems. Your course language!"],["Smalltalk","Pure","The classic pure OOP language."],["Ruby","Pure","Even numbers are objects."],["Swift","Hybrid","iPhone and Mac apps."],["Kotlin","Hybrid","Android apps."]];
+let f="All";function lf(v){f=v;$("lf").innerHTML=["All","Pure","Hybrid"].map(x=>`<button class="${x==f?'on':''}" onclick="lf('${x}')">${x}</button>`).join("");
+$("ll").innerHTML=L.filter(x=>f=="All"||x[1].startsWith(f)).map(x=>`<div class="card" style="margin:0"><b>${x[0]}</b> <span class="tag ${x[1]=='Hybrid'?'o':''}">${x[1]}</span><br><span style="color:var(--mu)">${x[2]}</span></div>`).join("")}
+lf("All");
+const A=[["🎮","Games","Players, enemies, weapons are objects."],["🏦","Banking","Accounts and transactions as objects."],["🖥","Desktop & mobile apps","Buttons, windows and menus are objects."],["🤖","AI & simulation","Model real-world things on a computer."],["🛒","Websites & e-commerce","Users, carts, orders."],["🧠","Operating systems","Files, processes, devices."]];
+$("al").innerHTML=A.map((x,i)=>`<div class="card" style="margin:0;cursor:pointer" onclick="this.querySelector('p').hidden=!this.querySelector('p').hidden"><span class="ex">${x[0]}</span> <b>${x[1]}</b><p hidden style="margin:6px 0 0;color:var(--mu)">${x[2]}</p></div>`).join("");
+const Q=[["Which is a blueprint for objects?",["Class","Variable","Loop"],0],["Hiding data inside a class is called…",["Inheritance","Encapsulation","Looping"],1],["Which language will you study?",["C++","HTML","SQL"],0]];
+$("qb").innerHTML=Q.map((q,i)=>`<p class="q">${i+1}. ${q[0]}</p><div class="row">${q[1].map((o,j)=>`<button onclick="ans(${i},${j},this)">${o}</button>`).join("")}</div><div class="res" id="r${i}"></div>`).join("");
+function ans(i,j,b){const r=$("r"+i);r.textContent=j==Q[i][2]?"✅ Correct!":"❌ Try again";r.style.color=j==Q[i][2]?"var(--ok)":"var(--ac2)"}
+</script></body></html>
