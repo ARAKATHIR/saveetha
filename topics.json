@@ -1,5 +1,9 @@
 [
   {
+    "title": "Tokens, Keywords, Identifiers and Constants, Data Types",
+    "file": "pages/cpp-basics.html"
+  },
+  {
     "title": "Principles of Object oriented programming",
     "file": "pages/oop-for-beginners.html"
   }
