@@ -1,5 +1,9 @@
 [
   {
+    "title": "Type Compatibility, Variables, Operators in C++, Implicit Conversions, Operator Precedence, Control Structures",
+    "file": "pages/c-basics-for-beginners.html"
+  },
+  {
     "title": "Tokens, Keywords, Identifiers and Constants, Data Types",
     "file": "pages/cpp-basics.html"
   },
