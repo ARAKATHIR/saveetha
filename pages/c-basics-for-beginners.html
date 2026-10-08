@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>C++ Basics for Beginners</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--tx:#1d2433;--mu:#5b6478;--ac:#6c5ce7;--ac2:#00a37f;--code:#eef0f8;--bd:#e1e4ef;--hit:#c8f7dc;--note:#fff4d6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12141c;--card:#1b1f2b;--tx:#e8ebf5;--mu:#9aa3b8;--ac:#a29bfe;--ac2:#55efc4;--code:#252a3a;--bd:#2d3347;--hit:#14532d;--note:#3a3320}}
+:root[data-theme="dark"]{--bg:#12141c;--card:#1b1f2b;--tx:#e8ebf5;--mu:#9aa3b8;--ac:#a29bfe;--ac2:#55efc4;--code:#252a3a;--bd:#2d3347;--hit:#14532d;--note:#3a3320}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 56px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:linear-gradient(135deg,#6c5ce7,#00b894);color:#fff;padding:28px 16px;text-align:center}
+header h1{margin:0;font-size:1.7rem}header p{margin:6px 0 0;opacity:.95}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--card);border-bottom:1px solid var(--bd);display:flex;gap:6px;overflow-x:auto;padding:8px}
+nav a{flex:none;text-decoration:none;color:var(--tx);background:var(--code);padding:6px 11px;border-radius:99px;font-size:.85rem;font-weight:600}
+nav a:hover{background:var(--ac);color:#fff}
+main{max-width:820px;margin:0 auto;padding:14px}
+section{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:16px;margin:14px 0;overflow-wrap:anywhere}
+h2{margin:0 0 8px;font-size:1.3rem}h3{margin:14px 0 6px}
+.n{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--ac);color:#fff;margin-right:6px;font-size:.95rem}
+.an{background:var(--note);border-left:5px solid #fdcb6e;padding:8px 12px;border-radius:10px;margin:8px 0}
+.qp{display:inline-block;background:var(--ac2);color:#000;font-weight:700;font-size:.78rem;padding:2px 10px;border-radius:99px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:10px 0}
+.c{background:var(--code);border-radius:14px;padding:10px;text-align:center}.c b{display:block;font-size:1.05rem}
+code,pre{font-family:ui-monospace,Consolas,monospace}
+code{background:var(--code);padding:1px 5px;border-radius:6px}
+pre{background:var(--code);padding:10px;border-radius:10px;overflow-x:auto;margin:6px 0}
+button,select,input{font:inherit;color:var(--tx)}
+button{background:var(--ac);color:#fff;border:0;border-radius:10px;padding:7px 13px;cursor:pointer;margin:3px 2px}
+button:disabled{opacity:.4}button.ghost{background:var(--code);color:var(--tx)}
+input,select{background:var(--code);border:1px solid var(--bd);border-radius:10px;padding:7px 10px;max-width:100%}
+.demo{border:2px dashed var(--ac);border-radius:14px;padding:10px;margin:10px 0}.demo>b:first-child{color:var(--ac)}
+.tap .tl{display:block;width:100%;text-align:left;background:var(--code);color:var(--tx);font-family:ui-monospace,Consolas,monospace;font-size:.9rem;white-space:pre-wrap}
+.tap .tl.on{background:var(--ac);color:#fff}
+.tm,.res{background:var(--note);border-radius:10px;padding:8px 10px;margin-top:6px}
+.lt{width:100%;border-collapse:collapse;margin:6px 0;font-size:.92rem}
+.lt td{border:1px solid var(--bd);padding:5px 8px;vertical-align:top}.lt td:first-child{white-space:pre;font-family:ui-monospace,Consolas,monospace;background:var(--code);width:48%}
+.lt{display:block;overflow-x:auto}
+.prog{border:1px solid var(--bd);border-radius:12px;padding:8px;margin:10px 0}
+.out pre{margin:2px 0;background:#10131c;color:#7dffb3}
+.si{padding:4px 8px;border-radius:8px;margin:3px 0;background:var(--code)}.si.cur{background:var(--hit);font-weight:700}
+.hit{background:var(--hit);display:block}
+.q{border:1px solid var(--bd);border-radius:12px;padding:10px;margin:8px 0}.qt{font-weight:600}
+.ans{background:var(--hit);border-radius:10px;padding:8px 10px;margin-top:6px}.ans[hidden]{display:none}
+.bar{position:sticky;top:calc(env(safe-area-inset-top,0px) + 50px);z-index:8;background:var(--card);padding:6px 0}
+.mk{display:inline-block;background:var(--ac);color:#fff;border-radius:8px;padding:0 8px;font-size:.8rem;margin-left:6px}
+footer{text-align:center;color:var(--mu);padding:20px}
+</style></head><body>
+<header><h1>🚀 C++ Basics for Beginners</h1><p>Variables • Operators • Conversions • If/Else • Loops</p></header>
+<nav><a href="#s1">1 Skeleton</a><a href="#s2">2 Variables</a><a href="#s3">3 Compatibility</a><a href="#s4">4 Operators</a><a href="#s5">5 Conversions</a><a href="#s6">6 Precedence</a><a href="#s7">7 If / Else</a><a href="#s8">8 Loops</a><a href="#s9">9 Practice</a></nav>
+<main>
+
+<section id="s1"><h2><span class="n">1</span>The Program Skeleton &amp; cout <span class="qp">Quick Preview</span></h2>
+<div class="an">🍳 A C++ program is like a <b>recipe</b>: some fixed starting lines, then your steps.</div>
+<p>Every program on this page lives <b>inside main</b>. The fixed skeleton is explained once here and not repeated later. <b>Tap each line:</b></p>
+<div class="tap" id="t1"></div>
+<p><code>cout</code> shows things on the screen. <code>&lt;&lt;</code> pushes things into it. You can chain many. <b>Tap:</b></p>
+<div class="tap" id="t2"></div>
+</section>
+
+<section id="s2"><h2><span class="n">2</span>Variables &amp; Data Types</h2>
+<div class="an">📦 A <b>variable</b> is a labelled box. The label is its name. The box type decides what can go inside: a water bottle holds water, a lunch box holds food.</div>
+<div class="grid"><div class="c">🔢<b>int</b>whole numbers<br><code>15</code></div><div class="c">💧<b>double</b>decimal numbers<br><code>9.5</code></div><div class="c">🔤<b>char</b>one letter in single quotes<br><code>'A'</code></div><div class="c">💡<b>bool</b>true or false<br><code>true</code></div></div>
+<p>Make a box: <code>type name = value;</code> &nbsp;Example: <code>int age = 15;</code>. Names have no spaces. Every statement ends with <code>;</code></p>
+<div class="demo"><b>⌨️ Type a value, see its type:</b><br><input id="tv" placeholder="try 15, 9.5, 'A', true" oninput="tf(this.value)"><div class="res" id="tr">👆 Type something</div></div>
+<div data-p="p1"></div></section>
+
+<section id="s3"><h2><span class="n">3</span>Type Compatibility</h2>
+<div class="an">🥤 Pour a <b>small cup into a big cup</b>: safe. Pour a <b>big cup into a small cup</b>: it may spill! Types work the same way.</div>
+<p>Two types are <b>compatible</b> if C++ can move a value from one to the other. Some moves are safe; some lose information.</p>
+<div class="demo"><b>🔁 Move a value from → to:</b><br><select id="cf"><option>int</option><option>double</option><option>char</option><option>bool</option></select> ➜ <select id="ct"><option>double</option><option>int</option><option>char</option><option>bool</option></select><div class="res" id="cr"></div></div></section>
+
+<section id="s4"><h2><span class="n">4</span>Operators</h2>
+<div class="an">🧮 Operators are the <b>buttons on a calculator</b>: they do work on values.</div>
+<div class="grid"><div class="c">➕<b>Arithmetic</b><code>+ - * / %</code><br>% = remainder</div><div class="c">⚖️<b>Relational</b><code>&gt; &lt; &gt;= &lt;= == !=</code><br>gives 1 (true) or 0 (false)</div><div class="c">🚦<b>Logical</b><code>&amp;&amp; || !</code><br>AND, OR, NOT</div><div class="c">📥<b>Assignment</b><code>=</code><br>put value in box</div><div class="c">🪜<b>Step</b><code>++ --</code><br>add 1 / subtract 1</div></div>
+<p>🚦 Logical: "Go if light is green <b>AND</b> road is clear." <code>=</code> <b>stores</b>, but <code>==</code> <b>asks</b> "are they equal?"</p>
+<div class="demo"><b>🧪 Try it with whole numbers:</b><br>a = <input id="ca" type="number" value="7" style="width:80px" oninput="calc()"> b = <input id="cb" type="number" value="2" style="width:80px" oninput="calc()"><div class="res" id="cc"></div></div>
+<div data-p="p2"></div></section>
+
+<section id="s5"><h2><span class="n">5</span>Implicit Conversions</h2>
+<div class="an">💰 Add coins and notes: you count everything in the <b>bigger</b> kind of money. C++ also quietly changes types by itself. This is <b>implicit</b> (automatic) conversion.</div>
+<ul><li><code>int</code> with <code>double</code> → answer is <code>double</code>.</li><li><code>int / int</code> → answer is <code>int</code> (decimal part is chopped!).</li><li><code>char</code> in maths → becomes its number code ('A' is 65).</li><li><code>double</code> into <code>int</code> → decimal part is cut off (no rounding).</li></ul>
+<div class="demo"><b>👆 Tap an example:</b><div id="ib"></div><div class="res" id="ir">Tap one</div></div>
+<div data-p="p3"></div></section>
+
+<section id="s6"><h2><span class="n">6</span>Operator Precedence</h2>
+<div class="an">🏫 Like <b>BODMAS</b> in maths: some operators go first. Brackets can always force the order.</div>
+<p>Order (high → low): <code>( )</code> → <code>* / %</code> → <code>+ -</code> → <code>&lt; &gt; &lt;= &gt;=</code> → <code>== !=</code> → <code>&amp;&amp;</code> → <code>||</code> → <code>=</code></p>
+<div class="demo"><b>👣 Step by step:</b><br><select id="pe" onchange="pick()"><option value="0">2 + 3 * 4</option><option value="1">(2 + 3) * 4</option><option value="2">10 - 4 / 2 + 1</option><option value="3">10 % 3 * 2</option></select><div id="pst"></div></div>
+<div data-p="p4"></div></section>
+
+<section id="s7"><h2><span class="n">7</span>Conditional Statements <span class="qp">Quick Preview</span></h2>
+<div class="an">☔ "<b>If</b> it rains, take an umbrella, <b>else if</b> it is sunny, wear a cap, <b>else</b> do nothing." The program chooses a path.</div>
+<div class="tap" id="t3"></div>
+<div class="demo"><b>🎓 Type marks, see which line runs:</b><br><input id="mk" type="number" value="72" style="width:90px" oninput="grade()"><pre id="gc"><span id="g1">if (marks &gt;= 90) {  → "Grade A"</span>
+<span id="g2">else if (marks &gt;= 50) {  → "Pass"</span>
+<span id="g3">else {  → "Fail"</span></pre><div class="res" id="gr"></div></div>
+<div data-p="p5"></div></section>
+
+<section id="s8"><h2><span class="n">8</span>Iterative Statements (Loops) <span class="qp">Quick Preview</span></h2>
+<div class="an">🏃 Running <b>laps</b> round a track: same path, again and again, until you have done enough laps.</div>
+<div class="tap" id="t4"></div>
+<div class="demo"><b>👣 Run <code>for (int i = 1; i &lt;= 5; i++)</code> step by step</b> (adds i to sum):<div id="lst"></div></div>
+<div data-p="p6"></div><div data-p="p7"></div></section>
+
+<section id="s9"><h2><span class="n">9</span>Practice Questions 📝</h2>
+<p>Answers are hidden. Try first, then tap <b>Show answer</b>.</p>
+<div class="bar"><button onclick="all(1)">Show all answers</button><button class="ghost" onclick="all(0)">Hide all</button></div>
+<h3>A. 1-mark questions <span class="mk">1 mark</span></h3><div id="q1"></div>
+<h3>B. True / False <span class="mk">1 mark</span></h3><div id="q2"></div>
+<h3>C. Short answers <span class="mk">2 marks</span></h3><div id="q3"></div>
+<h3>D. Explain / Differentiate <span class="mk">3 marks</span></h3><div id="q4"></div>
+<h3>E. Long answers <span class="mk">5 marks</span></h3><div id="q5"></div>
+<h3>F. Guess the output 🔍</h3><p>(Code is inside <code>main</code>.)</p><div id="q6"></div>
+<h3>G. Write a program ✍️</h3><div id="q7"></div></section>
+</main>
+<footer>Keep practising a little every day 💪</footer>
+
+<script>
+var E=function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')};
+var $=function(i){return document.getElementById(i)};
+var SK=[['#include <iostream>','Lets us use cout and cin (skeleton)'],['using namespace std;','Lets us write cout, not std::cout (skeleton)'],['int main() {','Program starts here (skeleton)']];
+var SKE=[['  return 0;','Program ended fine (skeleton)'],['}','End of main (skeleton)']];
+function table(r){return '<table class="lt">'+r.map(function(x){return '<tr><td>'+E(x[0])+'</td><td>'+x[1]+'</td></tr>'}).join('')+'</table>'}
+function prog(t,l,o,full){return '<div class="prog"><b>'+t+'</b>'+(full?'':'<br><small>(inside main)</small>')+table(full?SK.concat(l,SKE):l)+(o?'<div class="out">Output:<pre>'+E(o)+'</pre></div>':'')+'</div>'}
+var P={
+p1:['📘 Program: variables',[['int age = 15;','Box "age" holds whole number 15'],['double price = 9.5;','Box "price" holds decimal 9.5'],['char grade = \'A\';','Box "grade" holds the letter A'],['bool pass = true;','Box "pass" holds true'],['cout << age << " " << price << " " << grade << " " << pass << endl;','Prints all four with spaces; true prints as 1']],'15 9.5 A 1'],
+p2:['📘 Program: operators',[['int a = 7, b = 2;','Two int boxes: a is 7, b is 2'],['cout << a / b << endl;','7 / 2 = 3 (int division)'],['cout << a % b << endl;','Remainder of 7 / 2 is 1'],['a++;','a becomes 8'],['cout << a << endl;','Prints 8'],['cout << (a > b) << endl;','8 > 2 is true, prints 1']],'3\n1\n8\n1'],
+p3:['📘 Program: conversions',[['int x = 7; double y = 2.5;','x is int 7, y is double 2.5'],['cout << x / 2 << endl;','int / int = 3'],['cout << x / 2.0 << endl;','2.0 is double, so 7 becomes 7.0: 3.5'],['cout << x + y << endl;','int + double = double: 9.5'],['int z = y;','double into int: 2.5 is chopped to 2'],['cout << z << endl;','Prints 2'],['char c = \'A\';','c holds A (code 65)'],['cout << c + 1 << endl;','65 + 1 = 66']],'3\n3.5\n9.5\n2\n66'],
+p4:['📘 Program: precedence',[['int r = 2 + 3 * 4;','* first: 3*4=12, then 2+12 = 14'],['cout << r << endl;','Prints 14'],['r = (2 + 3) * 4;','Brackets first: 5*4 = 20'],['cout << r << endl;','Prints 20']],'14\n20'],
+p5:['📘 Program: grade checker (input 72)',[['int marks;','Empty box for marks'],['cin >> marks;','Reads what you type (72) into marks'],['if (marks >= 90) {','72 >= 90? false, skip'],['  cout << "Grade A";','Only runs if marks are 90 or more'],['} else if (marks >= 50) {','72 >= 50? true, run next line'],['  cout << "Pass";','Prints Pass'],['} else {','Only if both checks failed'],['  cout << "Fail";','Not run here'],['}','End of the if chain']],'Pass'],
+p6:['📘 Program: sum of 1 to 5 (for loop)',[['int sum = 0;','Total box starts at 0'],['for (int i = 1; i <= 5; i++) {','i starts 1; repeat while i <= 5; add 1 each round'],['  sum = sum + i;','Add i to sum: 1, 3, 6, 10, 15'],['}','End of loop body'],['cout << sum;','Prints 15']],'15'],
+p7:['📘 Program: countdown (while loop)',[['int n = 3;','n starts at 3'],['while (n > 0) {','Repeat as long as n > 0'],['  cout << n << endl;','Print n'],['  n--;','Reduce n by 1 (3, 2, 1, then 0 stops)'],['}','End of loop body'],['cout << "Go!";','Runs once after the loop']],'3\n2\n1\nGo!']};
+document.querySelectorAll('[data-p]').forEach(function(d){var p=P[d.dataset.p];d.innerHTML=prog(p[0],p[1],p[2],false)});
+
+var T={};
+function tap(id,rows){T[id]=rows;$(id).innerHTML=rows.map(function(r,i){return '<button class="tl" data-i="'+i+'">'+E(r[0])+'</button>'}).join('')+'<div class="tm">👆 Tap a line</div>'}
+tap('t1',[['#include <iostream>','Brings in the tool for screen and keyboard.'],['using namespace std;','Saves typing: write cout instead of std::cout.'],['int main() {','The door of your program. Running starts here. { begins its block.'],['  ...your lines...','Your steps go here.'],['  return 0;','Says "finished OK".'],['}','Closes main.']]);
+tap('t2',[['cout << "Hello" << endl;','Text in "" prints as it is. endl = go to next line. Shows: Hello'],['cout << 5 + 2;','Numbers can be calculated and printed. Shows: 7'],['cout << "A" << "B";','Chain many with <<. Shows: AB']]);
+tap('t3',[['if (marks >= 50) {','if checks a question in ( ). If true, the lines inside { } run.'],['} else if (marks >= 35) {','Asked only if the first question was false.'],['} else {','Runs when every question above was false. It has no ( ).'],['int marks; cin >> marks;','cin reads what the user types on the keyboard. >> puts it into the box (marks).']]);
+tap('t4',[['for (int i = 1; i <= 5; i++) {','Three parts: START (i = 1, once) ; CHECK (i <= 5, before each round) ; UPDATE (i++, after each round).'],['while (n > 0) {','Checks first. Repeats while the question is true. You must change n inside, or it never stops!'],['i++','Adds 1 to i.  n-- subtracts 1.']]);
+document.addEventListener('click',function(e){
+var t=e.target.closest('.tl');if(t){var w=t.parentNode;[].forEach.call(w.querySelectorAll('.tl'),function(x){x.classList.remove('on')});t.classList.add('on');w.querySelector('.tm').textContent=T[w.id][t.dataset.i][1];return}
+var b=e.target.closest('.sb');if(b){var a=b.nextElementSibling;a.hidden=!a.hidden;b.textContent=a.hidden?'Show answer':'Hide answer'}});
+
+function tf(v){v=v.trim();var r;
+if(!v)r='👆 Type something';
+else if(/^-?\d+$/.test(v))r='🔢 <b>int</b> &nbsp;<code>int x = '+E(v)+';</code>';
+else if(/^-?\d*\.\d+$/.test(v))r='💧 <b>double</b> &nbsp;<code>double x = '+E(v)+';</code>';
+else if(/^'.'$/.test(v))r='🔤 <b>char</b> &nbsp;<code>char x = '+E(v)+';</code>';
+else if(/^(true|false)$/.test(v))r='💡 <b>bool</b> &nbsp;<code>bool x = '+v+';</code>';
+else if(/^".*"$/.test(v))r='That is text (a string). We will learn it later.';
+else r='🤔 Not a value we have learned. Try 15, 9.5, \'A\' or true';
+$('tr').innerHTML=r}
+function comp(){var f=$('cf').value,t=$('ct').value,r;
+if(f==t)r='✅ Same type. Perfect.';
+else if((f=='int'&&t=='double')||(f=='char'&&(t=='int'||t=='double'))||(f=='bool'&&(t=='int'||t=='double')))r='✅ Safe (small cup into big cup). Value is kept'+(f=='char'?' as its number code.':f=='bool'?' as 1 or 0.':'.');
+else if(f=='double'&&t=='int')r='⚠️ Allowed, but the decimal part is cut off (9.7 becomes 9).';
+else if(t=='char')r='⚠️ Allowed, but only small numbers fit in a char (big cup into small cup).';
+else r='⚠️ Allowed: 0 becomes false, any other value becomes true.';
+$('cr').innerHTML=r}
+$('cf').onchange=comp;$('ct').onchange=comp;comp();
+function calc(){var a=parseInt($('ca').value),b=parseInt($('cb').value);
+if(isNaN(a)||isNaN(b)){$('cc').textContent='Type two whole numbers';return}
+var l=['a + b = '+(a+b),'a - b = '+(a-b),'a * b = '+(a*b),b?'a / b = '+Math.trunc(a/b)+' (int division)':'a / b = ⚠️ cannot divide by 0',b?'a % b = '+(a%b)+' (remainder)':'a % b = ⚠️ cannot use 0','a > b is '+(a>b?1:0),'a == b is '+(a==b?1:0)];
+$('cc').innerHTML=l.join('<br>')}
+calc();
+var IX=[['7 / 2','3','Both are int, so the answer is int. The .5 is chopped!'],['7 / 2.0','3.5','One is double, so 7 becomes 7.0 first.'],['5 + 2.5','7.5','int is promoted to double.'],["'A' + 1",'66','A has code 65, so 65 + 1.'],['int z = 9.99;','z is 9','Decimal part is chopped, not rounded.']];
+$('ib').innerHTML=IX.map(function(x,i){return '<button class="ghost" data-x="'+i+'">'+E(x[0])+'</button>'}).join('');
+$('ib').onclick=function(e){var b=e.target.closest('button');if(!b)return;var x=IX[b.dataset.x];$('ir').innerHTML='<code>'+E(x[0])+'</code> ➜ <b>'+x[1]+'</b><br>'+x[2]};
+var S={};
+function mkStep(id,s){S[id]={s:s,k:0};ds(id)}
+function ds(id){var o=S[id];$(id).innerHTML=o.s.slice(0,o.k).map(function(x,i){return '<div class="si'+(i==o.k-1?' cur':'')+'">'+x+'</div>'}).join('')+'<button onclick="nx(\''+id+'\')"'+(o.k>=o.s.length?' disabled':'')+'>'+(o.k?'Next ▶':'Start ▶')+'</button><button class="ghost" onclick="rs(\''+id+'\')">Reset ↺</button>'}
+function nx(id){S[id].k++;ds(id)}function rs(id){S[id].k=0;ds(id)}
+var PX=[['Start: 2 + 3 * 4','* is higher: 3 * 4 = 12, so 2 + 12','Now +: 2 + 12 = <b>14</b> ✅'],['Start: (2 + 3) * 4','Brackets first: 2 + 3 = 5, so 5 * 4','Then *: 5 * 4 = <b>20</b> ✅'],['Start: 10 - 4 / 2 + 1','/ first: 4 / 2 = 2, so 10 - 2 + 1','Same level goes left to right: 10 - 2 = 8','Then 8 + 1 = <b>9</b> ✅'],['Start: 10 % 3 * 2','% and * same level, left to right: 10 % 3 = 1','Then 1 * 2 = <b>2</b> ✅']];
+function pick(){mkStep('pst',PX[$('pe').value])}pick();
+function grade(){var m=parseInt($('mk').value);['g1','g2','g3'].forEach(function(i){$(i).className=''});
+if(isNaN(m)){$('gr').textContent='Type marks';return}
+var k=m>=90?1:m>=50?2:3;$('g'+k).className='hit';$('gr').innerHTML='Output: <b>'+['','Grade A','Pass','Fail'][k]+'</b>'}grade();
+(function(){var s=['Start: i = 1 (done once). sum = 0'],sum=0;for(var i=1;i<=5;i++){sum+=i;s.push('Check i &lt;= 5 → '+i+' &lt;= 5 true ✅. Body: sum = '+(sum-i)+' + '+i+' = <b>'+sum+'</b>');s.push('Update i++ → i becomes '+(i+1))}
+s.push('Check i &lt;= 5 → 6 &lt;= 5 false ❌. Loop stops. sum = <b>15</b>');mkStep('lst',s)})();
+
+function it(n,q,a){return '<div class="q"><div class="qt">'+n+'. '+q+'</div><button class="sb">Show answer</button><div class="ans" hidden>'+a+'</div></div>'}
+function fill(id,html){$(id).innerHTML=html}
+function txt(id,L){fill(id,L.map(function(x,i){return it(i+1,x[0],x[1])}).join(''))}
+txt('q1',[['Which symbol ends a C++ statement?','The semicolon <code>;</code>'],['Which type stores whole numbers?','<code>int</code>'],['Which type stores decimal numbers?','<code>double</code>'],['Which type stores one letter?','<code>char</code>'],['How many values can a bool hold?','Two: true and false'],['Which symbol is used with cout?','<code>&lt;&lt;</code>'],['Which operator gives the remainder?','<code>%</code>'],['What is 9 / 2 when both are int?','4'],['What does = do?','Stores (assigns) a value in a variable'],['What does == do?','Checks if two values are equal'],['Which is done first, + or *?','<code>*</code>'],['What does i++ do?','Adds 1 to i'],['Which keyword reads input?','<code>cin</code>'],['Which symbol is used with cin?','<code>&gt;&gt;</code>'],['What does &amp;&amp; mean?','AND (both must be true)'],['What does || mean?','OR (at least one true)'],['What does ! do?','NOT: reverses true and false'],['Which loop suits a known number of repeats?','<code>for</code>'],['What prints when bool true is sent to cout?','1'],['Which part runs when the if question is false?','<code>else</code>'],['What is 10 % 3?','1'],['Which quotes surround a char?','Single quotes, like <code>\'A\'</code>'],['What is automatic type change called?','Implicit conversion']]);
+txt('q2',[['An int can store 3.7 exactly.','False. It keeps only 3.'],['5 % 2 gives 1.','True. 5 = 2 x 2 + 1.'],['= and == mean the same.','False. = stores, == compares.'],['* is done before +.','True.'],['bool has only two values.','True.'],["'A' + 1 is treated as 66.",'True. A has code 65.'],['A for loop must run exactly 10 times.','False. You choose the count.'],['else needs a question in ( ).','False. else has no condition.'],['A while loop checks its condition before each round.','True.'],['7 / 2 gives 3.5 when both are int.','False. It gives 3.']]);
+txt('q3',[['What is a variable? Give an example.','A named box in memory that holds a value. Example: <code>int age = 15;</code>'],['What is implicit conversion? Give an example.','C++ changes a type automatically. Example: <code>5 + 2.5</code>: the 5 becomes 5.0, result 7.5.'],['Write two differences between = and ==.','1) = stores a value; == compares two values. 2) = changes the variable; == gives true (1) or false (0).'],['What is operator precedence? What is 2 + 3 * 4?','The rule for which operator goes first. * is before +, so 3*4=12, then 2+12 = 14.'],['What is the use of if-else?','It lets the program choose one path: if the question is true run one block, else run the other.'],['What is a loop? Name two loops.','A loop repeats lines many times. Examples: <code>for</code> and <code>while</code>.']]);
+txt('q4',[['Differentiate int and double.','<b>int</b>: whole numbers only (15), decimal part lost. <b>double</b>: numbers with decimals (9.5). Example: <code>int a = 3;</code> vs <code>double b = 3.5;</code>'],['Differentiate for and while loops.','<b>for</b>: start, check and update are in one line; best for known counts. <b>while</b>: only a check; you update the variable inside; best when the count is unknown. Both check before running.'],['Explain arithmetic operators with an example.','+ add, - subtract, * multiply, / divide, % remainder. For a=7, b=2: a+b=9, a-b=5, a*b=14, a/b=3 (int division), a%b=1.'],['Explain if, else if and else.','<b>if</b> runs its block when its question is true. <b>else if</b> is asked only if earlier ones were false. <b>else</b> runs when all are false. Example: marks 72 gives Pass in the grade program.']]);
+txt('q5',[['Explain the data types int, double, char and bool with a program.','<b>int</b> whole numbers, <b>double</b> decimals, <b>char</b> one letter in single quotes, <b>bool</b> true/false (prints 1 or 0).'+prog('Example',P.p1[1],P.p1[2],false)],['Explain implicit conversion and operator precedence with examples.','<b>Implicit conversion</b>: int + double gives double (5 + 2.5 = 7.5); int / int gives int (7/2 = 3); char becomes a number ("A"+1 = 66); double into int cuts the decimals (2.5 becomes 2).<br><b>Precedence</b>: ( ) first, then * / %, then + -, then relational, ==, &amp;&amp;, ||, and = last. So 2+3*4 = 14 but (2+3)*4 = 20.'+prog('Example',P.p4[1],P.p4[2],false)],['Explain conditional and iterative statements with programs.','<b>Conditional</b> (if/else if/else) picks a path. <b>Iterative</b> (for/while) repeats lines.'+prog('If/else',P.p5[1],P.p5[2],false)+prog('For loop',P.p6[1],P.p6[2],false)]]);
+fill('q6',[['int a = 5, b = 2;\ncout << a / b << endl;\ncout << a % b;','2\n1','5/2 is int division = 2; 5%2 is the remainder = 1.'],['int x = 3;\nx++;\ncout << x * 2;','8','x becomes 4, then 4*2 = 8.'],['double d = 7 / 2;\ncout << d;','3','7/2 is int division = 3 first, then stored as 3.0 (prints 3).'],['for (int i = 1; i <= 3; i++) {\n  cout << i * i << endl;\n}','1\n4\n9','i is 1, 2, 3 and each is multiplied by itself.'],['int n = 2;\nif (n > 3) {\n  cout << "Big";\n} else {\n  cout << "Small";\n}','Small','2 > 3 is false, so else runs.'],['cout << 2 + 3 * 4 << endl;\ncout << (2 + 3) * 4;','14\n20','* first gives 14; brackets first give 20.']].map(function(x,i){return it(i+1,'What is the output?<pre>'+E(x[0])+'</pre>','Output:<pre>'+E(x[1])+'</pre>'+x[2])}).join(''));
+var W=[['Print Hello, C++!',[['cout << "Hello, C++!" << endl;','Prints the text and a new line']]],
+['Add two numbers typed by the user',[['int a, b;','Two empty boxes'],['cin >> a >> b;','Read two numbers'],['cout << a + b;','Print the sum']]],
+['Area of a rectangle',[['int l, w;','Length and width boxes'],['cin >> l >> w;','Read both'],['cout << l * w;','Area = length x width']]],
+['Check even or odd',[['int n;','Box for the number'],['cin >> n;','Read it'],['if (n % 2 == 0) {','Remainder 0 means even'],['  cout << "Even";','Print Even'],['} else {','Otherwise'],['  cout << "Odd";','Print Odd'],['}','End of if']]],
+['Larger of two numbers',[['int a, b;','Two boxes'],['cin >> a >> b;','Read both'],['if (a > b) {','Is a bigger?'],['  cout << a;','Yes: print a'],['} else {','No'],['  cout << b;','Print b'],['}','End of if']]],
+['Positive, negative or zero',[['int n;','Box'],['cin >> n;','Read it'],['if (n > 0) {','Above zero?'],['  cout << "Positive";','Print Positive'],['} else if (n < 0) {','Below zero?'],['  cout << "Negative";','Print Negative'],['} else {','Must be zero'],['  cout << "Zero";','Print Zero'],['}','End of if']]],
+['Print 1 to 10',[['for (int i = 1; i <= 10; i++) {','i goes 1 to 10'],['  cout << i << endl;','Print i on its own line'],['}','End of loop']]],
+['Sum of first n numbers',[['int n, sum = 0;','n is the limit; sum starts at 0'],['cin >> n;','Read n'],['for (int i = 1; i <= n; i++) {','i goes 1 to n'],['  sum = sum + i;','Add i to sum'],['}','End of loop'],['cout << sum;','Print total']]],
+['Countdown from 5 to 1',[['int n = 5;','Start at 5'],['while (n >= 1) {','Repeat while n is 1 or more'],['  cout << n << endl;','Print n'],['  n--;','Reduce n by 1'],['}','End of loop']]],
+['Multiplication table of n',[['int n;','Box for n'],['cin >> n;','Read n'],['for (int i = 1; i <= 10; i++) {','i goes 1 to 10'],['  cout << n * i << endl;','Print n times i'],['}','End of loop']]]];
+fill('q7',W.map(function(x,i){return it(i+1,x[0],prog('Full program',x[1],'',true))}).join(''));
+function all(s){document.querySelectorAll('.ans').forEach(function(a){a.hidden=!s;a.previousElementSibling.textContent=s?'Hide answer':'Show answer'})}
+</script></body></html>
