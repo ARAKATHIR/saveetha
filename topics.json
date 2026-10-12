@@ -1,5 +1,9 @@
 [
   {
+    "title": "Specifying a class, Member Functions, Arrays within a class, Static Member Functions, Arrays of Objects, Friendly Functions.",
+    "file": "pages/c-classes-for-beginners.html"
+  },
+  {
     "title": "The Main Function, Function Prototyping, Call by Reference, Return by Reference, Inline Functions, Default Arguments, Function Overloading.",
     "file": "pages/c-functions-for-beginners.html"
   },
