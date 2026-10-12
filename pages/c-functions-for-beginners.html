@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>C++ Functions for Beginners</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--tx:#1d2433;--mut:#5b6478;--bd:#e3e6ef;--code:#f0f2f9;--hl:#fff3b0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1320;--card:#1a2033;--tx:#eef1fa;--mut:#a3adc4;--bd:#2c3550;--code:#12182a;--hl:#5a4a00}}
+:root[data-theme="dark"]{--bg:#0f1320;--card:#1a2033;--tx:#eef1fa;--mut:#a3adc4;--bd:#2c3550;--code:#12182a;--hl:#5a4a00}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--card);border-bottom:1px solid var(--bd);display:flex;gap:6px;padding:8px;overflow-x:auto}
+nav a{white-space:nowrap;text-decoration:none;color:var(--tx);background:var(--code);padding:6px 11px;border-radius:99px;font-size:14px}
+nav button{margin-left:auto}
+header{padding:28px 16px 8px;text-align:center}
+h1{margin:0;font-size:clamp(26px,6vw,40px)}
+header p{color:var(--mut);margin:6px 0}
+main{max-width:860px;margin:auto;padding:8px 12px 60px}
+section{background:var(--card);border:1px solid var(--bd);border-top:6px solid var(--c);border-radius:16px;padding:16px;margin:16px 0;overflow-x:auto}
+h2{margin:0 0 8px;font-size:22px}
+h2 i{font-style:normal;background:var(--c);color:#fff;border-radius:10px;padding:1px 10px;margin-right:8px}
+h3{margin:18px 0 6px;color:var(--c)}
+.an{background:var(--code);border-left:5px solid var(--c);border-radius:10px;padding:10px 12px;margin:10px 0}
+button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:8px 14px;background:var(--c,#3b82f6);color:#fff;margin:4px 4px 4px 0}
+button.alt{background:var(--code);color:var(--tx);border:1px solid var(--bd)}
+input{font:inherit;padding:7px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx);width:110px}
+.pg{margin:10px 0;overflow-x:auto}
+.pg table{border-collapse:collapse;width:100%;min-width:480px}
+.pg td{border:1px solid var(--bd);padding:5px 8px;vertical-align:top;font-size:14px}
+.pg td:first-child{background:var(--code);width:46%}
+code,pre{font-family:ui-monospace,Menlo,Consolas,monospace;white-space:pre}
+.pg code{font-size:13px}
+tr.hl td{background:var(--hl)!important}
+.tp{opacity:0}tr.on .tp{opacity:1}.pg tr{cursor:pointer}
+.out{background:#10151f;color:#7CFC9A;padding:8px;border-radius:8px;margin:6px 0;min-height:36px;white-space:pre-wrap}
+.res{background:var(--code);border-radius:10px;padding:10px;margin:8px 0;min-height:42px}
+.ans{background:var(--code);border-left:5px solid #22c55e;border-radius:10px;padding:10px;margin:6px 0;white-space:pre-wrap}
+.ans[hidden]{display:none}
+.ans .pg{white-space:normal}
+.q{border-bottom:1px dashed var(--bd);padding:6px 0}
+.q p{margin:4px 0}
+.q pre{background:var(--code);padding:8px;border-radius:8px;overflow-x:auto;font-size:13px}
+.bar2{position:sticky;top:calc(env(safe-area-inset-top,0px) + 52px);background:var(--card);padding:6px 0;z-index:5}
+.hint{color:var(--mut);font-size:14px}
+ul{padding-left:20px}
+</style></head><body>
+<nav id="nav"><a href="#s1">1 Preview</a><a href="#s2">2 main()</a><a href="#s3">3 Prototype</a><a href="#s4">4 By Reference</a><a href="#s5">5 Return Ref</a><a href="#s6">6 Inline</a><a href="#s7">7 Default</a><a href="#s8">8 Overloading</a><a href="#s9">9 Practice</a><button class="alt" id="th" style="--c:#555">🌓</button></nav>
+<header><h1>🚀 C++ Functions for Beginners</h1><p>Simple words • Real-life examples • Tap and try!</p></header>
+<main>
+
+<section id="s1" style="--c:#ef476f"><h2><i>1</i>Quick Preview 👀</h2>
+<p>Before we start, meet a few tiny tools we will use in every program. <b>👆 Tap a line</b> to see what it means.</p>
+<div data-p="pre"></div>
+<ul><li><b>int</b> = a box for whole numbers (5, 20). <b>double</b> = a box for decimal numbers (2.5).</li>
+<li><b>cout</b> shows something on the screen. <b>cin</b> reads what you type.</li>
+<li><code>+ - *</code> add, subtract, multiply. A line ends with <code>;</code></li></ul>
+<div class="an">📌 <b>Standard skeleton:</b> the first two lines (<code>#include</code> and <code>using namespace std;</code>) are assumed at the top of <b>every</b> program below. We will not repeat them.</div></section>
+
+<section id="s2" style="--c:#f78c1f"><h2><i>2</i>The main() Function 🚪</h2>
+<div class="an">🎬 <b>Analogy:</b> main() is the <b>start button</b> of a movie. The film always begins there. A program has exactly <b>one</b> main().</div>
+<p>The computer runs main() first, line by line. <code>return 0;</code> means "I finished with no problem".</p>
+<div data-p="main"></div></section>
+
+<section id="s3" style="--c:#06a77d"><h2><i>3</i>Function Prototyping 📋</h2>
+<div class="an">🍽️ <b>Analogy:</b> A function is a <b>recipe with a name</b>. A <b>prototype</b> is the menu line: it tells the computer "this dish exists" before the kitchen (the definition) is shown.</div>
+<p>A function has a <b>return type</b> (what it gives back), a <b>name</b>, and <b>parameters</b> (what it needs). <code>void</code> means it gives back nothing. A prototype has no body and ends with <code>;</code></p>
+<div data-p="proto"></div>
+<h3>Try it: remove the prototype</h3>
+<button id="pt" class="alt">Prototype line: ON ✅ (tap to remove)</button><div class="res" id="prr">✅ Compiles. Output: 5</div></section>
+
+<section id="s4" style="--c:#118ab2"><h2><i>4</i>Call by Reference 🔗</h2>
+<div class="an">📄 <b>Analogy:</b> <b>By value</b> = you give a friend a <b>photocopy</b> of your notebook. They scribble on the copy; yours is safe. <b>By reference</b> = you give your <b>real notebook</b> (a nickname for it). Their scribbles change yours.</div>
+<p>Put <code>&amp;</code> before the parameter name to make it a reference.</p>
+<div data-p="ref"></div>
+<h3>Try it</h3>
+Type n: <input id="n" type="number" value="5" oninput="vr(null)">
+<button onclick="vr(0)">By value 📄</button><button onclick="vr(1)">By reference 🔗</button>
+<div class="res" id="vr">Tap a button 👆</div></section>
+
+<section id="s5" style="--c:#8e5cf7"><h2><i>5</i>Return by Reference 🔑</h2>
+<div class="an">🔑 <b>Analogy:</b> Return by value gives you a <b>copy</b> of a house key. Return by reference gives you the <b>real key</b>, so you can open the real house and change things inside.</div>
+<p>Write <code>&amp;</code> after the return type: <code>int&amp;</code>. The function hands back the variable itself, so you can put a new value into it.</p>
+<div data-p="retref"></div>
+<button class="sh" data-l="⚠️ Safety rule">⚠️ Safety rule</button><div class="ans" hidden>Never return a reference to a variable created inside the function. It disappears when the function ends, like a key to a house that was demolished!</div></section>
+
+<section id="s6" style="--c:#e0488f"><h2><i>6</i>Inline Functions ⚡</h2>
+<div class="an">🗣️ <b>Analogy:</b> Instead of walking to another room to ask a tiny question, you <b>say the short answer right here</b>. Saves a trip!</div>
+<p>Normally a call jumps to the function and comes back. With <code>inline</code>, the compiler may paste the tiny code right where it is used. Best for very short functions.</p>
+<div data-p="inl"></div>
+<button class="alt" onclick="ia(0)">Normal call 🚶</button><button onclick="ia(1)">Inline ⚡</button><div class="res" id="ir">Tap a button 👆</div>
+<button class="sh" data-l="💡 Good to know">💡 Good to know</button><div class="ans" hidden>inline is a polite request. The compiler can say no for big functions.</div></section>
+
+<section id="s7" style="--c:#2ba84a"><h2><i>7</i>Default Arguments ☕</h2>
+<div class="an">☕ <b>Analogy:</b> At a coffee shop, if you do not say how much sugar, you get the <b>usual 2 spoons</b>. If you say, you get what you asked for.</div>
+<p>Write <code>= value</code> after a parameter. If the caller skips it, the default is used. Defaults go on the <b>right-most</b> parameters.</p>
+<div data-p="def"></div>
+<h3>Try it (leave tax empty to use the default 5)</h3>
+Price: <input id="p1" type="number" value="100" oninput="dd()"> Tax: <input id="t1" type="number" placeholder="empty" oninput="dd()">
+<div class="res" id="dr">Call: total(100) → tax missing, default 5 used → returns 105</div></section>
+
+<section id="s8" style="--c:#d97706"><h2><i>8</i>Function Overloading 🎭</h2>
+<div class="an">🔓 <b>Analogy:</b> The word <b>"open"</b>: open a door, open a bottle, open an app. Same name, different jobs, chosen by what you open.</div>
+<p>Many functions may share one name if their <b>parameters differ</b> (different number or different types). Different return type alone is <b>not</b> enough.</p>
+<div data-p="ov"></div>
+<h3>Which one runs?</h3>
+<button onclick="ov(0)">add(2, 3)</button><button onclick="ov(1)">add(2.5, 1.5)</button><button onclick="ov(2)">add(1, 2, 3)</button>
+<div class="res" id="ovr">Tap a call 👆</div></section>
+
+<section id="s9" style="--c:#3b82f6"><h2><i>9</i>Practice Time ✍️</h2>
+<p class="hint">All answers are hidden. Try first, then tap <b>Show answer</b>.</p>
+<div class="bar2"><button id="sa" style="--c:#16a34a">👁 Show all answers</button><button id="ha" style="--c:#dc2626">🙈 Hide all</button></div>
+<h3>9.1 One-mark questions</h3><div id="q1"></div>
+<h3>9.2 True or False</h3><div id="q2"></div>
+<h3>9.3 Two-mark questions</h3><div id="q3"></div>
+<h3>9.4 Three-mark questions</h3><div id="q4"></div>
+<h3>9.5 Five-mark questions</h3><div id="q5"></div>
+<h3>9.6 Guess the output</h3><div id="q6"></div>
+<h3>9.7 Write a program</h3><div id="q7"></div>
+</section>
+</main>
+<script>
+const $=s=>document.querySelector(s),r=s=>s.raw[0];
+const E=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function prog(rows,o={}){
+ const d=document.createElement('div');d.className='pg';let h='<table>';
+ rows.forEach((x,i)=>{const k=x.indexOf('|');h+=`<tr data-i="${i}"><td><code>${E(x.slice(0,k))}</code></td><td class="${o.tap?'tp':''}">${E(x.slice(k+1))}</td></tr>`});
+ d.innerHTML=h+'</table>';
+ if(o.tap)d.querySelectorAll('tr').forEach(t=>t.onclick=()=>t.classList.toggle('on'));
+ if(o.order){
+  const b=document.createElement('div'),go=document.createElement('button'),rs=document.createElement('button'),cap=document.createElement('span'),out=document.createElement('div');
+  go.textContent='▶ Step';rs.textContent='↺ Reset';rs.className='alt';out.className='out';
+  let s=0;const L=o.order.length,txt='Output: ';out.textContent=txt;cap.textContent=' Tap Step to run the program';
+  go.onclick=()=>{if(s>=L)return;d.querySelectorAll('tr').forEach(t=>t.classList.remove('hl'));
+   d.querySelector(`tr[data-i="${o.order[s]}"]`).classList.add('hl');
+   if(o.outs&&o.outs[s]!==undefined)out.textContent+=o.outs[s];s++;cap.textContent=s>=L?' ✅ Finished!':` Step ${s} of ${L}`};
+  rs.onclick=()=>{s=0;out.textContent=txt;cap.textContent=' Tap Step to run the program';d.querySelectorAll('tr').forEach(t=>t.classList.remove('hl'))};
+  b.append(go,rs,cap,out);d.appendChild(b);}
+ return d}
+const P={
+pre:{tap:1,rows:[
+'#include <iostream>|Borrow the toolbox for screen and keyboard.',
+'using namespace std;|Lets us write cout instead of std::cout.',
+'int main() {|Every program starts running here.',
+'  int age = 20;|Make a box named age and put 20 inside.',
+r`  cout << "Age: " << age << "\n";|cout shows on screen. << pushes items out. "\n" = new line. Prints Age: 20`,
+'  cin >> age;|cin reads a number you type and stores it in age.',
+'  return 0;|Finished OK.',
+'}|Closing bracket ends main.']},
+main:{order:[0,1,2,3],outs:{1:'Hello!'},rows:[
+'int main() {|The computer starts here.',
+r`  cout << "Hello!\n";|Prints Hello! then a new line.`,
+'  return 0;|Gives 0 back = all good. Program stops.',
+'}|End of main.']},
+proto:{order:[0,1,2,5,6,2,3,4],outs:{5:'5'},rows:[
+'int add(int a, int b);|PROTOTYPE: add exists, takes two ints, gives back an int. Ends with ;',
+'int main() {|Start here.',
+r`  cout << add(2, 3) << "\n";|Call add with 2 and 3. Prints the answer 5.`,
+'  return 0;|Done.',
+'}|End of main.',
+'int add(int a, int b) {|DEFINITION: the real recipe, written later.',
+'  return a + b;|Add and send the answer back.',
+'}|End of add.']},
+ref:{order:[3,4,5,0,1,2,6,7,8],outs:{6:'15'},rows:[
+'void addTen(int &x) {|void = gives back nothing. &x = x is a nickname for the caller\'s own box.',
+'  x = x + 10;|Changes the ORIGINAL box.',
+'}|End of addTen.',
+'int main() {|Start.',
+'  int n = 5;|Box n holds 5.',
+'  addTen(n);|x and n are now the same box.',
+r`  cout << n << "\n";|Prints 15. n really changed!`,
+'  return 0;|Done.',
+'}|End.']},
+retref:{order:[3,4,5,0,1,2,6,7,8],outs:{6:'99'},rows:[
+'int& pick(int &x) {|int& = returns the SAME box, not a copy.',
+'  return x;|Hands back the box x itself.',
+'}|End of pick.',
+'int main() {|Start.',
+'  int a = 5;|a holds 5.',
+'  pick(a) = 99;|pick(a) IS the box a, so we can put 99 in it.',
+r`  cout << a << "\n";|Prints 99.`,
+'  return 0;|Done.',
+'}|End.']},
+inl:{rows:[
+'inline int square(int x) {|inline = paste this tiny code where it is used.',
+'  return x * x;|Multiply the number by itself.',
+'}|End of square.',
+'int main() {|Start.',
+r`  cout << square(4) << "\n";|Works like 4 * 4. Prints 16.`,
+'  return 0;|Done.',
+'}|End.']},
+def:{rows:[
+'int total(int price, int tax = 5) {|tax = 5 is the default, used when no tax is given.',
+'  return price + tax;|Add price and tax.',
+'}|End of total.',
+'int main() {|Start.',
+r`  cout << total(100) << "\n";|No tax given, so 5 is used. Prints 105.`,
+r`  cout << total(100, 20) << "\n";|Tax 20 given. Prints 120.`,
+'  return 0;|Done.',
+'}|End.']},
+ov:{rows:[
+'int add(int a, int b) {|Version 1: two whole numbers.',
+'  return a + b;|Add them.',
+'}|End.',
+'double add(double a, double b) {|Version 2: two decimal numbers.',
+'  return a + b;|Add them.',
+'}|End.',
+'int add(int a, int b, int c) {|Version 3: three whole numbers.',
+'  return a + b + c;|Add all three.',
+'}|End.',
+'int main() {|Start.',
+r`  cout << add(2, 3) << "\n";|Two ints: Version 1. Prints 5.`,
+r`  cout << add(2.5, 1.5) << "\n";|Two decimals: Version 2. Prints 4.`,
+r`  cout << add(1, 2, 3) << "\n";|Three ints: Version 3. Prints 6.`,
+'  return 0;|Done.',
+'}|End.']}};
+document.querySelectorAll('[data-p]').forEach(e=>{const p=P[e.dataset.p];e.appendChild(prog(p.rows,p))});
+/* demos */
+let pOn=true;
+$('#pt').onclick=()=>{pOn=!pOn;$('#pt').textContent=pOn?'Prototype line: ON ✅ (tap to remove)':'Prototype line: OFF ❌ (tap to add)';
+$('#prr').textContent=pOn?'✅ Compiles. Output: 5':"❌ Error: 'add' was not declared. main() met add before it was introduced.";};
+function vr(k){const n=+$('#n').value||0,o=$('#vr');
+ if(k===null){o.textContent='Tap a button 👆';return}
+ o.textContent=k?`n = ${n}. addTen works on the ORIGINAL, so n is now ${n+10} 🎉`:`n = ${n}. addTen works on a COPY, so n is still ${n} 😐`}
+function ia(k){$('#ir').textContent=k?'⚡ Inline: the code x * x is pasted right where square(4) was written. No jump!':'🚶 Normal: the computer jumps to square, runs it, then jumps back.'}
+function dd(){const p=+$('#p1').value||0,t=$('#t1').value,h=t!=='',x=h?+t:5;
+ $('#dr').textContent=`Call: total(${p}${h?', '+x:''}) → ${h?'tax given':'tax missing, default 5 used'} → returns ${p+x}`}
+function ov(k){$('#ovr').textContent=['add(2, 3): two ints → Version 1 → 5','add(2.5, 1.5): two decimals → Version 2 → 4','add(1, 2, 3): three numbers → Version 3 → 6'][k]}
+$('#th').onclick=()=>{const d=document.documentElement,cur=d.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');d.dataset.theme=cur==='dark'?'light':'dark'};
+/* questions */
+const Q1=[['Which function does every C++ program start from?','main()'],['What does return 0; tell the computer?','The program finished successfully.'],['Which symbol ends a function prototype?','A semicolon ;'],['What is written before the function name to say what it gives back?','The return type.'],['Which symbol makes a reference parameter?','& (ampersand)'],['Call by reference passes what?','The original variable (a nickname), not a copy.'],['Which keyword makes an inline function?','inline'],['What does void mean as a return type?','The function returns nothing.'],['Which header file is needed for cout?','iostream'],['Which operator is used with cout?','<<'],['Which object reads input from the keyboard?','cin'],['How do you give a default value to a parameter?','Write = value after it, e.g. int tax = 5'],['Can a program have two main() functions?','No. Exactly one.'],['What is function overloading?','Many functions with the same name but different parameters.'],['Can the return type alone overload a function?','No.'],['Which data type stores decimal numbers?','double'],['Does call by value change the caller\'s variable?','No. It changes only a copy.'],[r`What does \n do inside cout?`,'Moves to a new line.'],['Default arguments are given to the left or right-most parameters?','Right-most parameters.'],['What is the return type of a function that gives back a reference to an int?','int&'],['What does using namespace std; let us do?','Write cout instead of std::cout.']];
+const Q2=[['A function prototype has a body inside curly brackets.','False ❌. A prototype has no body and ends with ;'],['Call by reference can change the caller\'s variable.','True ✅. The function works on the original.'],['An inline function is always pasted by the compiler.','False ❌. inline is only a request.'],['Default arguments are placed on the right-most parameters.','True ✅.'],['Overloaded functions must have different parameter lists.','True ✅.'],['A program can have two main() functions.','False ❌. Only one.'],['It is safe to return a reference to a local variable.','False ❌. The variable disappears when the function ends.'],['In call by value the function works on a copy.','True ✅.']];
+const Q3=[['Define a function prototype with an example.','A prototype tells the compiler a function\'s name, parameters and return type before it is defined. Example: int add(int a, int b);'],['What is call by reference? Give one line of example.','The function gets the original variable through a nickname (&), so changes affect the caller. Example: void addTen(int &x);'],['What is an inline function?','A short function marked with inline. The compiler may paste its code at the place of the call instead of jumping to it.'],['What are default arguments?','Values given to parameters in advance, used when the caller skips them. Example: int total(int price, int tax = 5);'],['What is function overloading?','Using one function name for several functions that differ in the number or type of parameters.']];
+const Q4=[['Differentiate call by value and call by reference.','Call by value: a COPY is passed; the original does not change; no & in the parameter (int x).\nCall by reference: the ORIGINAL is passed through a nickname; the original can change; & is used (int &x).'],['Explain function prototype and why it is needed.','A prototype is a function declaration: return type, name, parameters, then ;\nIt is needed so main() can call a function that is defined later. Without it the compiler says the function was not declared.'],['Differentiate a normal function and an inline function.','Normal: the computer jumps to the function and comes back each call.\nInline: the compiler may paste the code at the call, avoiding the jump, so tiny functions run faster. The code can become larger if used many times.']];
+const Q5=[['Explain function overloading with a program and its output.',r`Function overloading = same name, different parameters (number or type). The compiler picks the matching version.
+
+int add(int a, int b) { return a + b; }
+double add(double a, double b) { return a + b; }
+int main() {
+  cout << add(2, 3) << "\n";
+  cout << add(2.5, 1.5) << "\n";
+  return 0;
+}
+Output:
+5
+4
+Explanation: add(2, 3) has two ints so the first version runs. add(2.5, 1.5) has decimals so the second runs.`],['Explain call by reference with a swap program and trace it.',r`Call by reference lets a function change the caller's variables.
+
+void swapNum(int &a, int &b) { int t = a; a = b; b = t; }
+int main() {
+  int x = 1, y = 2;
+  swapNum(x, y);
+  cout << x << " " << y << "\n";
+  return 0;
+}
+Trace: a is x (1), b is y (2). t = 1. a = 2 so x = 2. b = 1 so y = 1.
+Output: 2 1`],['Explain default arguments and inline functions with small examples.',r`Default argument: a value used when the caller gives none.
+int total(int price, int tax = 5) { return price + tax; }
+total(100) gives 105. total(100, 20) gives 120.
+Inline function: a tiny function the compiler may paste where it is called.
+inline int square(int x) { return x * x; }
+square(4) works like 4 * 4 = 16 and avoids the jump of a normal call.`]];
+const Q6=[[r`int twice(int x) { return x * 2; }
+int main() {
+  cout << twice(7) << "\n";
+  return 0;
+}`,'Output: 14\ntwice(7) returns 7 * 2.'],[r`void addTen(int x) { x = x + 10; }
+int main() {
+  int n = 5;
+  addTen(n);
+  cout << n << "\n";
+  return 0;
+}`,'Output: 5\nCall by value: addTen changed only its copy. n is unchanged.'],[r`void addOne(int &x) { x = x + 1; }
+int main() {
+  int a = 1;
+  addOne(a);
+  addOne(a);
+  cout << a << "\n";
+  return 0;
+}`,'Output: 3\nCall by reference: a really changes, 1 then 2 then 3.'],[r`int area(int w, int h = 2) { return w * h; }
+int main() {
+  cout << area(5) << " " << area(5, 3) << "\n";
+  return 0;
+}`,'Output: 10 15\narea(5) uses default h = 2 so 5 * 2. area(5, 3) gives 5 * 3.'],[r`void show(int x) { cout << "int "; }
+void show(double x) { cout << "double "; }
+int main() {
+  show(5);
+  show(5.5);
+  return 0;
+}`,'Output: int double\n5 is a whole number so the int version runs. 5.5 is decimal so the double version runs.']];
+const Q7=[
+['1. Print Hello C++ on the screen.',['int main() {|Start.',r`  cout << "Hello C++\n";|Prints the text.`,'  return 0;|Done.','}|End.']],
+['2. Add two numbers using a function with a prototype.',['int add(int a, int b);|Prototype.','int main() {|Start.',r`  cout << add(4, 6) << "\n";|Call add. Prints 10.`,'  return 0;|Done.','}|End of main.','int add(int a, int b) {|Definition.','  return a + b;|Send back the sum.','}|End.']],
+['3. Find the cube of 3 using an inline function.',['inline int cube(int x) {|Inline function.','  return x * x * x;|Multiply three times.','}|End.','int main() {|Start.',r`  cout << cube(3) << "\n";|Prints 27.`,'  return 0;|Done.','}|End.']],
+['4. Swap two numbers using call by reference.',['void swapNum(int &a, int &b) {|a and b are nicknames of the caller\'s boxes.','  int t = a;|Keep a in a spare box t.','  a = b;|Put b in a.','  b = t;|Put old a (in t) into b.','}|End.','int main() {|Start.','  int x = 1;|x is 1.','  int y = 2;|y is 2.','  swapNum(x, y);|Swaps the real x and y.',r`  cout << x << " " << y << "\n";|Prints 2 1.`,'  return 0;|Done.','}|End.']],
+['5. Multiply two numbers; the second has default value 1.',['int mul(int a, int b = 1) {|b defaults to 1.','  return a * b;|Multiply.','}|End.','int main() {|Start.',r`  cout << mul(6) << " " << mul(6, 3) << "\n";|Prints 6 18.`,'  return 0;|Done.','}|End.']],
+['6. Overload area(): one for a square, one for a rectangle.',['int area(int side) {|One number: square.','  return side * side;|Side times side.','}|End.','int area(int l, int w) {|Two numbers: rectangle.','  return l * w;|Length times width.','}|End.','int main() {|Start.',r`  cout << area(4) << " " << area(4, 5) << "\n";|Prints 16 20.`,'  return 0;|Done.','}|End.']],
+['7. Use return by reference to set a variable to 7.',['int& same(int &v) {|Returns the same box.','  return v;|Hands back v itself.','}|End.','int main() {|Start.','  int k = 1;|k is 1.','  same(k) = 7;|Puts 7 into k.',r`  cout << k << "\n";|Prints 7.`,'  return 0;|Done.','}|End.']],
+['8. Read two numbers and print their sum.',['int main() {|Start.','  int a;|Empty box a.','  int b;|Empty box b.','  cin >> a;|Read first number.','  cin >> b;|Read second number.',r`  cout << a + b << "\n";|Print the sum.`,'  return 0;|Done.','}|End.']],
+['9. Write a function with no parameters that prints Hello.',['void hello();|Prototype. void = returns nothing.','int main() {|Start.','  hello();|Call it.','  return 0;|Done.','}|End of main.','void hello() {|Definition.',r`  cout << "Hello\n";|Prints Hello.`,'}|End.']],
+['10. Double a number using call by reference.',['void doubleIt(int &x) {|x is a nickname for the caller\'s box.','  x = x * 2;|Doubles the original.','}|End.','int main() {|Start.','  int n = 8;|n is 8.','  doubleIt(n);|n becomes 16.',r`  cout << n << "\n";|Prints 16.`,'  return 0;|Done.','}|End.']]];
+function mk(id,items,kind){const o=$('#'+id);
+ items.forEach((it,i)=>{const q=document.createElement('div');q.className='q';
+  const p=document.createElement('p');
+  p.innerHTML=kind==='w'?`<b>${E(it[0])}</b>`:`<b>${i+1}.</b> `+(kind==='g'?'What is the output?<pre>'+E(it[0])+'</pre>':E(it[0]));
+  const b=document.createElement('button');b.className='sh';b.textContent='Show answer';
+  const a=document.createElement('div');a.className='ans';a.hidden=true;
+  if(kind==='w'){a.appendChild(prog(it[1]));a.insertAdjacentHTML('afterbegin','<div class="hint">Skeleton lines assumed at top.</div>')}else a.textContent=it[1];
+  q.append(p,b,a);o.appendChild(q)})}
+mk('q1',Q1,'a');mk('q2',Q2,'a');mk('q3',Q3,'a');mk('q4',Q4,'a');mk('q5',Q5,'a');mk('q6',Q6,'g');mk('q7',Q7,'w');
+function tg(b,show){const a=b.nextElementSibling;a.hidden=!show;b.textContent=show?'Hide':(b.dataset.l||'Show answer')}
+document.addEventListener('click',e=>{const b=e.target.closest('.sh');if(b)tg(b,b.nextElementSibling.hidden)});
+$('#sa').onclick=()=>document.querySelectorAll('#s9 .sh').forEach(b=>tg(b,true));
+$('#ha').onclick=()=>document.querySelectorAll('#s9 .sh').forEach(b=>tg(b,false));
+</script></body></html>
