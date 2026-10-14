@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>C++ Inheritance Made Easy</title>
+<style>
+:root{
+  --bg:#f5f6fc; --card:#ffffff; --text:#1f2542; --muted:#5a6285; --line:#e1e5f4;
+  --c1:#6c5ce7; --c2:#00a383; --c3:#e8505b; --c4:#e0a100; --c5:#0984e3;
+  --t1:#efeaff; --t2:#dff7ef; --t3:#ffe9ea; --t4:#fff4d1; --t5:#e1f0ff;
+  --code-bg:#1d2043; --code-text:#e9ecff; --code-line:#2a2e5c;
+  --k:#ff9de2; --s:#a5f3b4; --c:#8c93c0; --n:#ffd479; --p:#8fd3ff;
+  --run-bg:#ffe08a; --run-text:#2b2300;
+  --shadow:0 4px 14px rgba(40,50,120,.10);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10122a; --card:#1b1e3d; --text:#eceeff; --muted:#a9afd8; --line:#2f3568;
+    --c1:#a99bff; --c2:#3ddbb4; --c3:#ff8a93; --c4:#ffcb4d; --c5:#5db4ff;
+    --t1:#2a2564; --t2:#10403a; --t3:#4a2332; --t4:#4a3d12; --t5:#143a62;
+    --code-bg:#0d0f26; --code-text:#e9ecff; --code-line:#232859;
+    --shadow:0 4px 14px rgba(0,0,0,.35);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10122a; --card:#1b1e3d; --text:#eceeff; --muted:#a9afd8; --line:#2f3568;
+  --c1:#a99bff; --c2:#3ddbb4; --c3:#ff8a93; --c4:#ffcb4d; --c5:#5db4ff;
+  --t1:#2a2564; --t2:#10403a; --t3:#4a2332; --t4:#4a3d12; --t5:#143a62;
+  --code-bg:#0d0f26; --code-text:#e9ecff; --code-line:#232859;
+  --shadow:0 4px 14px rgba(0,0,0,.35);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.65;font-size:17px}
+[hidden]{display:none !important}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--t1);color:var(--text);padding:.1em .38em;border-radius:6px;font-size:.9em;word-break:break-word}
+a{color:var(--c5)}
+.wrap{max-width:860px;margin:0 auto;padding:0 14px 60px}
+
+/* top bar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--card);border-bottom:1px solid var(--line);box-shadow:var(--shadow)}
+.topbar .in{max-width:860px;margin:0 auto;display:flex;align-items:center;gap:6px;padding:8px 10px}
+.topbar nav{flex:1;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.topbar nav::-webkit-scrollbar{display:none}
+.topbar nav a{flex:0 0 auto;text-decoration:none;color:var(--text);background:var(--t1);border-radius:999px;padding:5px 12px;font-size:.85rem;font-weight:600;white-space:nowrap;border:2px solid transparent}
+.topbar nav a b{color:var(--c1);margin-right:3px}
+.topbar nav a.on{border-color:var(--c1);background:var(--card)}
+.iconbtn{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;width:38px;height:38px;font-size:1.1rem;cursor:pointer}
+
+/* hero */
+.hero{margin:18px 0 8px;border-radius:22px;padding:26px 20px;color:#fff;background:linear-gradient(135deg,#6c5ce7,#00b4d8 60%,#00c9a7);box-shadow:var(--shadow)}
+.hero h1{margin:0 0 6px;font-size:1.9rem;line-height:1.2}
+.hero p{margin:4px 0;font-size:1.02rem;opacity:.96}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.legend span{background:rgba(255,255,255,.2);border-radius:999px;padding:4px 12px;font-size:.85rem}
+
+/* sections */
+section{margin:26px 0;scroll-margin-top:70px}
+h2{font-size:1.45rem;line-height:1.3;margin:0 0 12px;display:flex;align-items:center;gap:10px}
+h2 .num{flex:0 0 auto;width:38px;height:38px;border-radius:12px;background:var(--c1);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:1.05rem}
+h3{margin:18px 0 8px;font-size:1.1rem}
+p{margin:8px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin:12px 0;box-shadow:var(--shadow)}
+.card>:first-child{margin-top:0}.card>:last-child{margin-bottom:0}
+.analogy{background:var(--t4);border-color:transparent}
+.key{background:var(--t2);border-color:transparent}
+.warn{background:var(--t3);border-color:transparent}
+.info-card{background:var(--t5);border-color:transparent}
+.tag{display:inline-block;font-weight:700;font-size:.8rem;letter-spacing:.02em;text-transform:uppercase;margin-bottom:4px;color:var(--muted)}
+ul.clean{padding-left:1.2em;margin:6px 0}
+ul.clean li{margin:4px 0}
+
+/* buttons */
+.btn{font:inherit;font-weight:700;font-size:.95rem;border:0;border-radius:12px;padding:10px 16px;background:var(--c1);color:#fff;cursor:pointer;min-height:42px;touch-action:manipulation}
+.btn:active{transform:scale(.97)}
+.btn.small{padding:7px 14px;font-size:.88rem;min-height:36px;background:var(--c5)}
+.btn.ghost{background:var(--t1);color:var(--text)}
+.btn.green{background:#00916f}
+.btn.red{background:#d63a46}
+.btn:focus-visible,.iconbtn:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--c4);outline-offset:2px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+
+/* code + program widget */
+.prog{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px;margin:14px 0;box-shadow:var(--shadow)}
+.prog-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;font-weight:700;margin-bottom:8px}
+.prog-head small{font-weight:500;color:var(--muted)}
+.codebox,pre.code{background:var(--code-bg);color:var(--code-text);border-radius:14px;padding:8px 0;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.84rem;line-height:1.6;-webkit-overflow-scrolling:touch}
+pre.code{margin:8px 0;padding:10px 14px;white-space:pre}
+.ln{display:flex;cursor:pointer;padding:0 10px 0 0;min-width:max-content;border-left:4px solid transparent}
+.ln:hover{background:var(--code-line)}
+.ln .no{flex:0 0 2.4em;text-align:right;padding-right:10px;color:#7b82b8;user-select:none}
+.ln .tx{white-space:pre}
+.ln.sel{border-left-color:#5db4ff;background:var(--code-line)}
+.ln.run{background:var(--run-bg);color:var(--run-text);border-left-color:#ff7a00}
+.ln.run .no{color:#7a5a00}
+.ln.run .tx span{color:inherit}
+.t-k{color:var(--k);font-weight:600}.t-s{color:var(--s)}.t-c{color:var(--c);font-style:italic}.t-n{color:var(--n)}.t-p{color:var(--p)}
+.info{margin:10px 0 0;padding:10px 12px;border-radius:12px;background:var(--t5);font-size:.95rem;min-height:3.2em}
+.console{margin-top:10px;background:#0b0d20;color:#9dffb5;border-radius:12px;padding:10px 14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.88rem;min-height:3em}
+.console .ph{color:#6f78a8}
+.console .err{color:#ff8a93}
+.console .ol::before{content:"> ";color:#6f78a8}
+.ltable{margin-top:10px;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+th{background:var(--t1)}
+td.no{color:var(--muted);width:2.2em;text-align:right}
+.tablewrap{overflow-x:auto;margin:8px 0}
+
+/* demos */
+.demo{background:var(--t1);border-radius:18px;padding:14px;margin:12px 0}
+.demo .tag{color:var(--c1)}
+.demo input[type=text]{font:inherit;padding:9px 12px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--text);min-width:0;width:100%;max-width:260px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.outbox{background:#0b0d20;color:#9dffb5;border-radius:12px;padding:8px 12px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9rem;min-height:2.4em;margin-top:8px}
+.family{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:600px){.family{grid-template-columns:1fr 1fr}}
+.fbox{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:10px 12px;transition:all .3s}
+.fbox h4{margin:0 0 6px}
+.trait{display:inline-block;background:var(--t2);border-radius:999px;padding:3px 10px;margin:3px 3px 3px 0;font-size:.88rem}
+.trait.own{background:var(--t4)}
+.trait.inh{background:var(--t1);border:2px dashed var(--c1)}
+.fbox.glow{border-color:var(--c2);box-shadow:0 0 0 4px rgba(0,200,150,.18)}
+.diagram{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--card);border:2px dashed var(--line);border-radius:14px;padding:10px 14px;margin:10px 0;white-space:pre;overflow-x:auto;line-height:1.4;font-size:.95rem}
+.diagram b{color:var(--c1)}
+.reveal-btn{width:100%;text-align:left;display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--card);color:var(--text);border:2px solid var(--line);border-radius:14px;padding:12px 14px;font:inherit;font-weight:700;cursor:pointer;margin-top:8px;min-height:48px}
+.reveal-btn[aria-expanded="true"]{border-color:var(--c1)}
+.reveal-body{background:var(--card);border:2px solid var(--line);border-top:0;border-radius:0 0 14px 14px;padding:8px 14px 12px;margin-top:-6px}
+.mem{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+.mem .part{background:var(--card);border:2px solid var(--line);border-radius:12px;padding:8px;text-align:center;font-size:.9rem}
+.mem .mini{background:var(--t4);border-radius:8px;padding:6px;margin:6px 0;font-size:.85rem}
+.mem .mini.one{grid-column:1/-1}
+.tabox{border:3px solid var(--c1);border-radius:16px;padding:10px;background:var(--card)}
+.tabox .ttl{font-weight:700;text-align:center;margin-bottom:8px}
+.shared{background:var(--t2);border:2px solid var(--c2);border-radius:10px;padding:8px;text-align:center;margin-bottom:8px;font-size:.9rem}
+.msg{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--t5);min-height:3em}
+.msg.bad{background:var(--t3)}.msg.good{background:var(--t2)}
+.shake{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.seg{display:inline-flex;border:2px solid var(--c1);border-radius:12px;overflow:hidden}
+.seg button{border:0;background:var(--card);color:var(--text);font:inherit;font-weight:700;padding:9px 14px;cursor:pointer;min-height:42px}
+.seg button.on{background:var(--c1);color:#fff}
+.syn span.b{color:var(--c3);font-weight:700}.syn span.d{color:var(--c2);font-weight:700}
+
+/* questions */
+.qa{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin:10px 0;box-shadow:var(--shadow)}
+.qa.try{background:var(--t1);border-color:transparent}
+.q{display:flex;gap:10px;align-items:flex-start}
+.qn{flex:0 0 auto;min-width:30px;height:30px;border-radius:9px;background:var(--c1);color:#fff;font-weight:700;font-size:.85rem;display:inline-flex;align-items:center;justify-content:center;padding:0 6px}
+.qt{flex:1;min-width:0}
+.qt pre.code{margin-top:8px}
+.qa>.btn{margin-top:10px}
+.ans{margin-top:10px;background:var(--t2);border-radius:12px;padding:10px 12px}
+.ans p:first-child{margin-top:0}
+.qgroup h3{background:var(--c1);color:#fff;border-radius:12px;padding:8px 14px;margin:26px 0 6px}
+.qbar{position:sticky;top:calc(env(safe-area-inset-top,0px) + 58px);z-index:20;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px 10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow)}
+.qbar span{flex:1;font-weight:700;min-width:120px}
+.to-top{position:fixed;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);z-index:60;width:46px;height:46px;border-radius:50%;border:0;background:var(--c1);color:#fff;font-size:1.3rem;cursor:pointer;box-shadow:var(--shadow)}
+footer{text-align:center;color:var(--muted);font-size:.9rem;margin:30px 0}
+@media(max-width:520px){body{font-size:16px}.hero h1{font-size:1.5rem}h2{font-size:1.25rem}}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.shake{animation:none}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="in">
+    <nav id="menu" aria-label="Sections">
+      <a href="#s1"><b>1</b>Basics</a>
+      <a href="#s2"><b>2</b>Inheritance</a>
+      <a href="#s3"><b>3</b>Syntax</a>
+      <a href="#s4"><b>4</b>Types</a>
+      <a href="#s5"><b>5</b>Single</a>
+      <a href="#s6"><b>6</b>Multilevel</a>
+      <a href="#s7"><b>7</b>Hierarchical</a>
+      <a href="#s8"><b>8</b>Multiple</a>
+      <a href="#s9"><b>9</b>Hybrid</a>
+      <a href="#s10"><b>10</b>Diamond</a>
+      <a href="#s11"><b>11</b>Virtual</a>
+      <a href="#s12"><b>12</b>Summary</a>
+      <a href="#s13"><b>13</b>Practice</a>
+    </nav>
+    <button class="iconbtn" id="themeBtn" aria-label="Switch light or dark mode" title="Light / Dark">🌓</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+<div class="hero">
+  <h1>🧬 C++ Inheritance Made Easy</h1>
+  <p>Inheritance • Types of inheritance • Virtual base classes</p>
+  <p>Made for complete beginners. Simple English. Real-life examples. Tap, type and try!</p>
+  <div class="legend"><span>🌍 Real-life analogy</span><span>💻 Step-by-step program</span><span>✍️ Try it now</span><span>📝 Practice questions</span></div>
+</div>
+
+<div class="card info-card">
+  <span class="tag">How to use this page</span>
+  <ul class="clean">
+    <li>Read the sections in order (use the menu on top).</li>
+    <li>In every program: <b>tap a line</b> to see what it means, or press <b>▶ Next step</b> to run it like a computer.</li>
+    <li>After each idea there is a <b>✍️ Try it now</b> question. Think first, then press <b>Show answer</b>.</li>
+    <li>Lots of practice questions are at the end (Section 13).</li>
+  </ul>
+</div>
+
+<!-- ============ 1 ============ -->
+<section id="s1">
+  <h2><span class="num">1</span> Before we start: Class &amp; Object 🏠</h2>
+  <p>Inheritance is built on <b>classes</b>. So first, let us meet the small words that we will use in every program. Nothing else will appear in the code later!</p>
+  <div class="card analogy">
+    <span class="tag">🌍 Real-life analogy</span>
+    <p>A <b>class</b> is like a <b>house plan</b> 📐 on paper. An <b>object</b> is a <b>real house</b> 🏠 built from that plan. From one plan you can build many houses.</p>
+  </div>
+  <h3>Little words we will use</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Word</th><th>Simple meaning</th></tr>
+    <tr><td><code>#include &lt;iostream&gt;</code></td><td>Brings in the tool for printing on the screen.</td></tr>
+    <tr><td><code>#include &lt;string&gt;</code></td><td>Brings in the tool for text.</td></tr>
+    <tr><td><code>using namespace std;</code></td><td>Lets us write <code>cout</code> instead of <code>std::cout</code>.</td></tr>
+    <tr><td><code>cout &lt;&lt; "Hi" &lt;&lt; endl;</code></td><td>Prints Hi. <code>endl</code> moves to a new line. You can chain many <code>&lt;&lt;</code>.</td></tr>
+    <tr><td><code>int</code></td><td>A whole number, like 5 or 90.</td></tr>
+    <tr><td><code>string</code></td><td>Text, like "Tommy".</td></tr>
+    <tr><td><code>+</code> and <code>*</code></td><td>Work like in maths. <code>2 + 3</code> is 5 and <code>4 * 4</code> is 16.</td></tr>
+    <tr><td><code>=</code></td><td>Puts a value into a variable: <code>marks = 90;</code></td></tr>
+    <tr><td><code>class</code></td><td>The blueprint (plan). It ends with <code>};</code></td></tr>
+    <tr><td><code>public:</code></td><td>Everything below it can be used from outside the class.</td></tr>
+    <tr><td>data member</td><td>A variable that lives inside a class (like <code>string name;</code>).</td></tr>
+    <tr><td>member function</td><td>A function that lives inside a class. <code>void</code> means it gives nothing back.</td></tr>
+    <tr><td>object</td><td>A real thing made from a class: <code>Animal a;</code></td></tr>
+    <tr><td>dot <code>.</code></td><td>Reaches inside an object: <code>a.name</code> or <code>a.eat()</code></td></tr>
+    <tr><td><code>main()</code></td><td>The place where every program starts.</td></tr>
+    <tr><td><code>//</code></td><td>A note for humans. The computer ignores it.</td></tr>
+  </table></div>
+
+  <div class="demo">
+    <span class="tag">🎮 Type &amp; see</span>
+    <p>Give the animal a name, then run the program.</p>
+    <div class="row">
+      <input type="text" id="d1name" value="Tommy" maxlength="14" aria-label="Animal name">
+      <button class="btn green" id="d1run">▶ Run a.eat()</button>
+    </div>
+    <div class="diagram" id="d1code" style="margin-bottom:0"></div>
+    <div class="outbox" id="d1out">Press Run…</div>
+  </div>
+
+  <div class="prog" data-prog="basics"></div>
+  <div data-try="s1"></div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section id="s2">
+  <h2><span class="num">2</span> What is Inheritance? 🧬</h2>
+  <p><b>Inheritance</b> means one class <b>gets (inherits)</b> the things of another class. We do not need to write the same code again.</p>
+  <div class="card analogy">
+    <span class="tag">🌍 Real-life analogy</span>
+    <p>You get your <b>eye colour</b> and <b>height</b> from your parents 👨‍👩‍👧. Nobody teaches your eyes to be brown. You <b>inherit</b> them! You also have your <b>own</b> talents, like playing guitar 🎸.</p>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">Two names to remember</h3>
+    <div class="tablewrap"><table>
+      <tr><th>Class</th><th>Other names</th><th>Job</th></tr>
+      <tr><td><b>Base class</b> 👨‍👩‍👧</td><td>Parent class, Super class</td><td><b>Gives</b> its members</td></tr>
+      <tr><td><b>Derived class</b> 👶</td><td>Child class, Sub class</td><td><b>Receives</b> the members and adds its own</td></tr>
+    </table></div>
+  </div>
+  <div class="card key">
+    <span class="tag">✅ The "is-a" test</span>
+    <p>Use inheritance only when you can say "<b>is a</b>": A Dog <b>is an</b> Animal ✔️. A Car <b>is a</b> Vehicle ✔️. A Dog is a Car? ❌ No!</p>
+    <p><b>Why use it?</b> 1) Write code once, use many times. 2) Saves time. 3) Fewer mistakes. 4) Easy to change.</p>
+  </div>
+
+  <div class="demo">
+    <span class="tag">🎮 Tap to see inheritance</span>
+    <div class="family">
+      <div class="fbox" id="fParent">
+        <h4>🐾 Animal (base class)</h4>
+        <span class="trait">name</span><span class="trait">eat()</span>
+      </div>
+      <div class="fbox" id="fChild">
+        <h4>🐶 Dog (derived class)</h4>
+        <span id="fInh"></span><span class="trait own">bark()</span>
+      </div>
+    </div>
+    <div class="ctrl">
+      <button class="btn green" id="fGo">🧬 Let Dog inherit from Animal</button>
+      <button class="btn ghost" id="fReset">↺ Reset</button>
+    </div>
+    <div class="msg" id="fMsg">Dog has only its own member for now: <code>bark()</code>.</div>
+  </div>
+  <div data-try="s2"></div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section id="s3">
+  <h2><span class="num">3</span> How to write it: Syntax ✍️</h2>
+  <p>To inherit, we write a <b>colon</b> <code>:</code> after the new class name. Then we write <code>public</code> and the base class name.</p>
+  <div class="diagram">class <b>Child</b> : public <b>Parent</b> {
+    // Child's own members
+};</div>
+  <ul class="clean">
+    <li><code>:</code> means "inherits from".</li>
+    <li>For now, always write <code>public</code> after the colon. Keep every member <code>public</code> too.</li>
+    <li>After this, a Child object can use the public members of Parent with the dot: <code>c.eat()</code></li>
+  </ul>
+  <div class="demo">
+    <span class="tag">🎮 Type &amp; see: build the first line</span>
+    <div class="row">
+      <label>Base (parent): <input type="text" id="sBase" value="Animal" maxlength="16"></label>
+      <label>Derived (child): <input type="text" id="sDer" value="Dog" maxlength="16"></label>
+    </div>
+    <div class="diagram syn" id="sOut" style="margin-bottom:0"></div>
+    <div class="msg" id="sMsg"></div>
+  </div>
+  <div data-try="s3"></div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section id="s4">
+  <h2><span class="num">4</span> Types of Inheritance at a glance 🗂️</h2>
+  <p>There are <b>5 types</b>. Tap each card to open it.</p>
+  <div id="typeCards"></div>
+  <div class="card key"><span class="tag">✅ Easy memory trick</span><p>Single, Multilevel, Hierarchical, Multiple, Hybrid → <b>S M H M H</b>. Next we study them one by one.</p></div>
+  <div data-try="s4"></div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section id="s5">
+  <h2><span class="num">5</span> Single Inheritance 🧍➜🧍</h2>
+  <p><b>One</b> base class and <b>one</b> derived class.</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>A son gets his <b>one father's</b> surname and cricket skill 🏏. One father → one child class.</p></div>
+  <div class="diagram"><b>Animal</b>
+   ↓
+<b>Dog</b></div>
+  <div class="prog" data-prog="single"></div>
+  <div class="card key"><span class="tag">✅ Look carefully</span><p><code>Dog</code> never wrote <code>name</code> or <code>eat()</code>. It got them from <code>Animal</code>. That is inheritance!</p></div>
+  <div data-try="s5"></div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section id="s6">
+  <h2><span class="num">6</span> Multilevel Inheritance 🔗</h2>
+  <p>A <b>chain</b>: A → B → C. The last class gets things from all the classes above it.</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>Grandfather's house 🏠 goes to the father, and then to the son. Grandfather → Father → Son.</p></div>
+  <div class="diagram"><b>Vehicle</b>
+   ↓
+<b>Car</b>
+   ↓
+<b>SportsCar</b></div>
+  <div class="prog" data-prog="multilevel"></div>
+  <div class="card key"><span class="tag">✅ Remember</span><p><code>SportsCar</code> inherits from <code>Car</code>, and <code>Car</code> inherits from <code>Vehicle</code>. So <code>SportsCar</code> can use <code>start()</code> from <code>Vehicle</code> too.</p></div>
+  <div data-try="s6"></div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section id="s7">
+  <h2><span class="num">7</span> Hierarchical Inheritance 🌳</h2>
+  <p><b>One</b> base class and <b>many</b> derived classes.</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>One mother 👩 has many children. All children get her family name. Each child also has a <b>different talent</b> 🎨🎤.</p></div>
+  <div class="diagram">      <b>Person</b>
+     ↙     ↘
+<b>Student</b>   <b>Employee</b></div>
+  <div class="prog" data-prog="hierarchical"></div>
+  <div class="card key"><span class="tag">✅ Remember</span><p>Each object has its <b>own</b> copy of <code>name</code>. Changing <code>s.name</code> does not change <code>e.name</code>.</p></div>
+  <div data-try="s7"></div>
+</section>
+
+<!-- ============ 8 ============ -->
+<section id="s8">
+  <h2><span class="num">8</span> Multiple Inheritance 👨‍👩‍👧</h2>
+  <p><b>Two or more</b> base classes and <b>one</b> derived class. We separate base classes with a comma.</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>A child gets <b>driving</b> skill from the father 🚗 and <b>cooking</b> skill from the mother 🍳. Two parents → one child.</p></div>
+  <div class="diagram"><b>Father</b>   <b>Mother</b>
+    ↘     ↙
+     <b>Child</b></div>
+  <div class="prog" data-prog="multiple"></div>
+  <div class="card key"><span class="tag">✅ Remember</span><p>Syntax: <code>class Child : public Father, public Mother</code>. Write <code>public</code> before <b>each</b> parent.</p></div>
+  <div data-try="s8"></div>
+</section>
+
+<!-- ============ 9 ============ -->
+<section id="s9">
+  <h2><span class="num">9</span> Hybrid Inheritance 🧩</h2>
+  <p><b>Hybrid</b> means a <b>mix</b> of two or more types in one program.</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>A big family tree 🌳 is not just one pattern. Some people have one parent line, some get things from two sides. A family tree mixes everything!</p></div>
+  <div class="diagram"><b>Person</b>
+   ↓
+<b>Student</b>    <b>Sports</b>
+     ↘     ↙
+      <b>Player</b></div>
+  <div class="prog" data-prog="hybrid"></div>
+  <div class="card key"><span class="tag">✅ Remember</span><p>Here Person → Student is <b>single</b>. Student and Sports → Player is <b>multiple</b>. Mix of both = <b>hybrid</b>.</p></div>
+  <div data-try="s9"></div>
+</section>
+
+<!-- ============ 10 ============ -->
+<section id="s10">
+  <h2><span class="num">10</span> The Diamond Problem 💎⚠️</h2>
+  <p>Look at this shape. A class gets from two parents, and both parents got from the <b>same</b> grandparent. The shape looks like a diamond 💎.</p>
+  <div class="diagram">       <b>Person</b>
+      ↙     ↘
+<b>Student</b>      <b>Employee</b>
+      ↘     ↙
+  <b>TeachingAssistant</b></div>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>Ravi studies in a college and also works there as a Teaching Assistant. The college keeps a <b>student file</b> and an <b>employee file</b>. Both files contain his name. If someone asks, "What is Ravi's name?", which file will you open? 😵 Confusing!</p></div>
+  <div class="card info-card"><span class="tag">New symbol: ::</span><p>The <b>scope resolution</b> operator <code>::</code> means "from this class". <code>ta.Student::name</code> means "the name that came through Student".</p></div>
+
+  <div class="prog" data-prog="diamondErr"></div>
+
+  <div class="demo">
+    <span class="tag">🎮 Tap to see the two copies</span>
+    <div class="tabox">
+      <div class="ttl">🎓 object <code>ta</code> (TeachingAssistant)</div>
+      <div class="mem">
+        <div class="part"><b>Student part</b><div class="mini">Person part<br>name = <b id="mS">?</b></div>marks</div>
+        <div class="part"><b>Employee part</b><div class="mini">Person part<br>name = <b id="mE">?</b></div>salary</div>
+      </div>
+    </div>
+    <div class="ctrl">
+      <button class="btn red" id="mAmb"><code style="background:none;color:inherit">ta.name = "Ravi";</code></button>
+      <button class="btn" id="mS1"><code style="background:none;color:inherit">ta.Student::name = "Ravi";</code></button>
+      <button class="btn" id="mE1"><code style="background:none;color:inherit">ta.Employee::name = "Rani";</code></button>
+      <button class="btn ghost" id="mReset">↺ Reset</button>
+    </div>
+    <div class="msg" id="mMsg">Press a button to try.</div>
+  </div>
+
+  <p>We can still use <code>::</code> to say which copy we mean. But then there are <b>two names</b> inside one object. That wastes memory and is confusing:</p>
+  <div class="prog" data-prog="diamondTwo"></div>
+  <div data-try="s10"></div>
+</section>
+
+<!-- ============ 11 ============ -->
+<section id="s11">
+  <h2><span class="num">11</span> Virtual Base Class ✅💎</h2>
+  <p>A <b>virtual base class</b> fixes the diamond problem. The word <code>virtual</code> tells C++: "Keep <b>only one</b> copy of this base class and share it."</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>Now the college keeps <b>one common file</b> 📁 for Ravi's name. The student office and the employee office both look at the same file. One file, no confusion.</p></div>
+  <div class="diagram">class Student  : <b>virtual</b> public Person
+class Employee : <b>virtual</b> public Person
+class TeachingAssistant : public Student, public Employee</div>
+  <div class="card key"><span class="tag">✅ Rule</span><p>Write <code>virtual</code> in the <b>middle</b> classes (Student and Employee), the ones that directly inherit from the top class. Do not write it in Person or in TeachingAssistant.</p></div>
+
+  <div class="demo">
+    <span class="tag">🎮 Switch virtual ON / OFF</span>
+    <div class="seg" role="group" aria-label="virtual switch">
+      <button id="vOff" class="on">virtual OFF</button>
+      <button id="vOn">virtual ON</button>
+    </div>
+    <div class="tabox" style="margin-top:10px">
+      <div class="ttl">🎓 object <code>ta</code></div>
+      <div id="vView"></div>
+    </div>
+    <div class="diagram" id="vCode" style="margin-bottom:0"></div>
+    <div class="msg" id="vMsg"></div>
+  </div>
+
+  <div class="prog" data-prog="virtual"></div>
+  <div data-try="s11"></div>
+</section>
+
+<!-- ============ 12 ============ -->
+<section id="s12">
+  <h2><span class="num">12</span> Quick Summary 📌</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Type</th><th>Base classes</th><th>Derived classes</th><th>Shape</th><th>Example</th></tr>
+    <tr><td><b>Single</b></td><td>1</td><td>1</td><td>A → B</td><td>Animal → Dog</td></tr>
+    <tr><td><b>Multilevel</b></td><td>chain</td><td>chain</td><td>A → B → C</td><td>Vehicle → Car → SportsCar</td></tr>
+    <tr><td><b>Hierarchical</b></td><td>1</td><td>many</td><td>A → B, A → C</td><td>Person → Student, Employee</td></tr>
+    <tr><td><b>Multiple</b></td><td>2 or more</td><td>1</td><td>A, B → C</td><td>Father, Mother → Child</td></tr>
+    <tr><td><b>Hybrid</b></td><td colspan="2">mix of the above</td><td>mixed</td><td>Person → Student; Student, Sports → Player</td></tr>
+  </table></div>
+  <div class="card key">
+    <span class="tag">✅ Five golden rules</span>
+    <ul class="clean">
+      <li>Inheritance = a child class gets the members of a parent class.</li>
+      <li>Syntax: <code>class Child : public Parent</code></li>
+      <li>Use it only when "Child <b>is a</b> Parent".</li>
+      <li>Diamond problem = two copies of the top class → confusion (ambiguity).</li>
+      <li>Solution = <code>virtual</code> base class → only one shared copy.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 13 ============ -->
+<section id="s13">
+  <h2><span class="num">13</span> Practice Questions 📝</h2>
+  <p>Try to answer each question in your notebook first. Then press <b>Show answer</b>. All answers are hidden now.</p>
+  <div class="qbar">
+    <span>📚 All answers</span>
+    <button class="btn green small" data-all="show" style="background:#00916f">👀 Show all answers</button>
+    <button class="btn red small" data-all="hide" style="background:#d63a46">🙈 Hide all</button>
+  </div>
+  <div id="qRoot"></div>
+  <div class="qbar" style="position:static;margin-top:20px">
+    <span>📚 All answers</span>
+    <button class="btn green small" data-all="show" style="background:#00916f">👀 Show all answers</button>
+    <button class="btn red small" data-all="hide" style="background:#d63a46">🙈 Hide all</button>
+  </div>
+</section>
+
+<footer>🎉 Great job! Keep practising — inheritance will soon feel easy.</footer>
+</main>
+
+<button class="to-top" id="toTop" aria-label="Back to top">↑</button>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- helpers ---------- */
+function $(s,r){return (r||document).querySelector(s);}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+var KW=/^(class|public|virtual|void|int|string|return|using|namespace)$/;
+function hl(s){
+  var re=/(\/\/.*$)|("(?:[^"\\]|\\.)*")|(#include\s*<[^>]*>)|([A-Za-z_]\w*)|(\d+)/g,out="",last=0,m;
+  while((m=re.exec(s))){
+    out+=esc(s.slice(last,m.index));
+    var t=m[0],cls=null;
+    if(m[1])cls="c";else if(m[2])cls="s";else if(m[3])cls="p";else if(m[4]){if(KW.test(t))cls="k";}else if(m[5])cls="n";
+    out+=cls?'<span class="t-'+cls+'">'+esc(t)+'</span>':esc(t);
+    last=m.index+t.length;
+  }
+  return out+esc(s.slice(last));
+}
+
+/* ---------- program data ---------- */
+function mk(title,rows,trace,out){
+  var lines=rows.replace(/^\n+|\n+$/g,"").split("\n").map(function(r){
+    var i=r.indexOf(" ||| ");
+    if(i<0){ if(r.slice(-4)===" |||"){return [r.slice(0,-4),""];} return [r,""]; }
+    return [r.slice(0,i),r.slice(i+5)];
+  });
+  return {title:title,lines:lines,trace:trace||[],out:out};
+}
+var H2="#include <iostream> ||| Brings in the tool for printing (cout).\nusing namespace std; ||| Lets us write cout instead of std::cout.\n";
+var H3="#include <iostream> ||| Brings in the tool for printing (cout).\n#include <string> ||| Brings in the tool for text (string).\nusing namespace std; ||| Lets us write cout instead of std::cout.\n";
+
+var PROGS={};
+PROGS.basics=mk("Our first class and object",H3+`
+class Animal { ||| We start a class named Animal. It is a blueprint.
+public: ||| Everything below can be used from outside.
+    string name; ||| A data member: every Animal has a name (text).
+    void eat() { ||| A member function named eat(). It gives nothing back, so void.
+        cout << name << " is eating" << endl; ||| Prints the name, then the words, then a new line.
+    } ||| End of eat().
+}; ||| End of the class. Do not forget the semicolon!
+
+int main() { ||| The program starts here.
+    Animal a; ||| Make an object named a from the Animal blueprint.
+    a.name = "Tommy"; ||| The dot reaches inside a. We put Tommy into name.
+    a.eat(); ||| Call the eat() function of object a.
+    return 0; ||| Say the program ended well.
+} ||| End of main().`,
+[["int main() {","","The program starts at main()."],
+ ["Animal a;","","Object a is created from the Animal blueprint. Its name is empty for now."],
+ ["a.name =","","The dot reaches inside a. The name becomes Tommy."],
+ ["a.eat();","","We call eat() on object a. The computer jumps inside eat()."],
+ ["cout << name","Tommy is eating","Inside eat(): name is Tommy, so this line prints."],
+ ["return 0;","","main() finishes. The program ends. 🎉"]]);
+
+PROGS.single=mk("Single inheritance: Animal ➜ Dog",H3+`
+class Animal { ||| The base class (parent).
+public: ||| Open for everyone.
+    string name; ||| Data member: the animal's name.
+    void eat() { ||| Member function eat().
+        cout << name << " is eating" << endl; ||| Prints "<name> is eating".
+    } ||| End of eat().
+}; ||| End of Animal.
+
+class Dog : public Animal { ||| Dog inherits from Animal. Dog gets name and eat() for free.
+public: ||| Open for everyone.
+    void bark() { ||| Dog's very own function.
+        cout << name << " says Woof!" << endl; ||| Dog can use name because it inherited it.
+    } ||| End of bark().
+}; ||| End of Dog.
+
+int main() { ||| The program starts here.
+    Dog d; ||| Make a Dog object named d.
+    d.name = "Tommy"; ||| name was not written in Dog. It came from Animal!
+    d.eat(); ||| eat() also came from Animal.
+    d.bark(); ||| bark() belongs to Dog itself.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[["int main() {","","The program starts at main()."],
+ ["Dog d;","","Object d is created. It has everything from Dog and also from Animal."],
+ ["d.name =","","name is stored in d. It came from the base class Animal."],
+ ["d.eat();","","We call eat(). It lives in Animal, but d can use it."],
+ ["cout << name << \" is eating\"","Tommy is eating","Prints the name and the words."],
+ ["d.bark();","","We call bark(), which is Dog's own function."],
+ ["cout << name << \" says Woof!\"","Tommy says Woof!","bark() uses the inherited name."],
+ ["return 0;","","The program ends. 🎉"]]);
+
+PROGS.multilevel=mk("Multilevel inheritance: Vehicle ➜ Car ➜ SportsCar",H3+`
+class Vehicle { ||| The top class (grandparent).
+public: ||| Open for everyone.
+    string brand; ||| Data member: the brand name.
+    void start() { ||| Function start().
+        cout << brand << " starts" << endl; ||| Prints "<brand> starts".
+    } ||| End of start().
+}; ||| End of Vehicle.
+
+class Car : public Vehicle { ||| Car inherits from Vehicle (parent).
+public: ||| Open for everyone.
+    void drive() { ||| Car's own function.
+        cout << brand << " is driving" << endl; ||| Uses brand from Vehicle.
+    } ||| End of drive().
+}; ||| End of Car.
+
+class SportsCar : public Car { ||| SportsCar inherits from Car. So it also gets Vehicle's things.
+public: ||| Open for everyone.
+    void race() { ||| SportsCar's own function.
+        cout << brand << " is racing fast!" << endl; ||| Uses brand from the grandparent.
+    } ||| End of race().
+}; ||| End of SportsCar.
+
+int main() { ||| The program starts here.
+    SportsCar s; ||| Make a SportsCar object.
+    s.brand = "Ferrari"; ||| brand came from Vehicle (two levels up).
+    s.start(); ||| start() came from Vehicle.
+    s.drive(); ||| drive() came from Car.
+    s.race(); ||| race() is SportsCar's own.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[["int main() {","","The program starts at main()."],
+ ["SportsCar s;","","Object s is created. It carries parts of Vehicle, Car and SportsCar."],
+ ["s.brand =","","brand is a member of Vehicle, but s can use it."],
+ ["s.start();","","We call start() from the grandparent class."],
+ ["cout << brand << \" starts\"","Ferrari starts","Prints the brand and the word."],
+ ["s.drive();","","We call drive() from the parent class Car."],
+ ["cout << brand << \" is driving\"","Ferrari is driving","Prints the sentence."],
+ ["s.race();","","We call race(), SportsCar's own function."],
+ ["cout << brand << \" is racing fast!\"","Ferrari is racing fast!","Prints the sentence."],
+ ["return 0;","","The program ends. 🎉"]]);
+
+PROGS.hierarchical=mk("Hierarchical inheritance: Person ➜ Student, Employee",H3+`
+class Person { ||| The one base class.
+public: ||| Open for everyone.
+    string name; ||| Every person has a name.
+    void showName() { ||| Function that prints the name.
+        cout << "Name: " << name << endl; ||| Prints "Name: " and then the name.
+    } ||| End of showName().
+}; ||| End of Person.
+
+class Student : public Person { ||| Child number 1. Gets name and showName().
+public: ||| Open for everyone.
+    int marks; ||| Student's own data: marks (whole number).
+    void showMarks() { ||| Student's own function.
+        cout << "Marks: " << marks << endl; ||| Prints the marks.
+    } ||| End of showMarks().
+}; ||| End of Student.
+
+class Employee : public Person { ||| Child number 2. Also gets name and showName().
+public: ||| Open for everyone.
+    int salary; ||| Employee's own data: salary.
+    void showSalary() { ||| Employee's own function.
+        cout << "Salary: " << salary << endl; ||| Prints the salary.
+    } ||| End of showSalary().
+}; ||| End of Employee.
+
+int main() { ||| The program starts here.
+    Student s; ||| Make a Student object.
+    s.name = "Asha"; ||| name is inherited from Person.
+    s.marks = 90; ||| marks belongs to Student.
+    s.showName(); ||| Inherited function.
+    s.showMarks(); ||| Student's own function.
+
+    Employee e; ||| Make an Employee object.
+    e.name = "Ravi"; ||| name is inherited from Person.
+    e.salary = 20000; ||| salary belongs to Employee.
+    e.showName(); ||| Same inherited function again.
+    e.showSalary(); ||| Employee's own function.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[["int main() {","","The program starts at main()."],
+ ["Student s;","","A Student object s is created."],
+ ["s.name =","","s gets its own name: Asha."],
+ ["s.marks =","","s gets marks 90."],
+ ["s.showName();","","We call the inherited function."],
+ ["cout << \"Name: \"","Name: Asha","Prints the name of s."],
+ ["s.showMarks();","","We call Student's own function."],
+ ["cout << \"Marks: \"","Marks: 90","Prints 90."],
+ ["Employee e;","","An Employee object e is created. It is a different object."],
+ ["e.name =","","e gets its own name: Ravi. s.name is not changed."],
+ ["e.salary =","","e gets salary 20000."],
+ ["e.showName();","","The same inherited function is used again."],
+ ["cout << \"Name: \"","Name: Ravi","Now it prints the name of e."],
+ ["e.showSalary();","","We call Employee's own function."],
+ ["cout << \"Salary: \"","Salary: 20000","Prints 20000."],
+ ["return 0;","","The program ends. 🎉"]]);
+
+PROGS.multiple=mk("Multiple inheritance: Father, Mother ➜ Child",H2+`
+class Father { ||| First base class.
+public: ||| Open for everyone.
+    void drive() { ||| Father's skill.
+        cout << "Father's skill: driving" << endl; ||| Prints the skill.
+    } ||| End of drive().
+}; ||| End of Father.
+
+class Mother { ||| Second base class.
+public: ||| Open for everyone.
+    void cook() { ||| Mother's skill.
+        cout << "Mother's skill: cooking" << endl; ||| Prints the skill.
+    } ||| End of cook().
+}; ||| End of Mother.
+
+class Child : public Father, public Mother { ||| Child inherits from BOTH. A comma separates the parents.
+public: ||| Open for everyone.
+    void play() { ||| Child's own function.
+        cout << "Child likes playing" << endl; ||| Prints a sentence.
+    } ||| End of play().
+}; ||| End of Child.
+
+int main() { ||| The program starts here.
+    Child c; ||| Make a Child object.
+    c.drive(); ||| Skill from the father.
+    c.cook(); ||| Skill from the mother.
+    c.play(); ||| Child's own skill.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[["int main() {","","The program starts at main()."],
+ ["Child c;","","Object c is created. It has parts of Father, Mother and Child."],
+ ["c.drive();","","We call drive(), which came from Father."],
+ ["cout << \"Father's skill","Father's skill: driving","Prints the father's skill."],
+ ["c.cook();","","We call cook(), which came from Mother."],
+ ["cout << \"Mother's skill","Mother's skill: cooking","Prints the mother's skill."],
+ ["c.play();","","We call play(), Child's own function."],
+ ["cout << \"Child likes","Child likes playing","Prints Child's own sentence."],
+ ["return 0;","","The program ends. 🎉"]]);
+
+PROGS.hybrid=mk("Hybrid inheritance: single + multiple together",H3+`
+class Person { ||| Top class.
+public: ||| Open for everyone.
+    string name; ||| The person's name.
+    void introduce() { ||| Function introduce().
+        cout << "I am " << name << endl; ||| Prints "I am <name>".
+    } ||| End of introduce().
+}; ||| End of Person.
+
+class Student : public Person { ||| Single inheritance: Person ➜ Student.
+public: ||| Open for everyone.
+    void study() { ||| Student's own function.
+        cout << name << " is studying" << endl; ||| Uses the inherited name.
+    } ||| End of study().
+}; ||| End of Student.
+
+class Sports { ||| A separate class with no parent.
+public: ||| Open for everyone.
+    void play() { ||| Sports' function.
+        cout << "Playing cricket" << endl; ||| Prints a sentence.
+    } ||| End of play().
+}; ||| End of Sports.
+
+class Player : public Student, public Sports { ||| Multiple inheritance: Student and Sports ➜ Player.
+}; ||| The body is empty. Player still gets everything from both parents.
+
+int main() { ||| The program starts here.
+    Player p; ||| Make a Player object.
+    p.name = "Kiran"; ||| name came from Person (through Student).
+    p.introduce(); ||| From Person.
+    p.study(); ||| From Student.
+    p.play(); ||| From Sports.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[["int main() {","","The program starts at main()."],
+ ["Player p;","","Object p is created. It has parts of Person, Student, Sports and Player."],
+ ["p.name =","","name came all the way from Person."],
+ ["p.introduce();","","We call introduce() from Person."],
+ ["cout << \"I am \"","I am Kiran","Prints the introduction."],
+ ["p.study();","","We call study() from Student."],
+ ["cout << name << \" is studying\"","Kiran is studying","Prints the sentence."],
+ ["p.play();","","We call play() from Sports."],
+ ["cout << \"Playing cricket\"","Playing cricket","Prints the sentence."],
+ ["return 0;","","The program ends. 🎉"]]);
+
+var DIA_TOP="\nclass Person { ||| The top class. It has one data member, name.\npublic: ||| Open for everyone.\n    string name; ||| One name (text).\n}; ||| End of Person.\n\n";
+function diaMid(v){
+  var w=v?"virtual public":"public";
+  return "class Student : "+w+" Person { ||| "+(v?"virtual = share the one Person part, do not copy it.":"Student inherits Person, so it carries a Person part (with name).")+"\npublic: ||| Open for everyone.\n    int marks; ||| Student's own whole number.\n}; ||| End of Student.\n\n"+
+  "class Employee : "+w+" Person { ||| "+(v?"virtual again: Employee shares the same Person part.":"Employee also inherits Person, so it carries its own Person part.")+"\npublic: ||| Open for everyone.\n    int salary; ||| Employee's own whole number.\n}; ||| End of Employee.\n\n"+
+  "class TeachingAssistant : public Student, public Employee { ||| Multiple inheritance: gets both Student and Employee.\n}; ||| Empty body is fine. It still gets everything.\n\n";
+}
+PROGS.diamondErr=mk("The diamond problem (this program has an ERROR)",H3+DIA_TOP+diaMid(false)+`
+int main() { ||| The program starts here.
+    TeachingAssistant ta; ||| Make a TeachingAssistant object.
+    ta.name = "Ravi"; ||| ERROR! Which name? The one via Student or via Employee?
+    return 0; ||| We never reach this line.
+} ||| End of main().`,
+[["int main() {","","The program starts at main()."],
+ ["TeachingAssistant ta;","","ta is created. Inside it there are TWO Person parts: one via Student, one via Employee."],
+ ["ta.name =","❌ Compile error: request for member 'name' is ambiguous","Which name do you mean? The computer cannot decide, so it stops with an error."]]);
+PROGS.diamondErr.endMsg="💥 The program stopped with an error. Press Reset to see it again.";
+
+PROGS.diamondTwo=mk("Using :: to pick a copy (it works, but there are two names)",H3+DIA_TOP+diaMid(false)+`
+int main() { ||| The program starts here.
+    TeachingAssistant ta; ||| Make a TeachingAssistant object.
+    ta.Student::name = "Ravi"; ||| We say exactly which name: the one inside the Student part.
+    ta.Employee::name = "Rani"; ||| This is a different name, inside the Employee part.
+    cout << ta.Student::name << endl; ||| Prints the Student copy.
+    cout << ta.Employee::name << endl; ||| Prints the Employee copy.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[["int main() {","","The program starts at main()."],
+ ["TeachingAssistant ta;","","ta is created with TWO name boxes inside it."],
+ ["ta.Student::name =","","Ravi goes into the name box that is inside the Student part."],
+ ["ta.Employee::name =","","Rani goes into the other name box (Employee part). Two boxes, two values!"],
+ ["cout << ta.Student::name","Ravi","Prints the Student copy."],
+ ["cout << ta.Employee::name","Rani","Prints the Employee copy."],
+ ["return 0;","","The program ends. 🎉"]]);
+
+PROGS.virtual=mk("Virtual base class: problem solved! ✅",H3+DIA_TOP+diaMid(true)+`
+int main() { ||| The program starts here.
+    TeachingAssistant ta; ||| Make a TeachingAssistant object.
+    ta.name = "Ravi"; ||| No error now! There is only ONE name.
+    ta.marks = 85; ||| marks comes from Student.
+    ta.salary = 15000; ||| salary comes from Employee.
+    cout << "Name: " << ta.name << endl; ||| Prints the one shared name.
+    cout << "Marks: " << ta.marks << endl; ||| Prints the marks.
+    cout << "Salary: " << ta.salary << endl; ||| Prints the salary.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[["int main() {","","The program starts at main()."],
+ ["TeachingAssistant ta;","","ta is created with only ONE Person part, shared by Student and Employee."],
+ ["ta.name =","","Clear and simple. There is only one name box, so no confusion."],
+ ["ta.marks =","","marks is stored in the Student part."],
+ ["ta.salary =","","salary is stored in the Employee part."],
+ ["cout << \"Name: \"","Name: Ravi","Prints the shared name."],
+ ["cout << \"Marks: \"","Marks: 85","Prints the marks."],
+ ["cout << \"Salary: \"","Salary: 15000","Prints the salary."],
+ ["return 0;","","The program ends. 🎉"]]);
+
+/* guess-the-output programs (code only) */
+var GUESS=[
+ mk("",H2+`
+class A {
+public:
+    void show() {
+        cout << "A" << endl;
+    }
+};
+
+class B : public A {
+public:
+    void display() {
+        cout << "B" << endl;
+    }
+};
+
+int main() {
+    B b;
+    b.show();
+    b.display();
+    return 0;
+}`,[],"A\nB"),
+ mk("",H2+`
+class A {
+public:
+    int x;
+};
+
+class B : public A {
+public:
+    int y;
+};
+
+class C : public B {
+public:
+    int z;
+};
+
+int main() {
+    C c;
+    c.x = 1;
+    c.y = 2;
+    c.z = 3;
+    cout << c.x + c.y + c.z << endl;
+    return 0;
+}`,[],"6"),
+ mk("",H2+`
+class Dad {
+public:
+    void first() {
+        cout << "Dad" << endl;
+    }
+};
+
+class Mom {
+public:
+    void second() {
+        cout << "Mom" << endl;
+    }
+};
+
+class Kid : public Dad, public Mom {
+};
+
+int main() {
+    Kid k;
+    k.second();
+    k.first();
+    return 0;
+}`,[],"Mom\nDad"),
+ mk("",H2+`
+class P {
+public:
+    int n;
+};
+
+class S1 : public P {
+};
+
+class S2 : public P {
+};
+
+int main() {
+    S1 a;
+    S2 b;
+    a.n = 5;
+    b.n = 10;
+    cout << a.n << endl;
+    cout << b.n << endl;
+    return 0;
+}`,[],"5\n10"),
+ mk("",H3+DIA_TOP.replace(/ \|\|\| [^\n]*/g,"")+diaMid(false).replace(/ \|\|\| [^\n]*/g,"")+`
+int main() {
+    TeachingAssistant ta;
+    ta.Student::name = "Ravi";
+    ta.Employee::name = "Rani";
+    ta.Student::name = "Kumar";
+    cout << ta.Student::name << " " << ta.Employee::name << endl;
+    return 0;
+}`,[],"Kumar Rani"),
+ mk("",H3+DIA_TOP.replace(/ \|\|\| [^\n]*/g,"")+diaMid(true).replace(/ \|\|\| [^\n]*/g,"")+`
+int main() {
+    TeachingAssistant ta;
+    ta.name = "Ravi";
+    ta.name = "Rani";
+    cout << ta.name << endl;
+    return 0;
+}`,[],"Rani")
+];
+var GUESS_WHY=[
+ "<code>B</code> inherits <code>show()</code> from <code>A</code>, so <code>b.show()</code> prints A first. Then <code>b.display()</code> prints B. Lines run in the order we call them.",
+ "<code>C</code> gets <code>x</code> from A (through B) and <code>y</code> from B. So c has x = 1, y = 2, z = 3. The sum 1 + 2 + 3 is 6.",
+ "The functions run in the order we <b>call</b> them, not the order of the parents. <code>k.second()</code> prints Mom first, then <code>k.first()</code> prints Dad.",
+ "<code>a</code> and <code>b</code> are two different objects. Each has its own <code>n</code>. So a.n stays 5 and b.n stays 10.",
+ "Without <code>virtual</code> there are two name boxes. Ravi goes into the Student box, Rani into the Employee box. Then the Student box changes to Kumar. So the output is <b>Kumar Rani</b>.",
+ "With <code>virtual</code> there is only one name box. Ravi is written first, then Rani replaces it. So the output is <b>Rani</b>."
+];
+
+/* write-a-program questions */
+var WRITE=[
+ {t:"Make a base class <code>Shape</code> with an <code>int side</code>. Make a derived class <code>Square</code> with a function <code>area()</code> that prints side × side. Set side to 5 and call <code>area()</code>.",
+  p:mk("",H2+`
+class Shape { ||| Base class.
+public: ||| Open for everyone.
+    int side; ||| The length of one side.
+}; ||| End of Shape.
+
+class Square : public Shape { ||| Square inherits Shape, so it gets side.
+public: ||| Open for everyone.
+    void area() { ||| Square's own function.
+        cout << "Area: " << side * side << endl; ||| Multiplies side by side and prints it.
+    } ||| End of area().
+}; ||| End of Square.
+
+int main() { ||| Program starts.
+    Square sq; ||| Make a Square object.
+    sq.side = 5; ||| Put 5 into the inherited side.
+    sq.area(); ||| Call area(): 5 * 5 = 25.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Area: 25")},
+ {t:"Write a multilevel inheritance program: <code>GrandFather</code> ➜ <code>Father</code> ➜ <code>Son</code>. Each class has one function that prints a sentence. A <code>Son</code> object must call all three functions.",
+  p:mk("",H2+`
+class GrandFather { ||| Top class.
+public: ||| Open for everyone.
+    void house() { ||| GrandFather's function.
+        cout << "Grandfather built a house" << endl; ||| Prints a sentence.
+    } ||| End of house().
+}; ||| End of GrandFather.
+
+class Father : public GrandFather { ||| Father inherits GrandFather.
+public: ||| Open for everyone.
+    void shop() { ||| Father's function.
+        cout << "Father opened a shop" << endl; ||| Prints a sentence.
+    } ||| End of shop().
+}; ||| End of Father.
+
+class Son : public Father { ||| Son inherits Father (and so GrandFather too).
+public: ||| Open for everyone.
+    void study() { ||| Son's function.
+        cout << "Son is studying" << endl; ||| Prints a sentence.
+    } ||| End of study().
+}; ||| End of Son.
+
+int main() { ||| Program starts.
+    Son s; ||| Make a Son object.
+    s.house(); ||| From GrandFather.
+    s.shop(); ||| From Father.
+    s.study(); ||| Son's own.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Grandfather built a house\nFather opened a shop\nSon is studying")},
+ {t:"Write a multiple inheritance program: classes <code>Writer</code> (function <code>write()</code>) and <code>Singer</code> (function <code>sing()</code>) are the parents of class <code>Artist</code>. Call both functions with an <code>Artist</code> object.",
+  p:mk("",H2+`
+class Writer { ||| First base class.
+public: ||| Open for everyone.
+    void write() { ||| Writer's function.
+        cout << "Writing a poem" << endl; ||| Prints a sentence.
+    } ||| End of write().
+}; ||| End of Writer.
+
+class Singer { ||| Second base class.
+public: ||| Open for everyone.
+    void sing() { ||| Singer's function.
+        cout << "Singing a song" << endl; ||| Prints a sentence.
+    } ||| End of sing().
+}; ||| End of Singer.
+
+class Artist : public Writer, public Singer { ||| Artist inherits both (comma between parents).
+}; ||| Empty body is fine.
+
+int main() { ||| Program starts.
+    Artist a; ||| Make an Artist object.
+    a.write(); ||| From Writer.
+    a.sing(); ||| From Singer.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Writing a poem\nSinging a song")},
+ {t:"Write a hierarchical inheritance program: base class <code>Vehicle</code> with <code>string brand</code> and a function <code>showBrand()</code>. Derived classes <code>Car</code> (function <code>honk()</code>) and <code>Bike</code> (function <code>ring()</code>). Make one object of each.",
+  p:mk("",H3+`
+class Vehicle { ||| One base class.
+public: ||| Open for everyone.
+    string brand; ||| The brand name.
+    void showBrand() { ||| Prints the brand.
+        cout << "Brand: " << brand << endl; ||| Prints "Brand: " and the brand.
+    } ||| End of showBrand().
+}; ||| End of Vehicle.
+
+class Car : public Vehicle { ||| Child 1.
+public: ||| Open for everyone.
+    void honk() { ||| Car's own function.
+        cout << "Car: Beep beep" << endl; ||| Prints a sentence.
+    } ||| End of honk().
+}; ||| End of Car.
+
+class Bike : public Vehicle { ||| Child 2.
+public: ||| Open for everyone.
+    void ring() { ||| Bike's own function.
+        cout << "Bike: Ring ring" << endl; ||| Prints a sentence.
+    } ||| End of ring().
+}; ||| End of Bike.
+
+int main() { ||| Program starts.
+    Car c; ||| Make a Car object.
+    c.brand = "Honda"; ||| Inherited member.
+    c.showBrand(); ||| Inherited function.
+    c.honk(); ||| Car's own function.
+
+    Bike b; ||| Make a Bike object.
+    b.brand = "Hero"; ||| Inherited member.
+    b.showBrand(); ||| Inherited function.
+    b.ring(); ||| Bike's own function.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Brand: Honda\nCar: Beep beep\nBrand: Hero\nBike: Ring ring")},
+ {t:"Make a base class <code>Account</code> with <code>int balance</code>. Make a derived class <code>SavingsAccount</code> with a function <code>bonus()</code> that adds 100 to the balance. Set the balance to 1000, call <code>bonus()</code> and print the balance.",
+  p:mk("",H2+`
+class Account { ||| Base class.
+public: ||| Open for everyone.
+    int balance; ||| Money in the account.
+}; ||| End of Account.
+
+class SavingsAccount : public Account { ||| Inherits balance.
+public: ||| Open for everyone.
+    void bonus() { ||| Adds a bonus.
+        balance = balance + 100; ||| New balance = old balance + 100.
+    } ||| End of bonus().
+}; ||| End of SavingsAccount.
+
+int main() { ||| Program starts.
+    SavingsAccount s; ||| Make an object.
+    s.balance = 1000; ||| Start with 1000.
+    s.bonus(); ||| Balance becomes 1100.
+    cout << "Balance: " << s.balance << endl; ||| Print the balance.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Balance: 1100")},
+ {t:"Write a multilevel program: <code>Person</code> (string <code>name</code>) ➜ <code>Student</code> (int <code>rollNo</code>) ➜ <code>Topper</code> (int <code>rank</code>). Set all three values in a <code>Topper</code> object and print them in one line.",
+  p:mk("",H3+`
+class Person { ||| Top class.
+public: ||| Open for everyone.
+    string name; ||| Person's name.
+}; ||| End of Person.
+
+class Student : public Person { ||| Student inherits name.
+public: ||| Open for everyone.
+    int rollNo; ||| Student's roll number.
+}; ||| End of Student.
+
+class Topper : public Student { ||| Topper inherits name and rollNo.
+public: ||| Open for everyone.
+    int rank; ||| Topper's rank.
+}; ||| End of Topper.
+
+int main() { ||| Program starts.
+    Topper t; ||| Make a Topper object.
+    t.name = "Meena"; ||| From Person.
+    t.rollNo = 12; ||| From Student.
+    t.rank = 1; ||| Topper's own.
+    cout << t.name << " Roll " << t.rollNo << " Rank " << t.rank << endl; ||| Prints all three in one line.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Meena Roll 12 Rank 1")},
+ {t:"Write a multiple inheritance program: classes <code>Marks</code> (int <code>maths</code>) and <code>Sports</code> (int <code>score</code>) are parents of class <code>Result</code>. <code>Result</code> has a function <code>total()</code> that prints maths + score. Use maths = 80 and score = 20.",
+  p:mk("",H2+`
+class Marks { ||| First base class.
+public: ||| Open for everyone.
+    int maths; ||| Maths marks.
+}; ||| End of Marks.
+
+class Sports { ||| Second base class.
+public: ||| Open for everyone.
+    int score; ||| Sports score.
+}; ||| End of Sports.
+
+class Result : public Marks, public Sports { ||| Inherits both.
+public: ||| Open for everyone.
+    void total() { ||| Result's own function.
+        cout << "Total: " << maths + score << endl; ||| Adds the two and prints.
+    } ||| End of total().
+}; ||| End of Result.
+
+int main() { ||| Program starts.
+    Result r; ||| Make a Result object.
+    r.maths = 80; ||| From Marks.
+    r.score = 20; ||| From Sports.
+    r.total(); ||| 80 + 20 = 100.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Total: 100")},
+ {t:"Write a hybrid inheritance program: <code>Employee</code> (string <code>name</code>) ➜ <code>Manager</code> (function <code>manage()</code>). Also a class <code>Driver</code> (function <code>drive()</code>). Class <code>Boss</code> inherits from <code>Manager</code> and <code>Driver</code>.",
+  p:mk("",H3+`
+class Employee { ||| Top class.
+public: ||| Open for everyone.
+    string name; ||| Employee's name.
+}; ||| End of Employee.
+
+class Manager : public Employee { ||| Single inheritance.
+public: ||| Open for everyone.
+    void manage() { ||| Manager's function.
+        cout << name << " manages the team" << endl; ||| Uses the inherited name.
+    } ||| End of manage().
+}; ||| End of Manager.
+
+class Driver { ||| Separate class.
+public: ||| Open for everyone.
+    void drive() { ||| Driver's function.
+        cout << "Driving the car" << endl; ||| Prints a sentence.
+    } ||| End of drive().
+}; ||| End of Driver.
+
+class Boss : public Manager, public Driver { ||| Multiple inheritance. Together with the line above: hybrid.
+}; ||| Empty body is fine.
+
+int main() { ||| Program starts.
+    Boss b; ||| Make a Boss object.
+    b.name = "Suresh"; ||| From Employee.
+    b.manage(); ||| From Manager.
+    b.drive(); ||| From Driver.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Suresh manages the team\nDriving the car")},
+ {t:"Diamond problem without <code>virtual</code>: <code>Animal</code> (int <code>age</code>) ➜ <code>Mammal</code> and <code>Bird</code> ➜ <code>Bat</code>. Use <code>::</code> to set the age through Mammal as 3 and through Bird as 5, then print both.",
+  p:mk("",H2+`
+class Animal { ||| Top class.
+public: ||| Open for everyone.
+    int age; ||| Animal's age.
+}; ||| End of Animal.
+
+class Mammal : public Animal { ||| Mammal inherits Animal.
+}; ||| Empty body is fine.
+
+class Bird : public Animal { ||| Bird inherits Animal too.
+}; ||| Empty body is fine.
+
+class Bat : public Mammal, public Bird { ||| Bat has TWO Animal parts (diamond).
+}; ||| Empty body is fine.
+
+int main() { ||| Program starts.
+    Bat b; ||| Make a Bat object.
+    b.Mammal::age = 3; ||| Age in the copy that came through Mammal.
+    b.Bird::age = 5; ||| Age in the copy that came through Bird.
+    cout << "Mammal copy: " << b.Mammal::age << endl; ||| Prints 3.
+    cout << "Bird copy: " << b.Bird::age << endl; ||| Prints 5.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Mammal copy: 3\nBird copy: 5")},
+ {t:"Fix the diamond with a virtual base class: <code>Animal</code> (int <code>legs</code>) ➜ <code>Mammal</code> and <code>Bird</code> (both virtual) ➜ <code>Bat</code>. Set legs to 2 using a <code>Bat</code> object and print it.",
+  p:mk("",H2+`
+class Animal { ||| Top class.
+public: ||| Open for everyone.
+    int legs; ||| Number of legs.
+}; ||| End of Animal.
+
+class Mammal : virtual public Animal { ||| virtual: share one Animal part.
+}; ||| Empty body is fine.
+
+class Bird : virtual public Animal { ||| virtual again: same shared Animal part.
+}; ||| Empty body is fine.
+
+class Bat : public Mammal, public Bird { ||| Now Bat has only ONE Animal part.
+}; ||| Empty body is fine.
+
+int main() { ||| Program starts.
+    Bat b; ||| Make a Bat object.
+    b.legs = 2; ||| No :: needed. There is only one legs.
+    cout << "Legs: " << b.legs << endl; ||| Prints 2.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Legs: 2")}
+];
+
+/* ---------- program widget ---------- */
+function tableHtml(def){
+  var r="<table><tr><th>#</th><th>Code line</th><th>Meaning</th></tr>";
+  def.lines.forEach(function(l,i){
+    if(!l[0].trim())return;
+    r+='<tr><td class="no">'+(i+1)+'</td><td><code>'+hl(l[0].trim())+'</code></td><td>'+esc(l[1])+'</td></tr>';
+  });
+  return r+"</table>";
+}
+function codeLinesHtml(def){
+  return def.lines.map(function(l,i){
+    return '<div class="ln" data-i="'+i+'"><span class="no">'+(i+1)+'</span><span class="tx">'+(hl(l[0])||"&nbsp;")+'</span></div>';
+  }).join("");
+}
+function plainCodeHtml(def){
+  return '<pre class="code">'+def.lines.map(function(l){return hl(l[0]);}).join("\n")+'</pre>';
+}
+function outputHtml(text){
+  return '<div class="console" style="margin-top:6px">'+text.split("\n").map(function(t){return '<div class="ol">'+esc(t)+'</div>';}).join("")+'</div>';
+}
+function resolveTrace(def){
+  return def.trace.map(function(t){
+    var idx=-1;
+    if(typeof t[0]==="number")idx=t[0];
+    else for(var i=0;i<def.lines.length;i++){if(def.lines[i][0].trim().indexOf(t[0])>=0){idx=i;break;}}
+    if(idx<0)throw new Error("Trace line not found: "+t[0]+" in "+def.title);
+    return {i:idx,out:t[1]||"",note:t[2]||""};
+  });
+}
+function buildProg(host,def){
+  var trace=resolveTrace(def);
+  host.innerHTML=
+    '<div class="prog-head"><span>💻 '+esc(def.title)+'</span><small>tap a line 👆 or run step by step</small></div>'+
+    '<div class="codebox">'+codeLinesHtml(def)+'</div>'+
+    '<div class="info" aria-live="polite"></div>'+
+    '<div class="ctrl"><button class="btn green go">▶ Next step</button><button class="btn ghost rs">↺ Reset</button><button class="btn ghost tb">📖 Line-by-line table</button></div>'+
+    '<div class="console" aria-label="Program output"></div>'+
+    '<div class="ltable" hidden>'+tableHtml(def)+'</div>';
+  var info=$(".info",host),con=$(".console",host),go=$(".go",host),lns=$$(".ln",host),step=0;
+  var hint="👆 Tap any line to see what it means, or press ▶ Next step.";
+  function clearMarks(c){lns.forEach(function(l){l.classList.remove(c);});}
+  function reset(){
+    step=0;clearMarks("run");clearMarks("sel");
+    info.textContent=hint;
+    con.innerHTML='<div class="ph">Output will appear here…</div>';
+    go.textContent="▶ Next step";
+  }
+  function next(){
+    if(step>=trace.length){info.textContent=def.endMsg||"🎉 Program finished! Press ↺ Reset to play again.";return;}
+    var t=trace[step];
+    clearMarks("run");clearMarks("sel");
+    lns[t.i].classList.add("run");
+    var m=def.lines[t.i][1];
+    info.textContent="Step "+(step+1)+" of "+trace.length+" — line "+(t.i+1)+": "+(t.note||m);
+    if(t.out){
+      var ph=$(".ph",con);if(ph)con.removeChild(ph);
+      var d=document.createElement("div");d.className="ol"+(t.out.indexOf("❌")===0?" err":"");d.textContent=t.out;con.appendChild(d);
+    }
+    if(lns[t.i].scrollIntoView&&false){lns[t.i].scrollIntoView({block:"nearest"});}
+    step++;
+    if(step>=trace.length)go.textContent="✅ Done — press Reset";
+  }
+  lns.forEach(function(l){
+    l.addEventListener("click",function(){
+      var i=+l.getAttribute("data-i");
+      clearMarks("sel");l.classList.add("sel");
+      var code=def.lines[i][0].trim();
+      info.textContent=code?("Line "+(i+1)+" → "+(def.lines[i][1]||"")):"Line "+(i+1)+" is empty. A blank line just keeps the code neat.";
+    });
+  });
+  go.addEventListener("click",next);
+  $(".rs",host).addEventListener("click",reset);
+  $(".tb",host).addEventListener("click",function(){var t=$(".ltable",host);t.hidden=!t.hidden;this.textContent=t.hidden?"📖 Line-by-line table":"🙈 Hide table";});
+  reset();
+}
+$$("[data-prog]").forEach(function(h){buildProg(h,PROGS[h.getAttribute("data-prog")]);});
+
+/* ---------- question blocks ---------- */
+function qa(label,q,a,cls){
+  return '<div class="qa '+(cls||"")+'"><div class="q">'+(label?'<span class="qn">'+label+'</span>':'')+'<div class="qt">'+q+'</div></div>'+
+    '<button class="btn small show" aria-expanded="false">👀 Show answer</button><div class="ans" hidden>'+a+'</div></div>';
+}
+function fullAns(def){
+  return '<p><b>Full program:</b></p>'+plainCodeHtml(def)+'<p><b>Output:</b></p>'+outputHtml(def.out)+'<p><b>Line-by-line explanation:</b></p><div class="tablewrap">'+tableHtml(def)+'</div>';
+}
+function tryAns(id){return PROGS[id]?outputHtml(PROGS[id].out||""):"";}
+
+var TRY={
+ s1:["What will this print?<pre class=\"code\">"+hl("a.name = \"Rani\";")+"\n"+hl("a.eat();")+"</pre>(Use the Animal class from the program above.)","It prints <code>Rani is eating</code>. The name is stored in the object, then <code>eat()</code> prints it."],
+ s2:["Dog gets <code>name</code> and <code>eat()</code> from Animal. Which one is the <b>base</b> class and which one is the <b>derived</b> class?","<b>Animal</b> is the base (parent) class because it gives. <b>Dog</b> is the derived (child) class because it receives."],
+ s3:["Write the first line of a class <code>Cat</code> that inherits from <code>Animal</code>.","<code>class Cat : public Animal</code> (then add <code>{ ... };</code> after it)."],
+ s4:["A class chain looks like <code>A → B → C</code>. Which type of inheritance is this?","<b>Multilevel</b> inheritance. It is a chain."],
+ s5:["In the Dog program, <code>Dog</code> does not contain <code>eat()</code>. Why can <code>d.eat()</code> still work?","Because <code>Dog</code> inherits from <code>Animal</code>. All public members of Animal, including <code>eat()</code>, are available in Dog."],
+ s6:["In <code>Vehicle → Car → SportsCar</code>, can a SportsCar object call <code>start()</code> of Vehicle? Why?","<b>Yes.</b> SportsCar inherits from Car, and Car inherits from Vehicle. So start() reaches SportsCar through the chain."],
+ s7:["Student <code>s</code> and Employee <code>e</code> both come from Person. If <code>s.name = \"Asha\";</code> and <code>e.name = \"Ravi\";</code> are written, what does <code>cout &lt;&lt; s.name;</code> print?","It prints <b>Asha</b>. Every object has its own copy of <code>name</code>. Setting e.name does not change s.name."],
+ s8:["Write the first line of a class <code>Child</code> that inherits from <code>Father</code> and <code>Mother</code>.","<code>class Child : public Father, public Mother</code>"],
+ s9:["Person → Student, and then Student + Sports → Player. Which two types are mixed here?","<b>Single</b> inheritance (Person → Student) and <b>multiple</b> inheritance (Student and Sports → Player). A mix is <b>hybrid</b>."],
+ s10:["Why does <code>ta.name = \"Ravi\";</code> give an error when <code>virtual</code> is not used?","Because the TeachingAssistant object has <b>two</b> copies of <code>name</code> (one through Student, one through Employee). The compiler cannot know which one we mean. This is called <b>ambiguity</b>."],
+ s11:["Where do we write the word <code>virtual</code>: in Person, in Student and Employee, or in TeachingAssistant?","In <b>Student and Employee</b> (the middle classes): <code>class Student : virtual public Person</code> and <code>class Employee : virtual public Person</code>."]
+};
+$$("[data-try]").forEach(function(h){
+  var d=TRY[h.getAttribute("data-try")];
+  h.outerHTML=qa("✍️ Try it now",d[0],d[1],"try");
+});
+
+/* ---------- final questions ---------- */
+var ONE=[
+ ["What is inheritance?","The process of one class getting (acquiring) the members of another class."],
+ ["Which symbol is used to inherit a class in C++?","The colon <code>:</code>"],
+ ["The class that gives its members is called the ______ class.","Base class (also called parent or super class)."],
+ ["The class that receives the members is called the ______ class.","Derived class (also called child or sub class)."],
+ ["How many types of inheritance are taught here?","Five: single, multilevel, hierarchical, multiple and hybrid."],
+ ["Which inheritance has one base class and one derived class?","Single inheritance."],
+ ["Which inheritance has two or more base classes for one derived class?","Multiple inheritance."],
+ ["Which keyword is used to make a virtual base class?","<code>virtual</code>"],
+ ["Write the first line of class <code>Car</code> that inherits from <code>Vehicle</code>.","<code>class Car : public Vehicle</code>"],
+ ["Inheritance shows which type of relationship?","The “is-a” relationship (a Car is a Vehicle)."],
+ ["What is the main advantage of inheritance?","Code reuse: write once, use again."],
+ ["In hierarchical inheritance, how many base classes are there?","One base class (with many derived classes)."],
+ ["A chain A → B → C is which type of inheritance?","Multilevel inheritance."],
+ ["Which operator reaches a member inside an object, like <code>d.name</code>?","The dot operator <code>.</code>"],
+ ["Which operator is used in <code>ta.Student::name</code> to say “from this class”?","The scope resolution operator <code>::</code>"],
+ ["What problem does a virtual base class solve?","The diamond problem: two copies of the top class and the confusion (ambiguity) they cause."],
+ ["A mix of two or more types of inheritance is called ______ inheritance.","Hybrid inheritance."],
+ ["Can a derived class have its own new members?","Yes. It gets the base members and can also add its own."],
+ ["Does the base class know about its derived classes?","No. Only the derived class knows its base class."],
+ ["How many copies of Person does a TeachingAssistant object have WITHOUT virtual?","Two copies."],
+ ["How many copies of Person does it have WITH virtual?","One shared copy."],
+ ["Which type of inheritance forms a diamond shape?","Hybrid (multiple + hierarchical together)."],
+ ["In <code>class Dog : public Animal</code>, which one is the derived class?","<code>Dog</code> is derived. <code>Animal</code> is the base."],
+ ["Which word do we write before the base class name in our programs?","<code>public</code>"]
+];
+var TF=[
+ ["A derived class can use the public members of its base class.",true,"The derived class inherits them."],
+ ["The base class is also called the child class.",false,"The base class is the parent. The derived class is the child."],
+ ["Multiple inheritance means a class has more than one base class.",true,"For example, Child inherits from Father and Mother."],
+ ["Multilevel inheritance forms a chain like A → B → C.",true,"Each class inherits from the one above it."],
+ ["A virtual base class is used to keep only one copy of the base class.",true,"That is how it solves the diamond problem."],
+ ["In hierarchical inheritance, one derived class has many base classes.",false,"It is the opposite: ONE base class and MANY derived classes."],
+ ["The keyword <code>virtual</code> is written inside the last class (TeachingAssistant).",false,"It is written in the middle classes (Student and Employee)."],
+ ["<code>class B : public A</code> means B inherits from A.",true,"B is the derived class and A is the base class."],
+ ["Without virtual, a TeachingAssistant object has two copies of Person's data.",true,"One through Student and one through Employee."],
+ ["Inheritance makes us write the same code again and again.",false,"It does the opposite. It helps us reuse code."],
+ ["The base class can use members that are only written in its derived class.",false,"Members flow downwards: from base to derived, not the other way."]
+];
+var TWO=[
+ ["Define inheritance. Give one example.","<p>Inheritance is the process in which one class (derived) acquires the members of another class (base).</p><p>Example: <code>class Dog : public Animal</code>. Dog gets <code>name</code> and <code>eat()</code> from Animal.</p>"],
+ ["Write any two advantages of inheritance.","<p>1) <b>Code reuse</b>: write once, use in many classes.</p><p>2) <b>Saves time and reduces mistakes</b>. A change in the base class reaches all child classes.</p>"],
+ ["What is single inheritance? Give an example.","<p>One derived class inherits from one base class.</p><p>Example: Animal → Dog.</p>"],
+ ["What is hierarchical inheritance? Give an example.","<p>One base class has two or more derived classes.</p><p>Example: Person → Student and Person → Employee.</p>"],
+ ["What is the diamond problem?","<p>When a class inherits from two classes that both inherit from the same top class, the object gets <b>two copies</b> of the top class. Using a member like <code>ta.name</code> becomes <b>ambiguous</b> (the compiler cannot choose).</p>"],
+ ["Write the syntax of multiple inheritance.","<p><code>class Child : public Father, public Mother { ... };</code></p><p>Parents are separated by a comma, and <code>public</code> is written before each parent.</p>"]
+];
+var THREE=[
+ ["Explain multilevel inheritance with an example.","<p>In multilevel inheritance, classes form a <b>chain</b>. A class inherits from a derived class, which itself inherits from another class.</p><p>Example: <code>Vehicle → Car → SportsCar</code>.</p><p>SportsCar gets members of Car and also of Vehicle (through Car). Real life: Grandfather → Father → Son.</p>"],
+ ["Differentiate single and multiple inheritance.","<div class=\"tablewrap\"><table><tr><th>Single</th><th>Multiple</th></tr><tr><td>One base class</td><td>Two or more base classes</td></tr><tr><td>Syntax: <code>class B : public A</code></td><td>Syntax: <code>class C : public A, public B</code></td></tr><tr><td>Example: Animal → Dog</td><td>Example: Father, Mother → Child</td></tr></table></div>"],
+ ["Differentiate multilevel and hierarchical inheritance.","<div class=\"tablewrap\"><table><tr><th>Multilevel</th><th>Hierarchical</th></tr><tr><td>Forms a chain: A → B → C</td><td>One base class, many children: A → B, A → C</td></tr><tr><td>A class is both a child and a parent</td><td>Children share the same single parent</td></tr><tr><td>Example: Vehicle → Car → SportsCar</td><td>Example: Person → Student, Employee</td></tr></table></div>"],
+ ["Explain virtual base class in short, with the syntax.","<p>A virtual base class makes sure that only <b>one copy</b> of the base class is shared, even if it is inherited through two paths. It solves the diamond problem.</p><p>Syntax: <code>class Student : virtual public Person</code> and <code>class Employee : virtual public Person</code>.</p><p>Then <code>class TeachingAssistant : public Student, public Employee</code> has only one Person part.</p>"]
+];
+var FIVE=[
+ ["Explain the five types of inheritance with a diagram and an example for each.","<div class=\"tablewrap\"><table><tr><th>Type</th><th>Diagram</th><th>Example</th></tr><tr><td><b>Single</b>: one base, one derived</td><td>A → B</td><td>Animal → Dog</td></tr><tr><td><b>Multilevel</b>: a chain of classes</td><td>A → B → C</td><td>Vehicle → Car → SportsCar</td></tr><tr><td><b>Hierarchical</b>: one base, many derived</td><td>A → B and A → C</td><td>Person → Student, Employee</td></tr><tr><td><b>Multiple</b>: many bases, one derived</td><td>A, B → C</td><td>Father, Mother → Child</td></tr><tr><td><b>Hybrid</b>: mix of two or more types</td><td>mixed</td><td>Person → Student; Student, Sports → Player</td></tr></table></div><p>Syntax for all: <code>class Derived : public Base</code>. For many bases, separate them with commas.</p>"],
+ ["Explain the diamond problem and how a virtual base class solves it. Write a program.","<p><b>Problem:</b> Person is the top class. Student and Employee inherit Person. TeachingAssistant inherits both. Now the TA object has <b>two Person parts</b> (two <code>name</code> boxes), so <code>ta.name</code> is ambiguous and gives an error.</p><p><b>Solution:</b> Write <code>virtual</code> in Student and Employee. Now Person is shared and only one copy exists.</p>{{CODE:virtual}}<p><b>Output:</b></p>{{OUT:virtual}}<p>Here <code>ta.name</code> works without any error.</p>"],
+ ["Explain inheritance, its advantages and its syntax. Write a small program using single inheritance.","<p><b>Inheritance:</b> one class (derived) gets the members of another class (base). It follows the “is-a” rule (a Dog is an Animal).</p><p><b>Advantages:</b> code reuse, saves time, fewer mistakes, easy to change.</p><p><b>Syntax:</b> <code>class Derived : public Base { ... };</code></p>{{CODE:single}}<p><b>Output:</b></p>{{OUT:single}}<p>Dog uses <code>name</code> and <code>eat()</code> from Animal and adds its own <code>bark()</code>.</p>"]
+];
+function expand(h){
+  return h.replace(/\{\{CODE:(\w+)\}\}/g,function(_,n){return plainCodeHtml(PROGS[n]);})
+          .replace(/\{\{OUT:(\w+)\}\}/g,function(_,n){var t=PROGS[n].trace.map(function(x){return x.length>1?x[1]:"";}).filter(Boolean).join("\n");return outputHtml(t);});
+}
+function group(title,items){return '<div class="qgroup"><h3>'+title+'</h3>'+items.join("")+'</div>';}
+var html="";
+html+=group("A. 1-mark questions ("+ONE.length+")",ONE.map(function(q,i){return qa(i+1,q[0],q[1]);}));
+html+=group("B. True or False ("+TF.length+")",TF.map(function(q,i){return qa(i+1,q[0],(q[1]?"<b>✅ True.</b> ":"<b>❌ False.</b> ")+q[2]);}));
+html+=group("C. 2-mark short answers ("+TWO.length+")",TWO.map(function(q,i){return qa(i+1,q[0],q[1]);}));
+html+=group("D. 3-mark: explain / differentiate ("+THREE.length+")",THREE.map(function(q,i){return qa(i+1,q[0],q[1]);}));
+html+=group("E. 5-mark long answers ("+FIVE.length+")",FIVE.map(function(q,i){return qa(i+1,q[0],expand(q[1]));}));
+html+=group("F. Guess the output ("+GUESS.length+")",GUESS.map(function(g,i){
+  return qa(i+1,"What is the output of this program?"+plainCodeHtml(g),"<p><b>Output:</b></p>"+outputHtml(g.out)+"<p><b>Why?</b> "+GUESS_WHY[i]+"</p>");
+}));
+html+=group("G. Write a program ("+WRITE.length+")",WRITE.map(function(w,i){
+  return qa(i+1,w.t,fullAns(Object.assign({},w.p)));
+}));
+$("#qRoot").innerHTML=html;
+
+/* ---------- show / hide answers ---------- */
+function setAns(box,open){
+  var a=$(".ans",box),b=$(".show",box);
+  a.hidden=!open;
+  b.setAttribute("aria-expanded",open?"true":"false");
+  b.textContent=open?"🙈 Hide answer":"👀 Show answer";
+}
+document.addEventListener("click",function(e){
+  var t=e.target;
+  var sb=t.closest?t.closest(".show"):null;
+  if(sb){var box=sb.parentNode;setAns(box,box.querySelector(".ans").hidden);return;}
+  var all=t.closest?t.closest("[data-all]"):null;
+  if(all){var open=all.getAttribute("data-all")==="show";$$(".qa").forEach(function(b){setAns(b,open);});}
+});
+
+/* ---------- section 1 demo ---------- */
+function d1update(){
+  var n=$("#d1name").value.replace(/["\\]/g,"");
+  $("#d1code").innerHTML=hl('a.name = "'+n+'";')+"\n"+hl("a.eat();");
+}
+$("#d1name").addEventListener("input",function(){d1update();$("#d1out").textContent="Press Run…";});
+$("#d1run").addEventListener("click",function(){
+  var n=$("#d1name").value.replace(/["\\]/g,"").trim();
+  $("#d1out").textContent=(n?n:"(nobody)")+" is eating";
+});
+d1update();
+
+/* ---------- section 2 demo ---------- */
+var fOn=false;
+function fRender(){
+  $("#fInh").innerHTML=fOn?'<span class="trait inh">name (from Animal)</span><span class="trait inh">eat() (from Animal)</span>':"";
+  $("#fChild").classList.toggle("glow",fOn);
+  $("#fMsg").textContent=fOn?"Now Dog has name and eat() from Animal, plus its own bark(). We wrote name and eat() only once!":"Dog has only its own member for now: bark().";
+}
+$("#fGo").addEventListener("click",function(){fOn=true;fRender();});
+$("#fReset").addEventListener("click",function(){fOn=false;fRender();});
+fRender();
+
+/* ---------- section 3 demo ---------- */
+function clean(s){return s.replace(/[^A-Za-z0-9_]/g,"");}
+function sRender(){
+  var b=clean($("#sBase").value),d=clean($("#sDer").value),msg=$("#sMsg"),out=$("#sOut");
+  if(!b||!d||/^\d/.test(b)||/^\d/.test(d)){
+    out.textContent="class ___ : public ___ { };";
+    msg.className="msg bad";msg.textContent="Type two names. A name must start with a letter. Only letters, numbers and _ are allowed.";return;
+  }
+  out.innerHTML="";
+  out.appendChild(document.createTextNode("class "));
+  var sd=document.createElement("span");sd.className="d";sd.textContent=d;out.appendChild(sd);
+  out.appendChild(document.createTextNode(" : public "));
+  var sb=document.createElement("span");sb.className="b";sb.textContent=b;out.appendChild(sb);
+  out.appendChild(document.createTextNode(" {\n    // "+d+"'s own members\n};"));
+  msg.className="msg good";
+  msg.textContent=d+" is the derived (child) class and "+b+" is the base (parent) class. "+(b===d?"Hmm, a class cannot inherit from itself! Use two different names.":"Say it: a "+d+" is a "+b+".");
+  if(b===d)msg.className="msg bad";
+}
+$("#sBase").addEventListener("input",sRender);$("#sDer").addEventListener("input",sRender);sRender();
+
+/* ---------- section 4 type cards ---------- */
+var TYPES=[
+ ["🧍➜🧍","Single","<b>Animal</b>\n   ↓\n<b>Dog</b>","One base class, one derived class.","A son gets his one father's skill."],
+ ["🔗","Multilevel","<b>A</b> → <b>B</b> → <b>C</b>","A chain of classes.","Grandfather → Father → Son."],
+ ["🌳","Hierarchical","      <b>A</b>\n     ↙  ↘\n   <b>B</b>    <b>C</b>","One base class, many derived classes.","One mother, many children."],
+ ["👨‍👩‍👧","Multiple","<b>A</b>    <b>B</b>\n  ↘  ↙\n   <b>C</b>","Many base classes, one derived class.","A child gets skills from father and mother."],
+ ["🧩","Hybrid","<b>A</b>\n ↓\n<b>B</b>   <b>C</b>\n  ↘  ↙\n   <b>D</b>","A mix of two or more types.","A family tree has many patterns."]
+];
+$("#typeCards").innerHTML=TYPES.map(function(t,i){
+  return '<button class="reveal-btn" aria-expanded="false" data-r="'+i+'"><span>'+t[0]+' '+(i+1)+'. '+t[1]+' inheritance</span><span>＋</span></button>'+
+   '<div class="reveal-body" hidden><div class="diagram">'+t[2]+'</div><p><b>Meaning:</b> '+t[3]+'</p><p>🌍 <b>Real life:</b> '+t[4]+'</p></div>';
+}).join("");
+$$(".reveal-btn").forEach(function(b){
+  b.addEventListener("click",function(){
+    var body=b.nextElementSibling,open=body.hidden;
+    body.hidden=!open;b.setAttribute("aria-expanded",open?"true":"false");
+    b.lastChild.textContent=open?"－":"＋";
+  });
+});
+
+/* ---------- section 10 memory demo ---------- */
+var mS=null,mE=null;
+function mRender(){
+  $("#mS").textContent=mS||"?";$("#mE").textContent=mE||"?";
+}
+$("#mAmb").addEventListener("click",function(){
+  var m=$("#mMsg");m.className="msg bad shake";
+  m.textContent="❌ Error: 'name' is ambiguous. There are two name boxes (Student's and Employee's). Which one should get Ravi?";
+  setTimeout(function(){m.classList.remove("shake");},450);
+});
+$("#mS1").addEventListener("click",function(){
+  mS="Ravi";mRender();var m=$("#mMsg");m.className="msg good";
+  m.textContent="Ravi went into the Student's name box. The Employee's name box is still empty!";
+});
+$("#mE1").addEventListener("click",function(){
+  mE="Rani";mRender();var m=$("#mMsg");m.className="msg good";
+  m.textContent="Rani went into the Employee's name box. One object, two different names. That is the diamond problem!";
+});
+$("#mReset").addEventListener("click",function(){mS=null;mE=null;mRender();var m=$("#mMsg");m.className="msg";m.textContent="Press a button to try.";});
+mRender();
+
+/* ---------- section 11 virtual demo ---------- */
+function vRender(on){
+  $("#vOn").classList.toggle("on",on);$("#vOff").classList.toggle("on",!on);
+  $("#vView").innerHTML=on?
+    '<div class="shared">📁 <b>Person part</b> (only ONE) — name</div><div class="mem"><div class="part"><b>Student part</b><br>marks</div><div class="part"><b>Employee part</b><br>salary</div></div>':
+    '<div class="mem"><div class="part"><b>Student part</b><div class="mini">Person copy 1<br>name</div>marks</div><div class="part"><b>Employee part</b><div class="mini">Person copy 2<br>name</div>salary</div></div>';
+  var w=on?"virtual public":"public";
+  $("#vCode").textContent="class Student  : "+w+" Person\nclass Employee : "+w+" Person\n\nta.name = \"Ravi\";";
+  var m=$("#vMsg");
+  if(on){m.className="msg good";m.textContent="✅ Only one name box. ta.name works with no error.";}
+  else{m.className="msg bad";m.textContent="❌ Two name boxes. ta.name is ambiguous and gives an error.";}
+}
+$("#vOn").addEventListener("click",function(){vRender(true);});
+$("#vOff").addEventListener("click",function(){vRender(false);});
+vRender(false);
+
+/* ---------- theme, menu, top button ---------- */
+function isDark(){
+  var t=document.documentElement.getAttribute("data-theme");
+  if(t)return t==="dark";
+  return !!(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches);
+}
+$("#themeBtn").addEventListener("click",function(){
+  document.documentElement.setAttribute("data-theme",isDark()?"light":"dark");
+});
+$("#toTop").addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"});});
+var links=$$("#menu a");
+if("IntersectionObserver" in window){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){
+      if(en.isIntersecting){
+        links.forEach(function(a){
+          var on=a.getAttribute("href")==="#"+en.target.id;
+          a.classList.toggle("on",on);
+          if(on&&a.scrollIntoView&&$("#menu").scrollTo){
+            var nav=$("#menu");nav.scrollTo({left:a.offsetLeft-nav.clientWidth/2+a.clientWidth/2,behavior:"smooth"});
+          }
+        });
+      }
+    });
+  },{rootMargin:"-30% 0px -60% 0px"});
+  $$("section").forEach(function(s){io.observe(s);});
+}
+
+window.__data={PROGS:PROGS,GUESS:GUESS,WRITE:WRITE,TRY:TRY,counts:{one:ONE.length,tf:TF.length,two:TWO.length,three:THREE.length,five:FIVE.length,guess:GUESS.length,write:WRITE.length}};
+})();
+</script>
+</body>
+</html>
