@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>C++ Destructors & Operator Overloading</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--tx:#1d2433;--mu:#5b6478;--ac:#5b5bf0;--cd:#eef0ff;--ok:#12a36b;--no:#e0364f;--bd:#dde2f0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1220;--card:#1a1e33;--tx:#e8ebf8;--mu:#9aa3c0;--ac:#8c8cff;--cd:#262b4a;--ok:#3ddc97;--no:#ff6b81;--bd:#2d3354}}
+:root[data-theme="dark"]{--bg:#0f1220;--card:#1a1e33;--tx:#e8ebf8;--mu:#9aa3c0;--ac:#8c8cff;--cd:#262b4a;--ok:#3ddc97;--no:#ff6b81;--bd:#2d3354}
+*{box-sizing:border-box}html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 60px);scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{padding:28px 16px 12px;text-align:center}h1{margin:0;font-size:1.6rem}header p{color:var(--mu);margin:6px 0 0}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--card);border-bottom:1px solid var(--bd);display:flex;gap:6px;overflow-x:auto;padding:8px 10px}
+nav a{white-space:nowrap;text-decoration:none;color:var(--tx);background:var(--cd);padding:6px 12px;border-radius:99px;font-size:.9rem}
+main{max-width:820px;margin:auto;padding:12px 14px 60px}
+section{background:var(--card);border:1px solid var(--bd);border-left:6px solid var(--c,var(--ac));border-radius:16px;padding:16px;margin:16px 0}
+h2{margin:0 0 8px;font-size:1.3rem}h3{margin:18px 0 6px;font-size:1.05rem}
+.an{background:var(--cd);border-radius:12px;padding:10px 12px;margin:10px 0}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--cd);padding:1px 5px;border-radius:5px;font-size:.92em}
+.code{background:#14172b;color:#e6e9ff;border-radius:12px;padding:6px;overflow-x:auto;margin:8px 0}
+.code code{background:none;color:inherit;white-space:pre;font-size:.88rem}
+.ln{display:flex;gap:10px;width:100%;text-align:left;background:none;border:0;color:inherit;padding:3px 6px;border-radius:6px;cursor:pointer;font:inherit}
+.ln .n{color:#7d84b8;min-width:1.5em;text-align:right}.ln.on{background:#3a3fa8}.ln:hover{background:#262a55}
+.say{background:var(--cd);border-radius:10px;padding:8px 12px;min-height:44px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.b,.sa{background:var(--ac);color:#fff;border:0;border-radius:10px;padding:8px 14px;font:inherit;cursor:pointer}
+.b.g,.sa{background:var(--cd);color:var(--tx);border:1px solid var(--bd)}.sa{padding:5px 12px;font-size:.9rem;margin-top:6px}
+input{width:70px;padding:7px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit}
+.demo{border:2px dashed var(--ac);border-radius:12px;padding:12px;margin:12px 0}.demo h4{margin:0 0 8px}
+.out{margin-top:8px;font-weight:600}
+.try{background:var(--cd);border:2px solid #f59e0b;border-radius:12px;padding:10px 12px;margin:12px 0}
+.ans{background:var(--card);border-left:4px solid var(--ok);padding:6px 12px;margin-top:6px;border-radius:6px}
+details{background:var(--cd);border-radius:10px;padding:8px 12px;margin:8px 0}summary{cursor:pointer;font-weight:600}
+ol{padding-left:22px}li{margin:10px 0}
+table{border-collapse:collapse;width:100%;font-size:.88rem;overflow-x:auto;display:block}td{border-top:1px solid var(--bd);padding:4px 8px;vertical-align:top}
+.lt td:first-child{white-space:pre;font-family:ui-monospace,Menlo,monospace}
+.top{position:sticky;top:calc(env(safe-area-inset-top,0px) + 52px);z-index:8;display:flex;gap:8px;justify-content:center;padding:6px}
+pre.o{background:#14172b;color:#e6e9ff;padding:10px;border-radius:10px;overflow-x:auto;margin:6px 0}
+pre.o code{background:none;color:#e6e9ff;padding:0;font-size:.88rem}
+.chip{background:var(--cd);color:var(--tx);border:2px solid var(--ac);border-radius:10px;padding:6px 12px;font:inherit;font-family:ui-monospace,Menlo,monospace;cursor:pointer}
+.obj{display:inline-block;margin:3px;padding:6px 10px;border-radius:8px;background:var(--cd);border:2px solid var(--ok)}
+</style></head><body>
+<header><h1>🧹 Destructors & ➕ Operator Overloading</h1><p>C++ for absolute beginners</p></header>
+<nav><a href="#s1">1 Recap</a><a href="#s2">2 Destructor</a><a href="#s3">3 What is it?</a><a href="#s4">4 Overloading</a><a href="#s5">5 Rules</a><a href="#s6">6 Practice</a></nav>
+<main>
+
+<section id="s1" style="--c:#f59e0b"><h2>1️⃣ Quick Recap 🧰</h2>
+<div class="an">🍪 <b>Analogy:</b> A <b>class</b> is a cookie cutter. An <b>object</b> is a real cookie.</div>
+<ul><li><code>class Num { ... };</code> is the blueprint. <code>public:</code> = anyone can use it. Make an object: <code>Num a(5);</code></li>
+<li>A <b>constructor</b> has the class name, no return type, and runs by itself when the object is made.</li>
+<li>A <b>member function</b> belongs to the class: <code>a.show();</code> (dot = "of a"). <code>void</code> = gives nothing back. <code>return</code> sends a value back.</li>
+<li><code>cout &lt;&lt; n;</code> prints. Words in "quotes" print as they are.</li></ul>
+<div class="ex" data-p="p1"></div><div class="try" data-t="t1"></div></section>
+
+<section id="s2" style="--c:#ec4899"><h2>2️⃣ Destructors 🧹</h2>
+<div class="an">🏪 <b>Analogy:</b> A shopkeeper <b>opens</b> the shop (constructor) and, when leaving, <b>switches off the lights and locks up</b> (destructor). Nobody has to remind them.</div>
+<ul><li>A destructor is a special function that runs <b>by itself</b> when an object <b>dies</b> (for example when <code>main()</code> ends).</li>
+<li>Name: <code>~</code> + class name, like <code>~Demo()</code>.</li>
+<li>It has <b>no parameters</b> and <b>no return type</b>. A class has <b>only one</b>.</li>
+<li>It is used for <b>clean-up</b>, like giving memory back.</li></ul>
+<div class="ex" data-p="p2"></div><div class="try" data-t="t2"></div>
+<h3>2.1 Order of dying</h3>
+<div class="an">🥞 <b>Analogy:</b> A stack of plates. The plate put on <b>last</b> is taken off <b>first</b>. Objects die in the <b>reverse</b> order of creation.</div>
+<div class="ex" data-p="p3"></div>
+<div class="demo"><h4>🎮 Make objects, then end main()</h4><div class="row"><button class="b" onclick="d2(1)">Tag t(next); (make one)</button><button class="b" onclick="d2(2)">End of main() ▶</button><button class="b g" onclick="d2(0)">Reset</button></div><div class="out" id="d2o">No objects yet</div></div>
+<div class="try" data-t="t3"></div></section>
+
+<section id="s3" style="--c:#06b6d4"><h2>3️⃣ Defining Operator Overloading 🎛️</h2>
+<div class="an">🎛️ <b>Analogy:</b> The <b>+ button</b> on a TV remote raises volume. On an AC remote the same button raises temperature. <b>Same button, different meaning</b> depending on the device. Operator overloading gives an operator like <code>+</code> a <b>new meaning for our own class</b>.</div>
+<ul><li>An <b>operator</b> is a symbol like <code>+</code>, <code>-</code>, <code>&gt;</code>, <code>++</code>. We know <code>2 + 3</code> works for numbers.</li>
+<li>But <code>a + b</code> for two <code>Num</code> objects? C++ doesn't know what we want. So <b>we tell it</b>.</li>
+<li>We write a function with the special name <code>operator</code> + the symbol, e.g. <code>operator+</code>.</li>
+<li><code>a + b</code> is then just a shortcut for <code>a.operator+(b)</code>.</li>
+<li><b>Operands</b> = the things the operator works on. Left one (a) is the object calling; right one (b) is the parameter.</li></ul>
+<p>Here is the recipe for <code>+</code>, written inside <code>class Num</code>:</p>
+<div class="ex" data-p="pr"></div>
+<details><summary>🤔 Tap: why not just write add(a, b)?</summary>You can! But <code>a + b</code> looks natural and is easy to read, like using + for plain numbers.</details>
+<div class="try" data-t="t4"></div></section>
+
+<section id="s4" style="--c:#10b981"><h2>4️⃣ Overloading Operators 🔧</h2>
+<h3>4.1 Binary operator: +</h3>
+<p>A <b>binary</b> operator has <b>two</b> operands (<code>a + b</code>). The function takes <b>one</b> parameter (the right side). It gives back a <b>new Num</b>, so its type is <code>Num</code>. Since <code>a + b</code> is a Num, we can write <code>(a + b).show()</code>.</p>
+<div class="ex" data-p="p4"></div><div class="try" data-t="t5"></div>
+<h3>4.2 Comparing: &gt;</h3>
+<p><code>5 &gt; 3</code> is true, which C++ shows as <b>1</b>. False shows as <b>0</b>. Our function returns an <code>int</code> (1 or 0).</p>
+<div class="ex" data-p="p5"></div><div class="try" data-t="t6"></div>
+<h3>4.3 Unary operator: ++</h3>
+<p>A <b>unary</b> operator has <b>one</b> operand (<code>++a</code>). The function takes <b>no</b> parameter, because the object itself is the operand. <code>n = n + 1;</code> adds one.</p>
+<div class="ex" data-p="p6"></div>
+<div class="demo"><h4>🎮 Try the operators</h4>a <input id="oa" type="number" value="5"> b <input id="ob" type="number" value="3"><div class="row"><button class="b" onclick="d4(0)">a + b</button><button class="b" onclick="d4(1)">a &gt; b</button><button class="b" onclick="d4(2)">++a</button></div><div class="out" id="d4o">Tap an operator</div></div>
+<div class="try" data-t="t7"></div></section>
+
+<section id="s5" style="--c:#8b5cf6"><h2>5️⃣ Rules for Overloading Operators 📜</h2>
+<div class="an">🚦 <b>Analogy:</b> Games have rules. You can invent new moves, but you can't break the rules of the game.</div>
+<ol><li>Only <b>existing</b> operators can be overloaded. You can't invent a new one like <code>**</code>.</li>
+<li>These <b>cannot</b> be overloaded: <code>::</code> &nbsp; <code>.</code> &nbsp; <code>?:</code> &nbsp; <code>sizeof</code></li>
+<li>You can't change the <b>number of operands</b>: binary stays binary, unary stays unary.</li>
+<li>You can't change <b>precedence</b> (which operator goes first, like <code>*</code> before <code>+</code>).</li>
+<li>At least one operand must be an <b>object of our class</b>. You can't change <code>2 + 3</code>.</li>
+<li>As a <b>member function</b>: binary takes <b>1</b> parameter, unary takes <b>0</b>.</li>
+<li>Keep the meaning <b>sensible</b>: + should add, not subtract!</li></ol>
+<div class="demo"><h4>🎮 Can I overload it? Tap an operator</h4><div class="row" id="chips"></div><div class="out" id="d5o">Tap one</div></div>
+<div class="try" data-t="t8"></div><div class="try" data-t="t9"></div></section>
+
+<section id="s6" style="--c:#0ea5e9"><h2>6️⃣ Practice Time ✍️</h2>
+<p>Every answer is hidden. Think first, then tap <b>Show answer</b>.</p>
+<div class="top"><button class="b" onclick="all(1)">Show all answers</button><button class="b g" onclick="all(0)">Hide all</button></div>
+<h3>6.1 One-mark questions (22)</h3><ol id="q1"></ol>
+<h3>6.2 True / False (7)</h3><ol id="q2"></ol>
+<h3>6.3 Two-mark short answers (4)</h3><ol id="q3"></ol>
+<h3>6.4 Three-mark: explain / differentiate (3)</h3><ol id="q4"></ol>
+<h3>6.5 Five-mark long answers (2)</h3><ol id="q5"></ol>
+<h3>6.6 Guess the output (4)</h3><ol id="q6"></ol>
+<h3>6.7 Write a program (8)</h3><ol id="q7"></ol></section>
+</main>
+<script>
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const $=id=>document.getElementById(id);
+const H=[['#include <iostream>','Brings in cout (printing).'],['using namespace std;','Lets us write cout, not std::cout.']];
+const mk=(h,b)=>[...H,...h,['int main() {','Program starts.'],...b,['  return 0;','Done.'],['}','End of main.']];
+const NUMC=x=>[['class Num {','Blueprint Num.'],['public:','Open to all.'],['  int n;','The number inside.'],['  Num(int v) { n = v; }','Constructor: stores v in n.'],['  void show() { cout << n; }','Prints n.'],...x,['};','End of class.']];
+const OPP=[['  Num operator+(Num o) {','Gives back a Num. Name = operator + symbol. o is the right-hand object.'],['    Num r(0);','A fresh Num to hold the answer.'],['    r.n = n + o.n;','n is the left object\'s number, o.n the right one\'s.'],['  }','End of function.']];
+const P={
+p1:mk([['class Num {','Blueprint Num.'],['public:','Open to all.'],['  int n;','Data member.'],['  Num(int x) { n = x; }','Constructor stores x.'],['  void show() { cout << n; }','Prints n.'],['};','End of class.']],[['  Num a(5);','Make a. Constructor sets n to 5.'],['  a.show();','Prints 5.']]),
+p3:mk([['class Tag {','Blueprint Tag.'],['public:','Open to all.'],['  int id;','Tag number.'],['  Tag(int x) { id = x; cout << "Made" << id << " "; }','Stores x and prints Made.'],['  ~Tag() { cout << "Gone" << id << " "; }','Prints Gone when it dies.'],['};','End of class.']],[['  Tag a(1);','Prints Made1'],['  Tag b(2);','Prints Made2. At the end of main, b dies first (Gone2), then a (Gone1).']]),
+pr:[['  Num operator+(Num o) {','Return type Num. Name = keyword operator + the symbol +. One parameter o = the right-hand object.'],['    Num r(0);','A fresh Num to hold the answer.'],['    r.n = n + o.n;','n is the left object\'s number. o.n is the right object\'s.'],['    return r;','Send the answer back.'],['  }','End of function.']],
+p4:mk(NUMC([['  Num operator+(Num o) {','Binary +: one parameter, gives back a Num.'],['    Num r(0);','Fresh Num for the answer.'],['    r.n = n + o.n;','Left number plus right number.'],['    return r;','Send it back.'],['  }','End of function.']]),[['  Num a(5);','a holds 5.'],['  Num b(3);','b holds 3.'],['  (a + b).show();','a + b means a.operator+(b). It makes a new Num holding 8, and show() prints 8.']]),
+p5:mk(NUMC([['  int operator>(Num o) {','Gives back an int: 1 for true, 0 for false.'],['    return n > o.n;','Is the left number bigger than the right one?'],['  }','End of function.']]),[['  Num a(5);','a holds 5.'],['  Num b(3);','b holds 3.'],['  cout << (a > b);','5 is bigger than 3, so this prints 1.']]),
+p6:mk(NUMC([['  void operator++() {','Unary: no parameter. Gives nothing back.'],['    n = n + 1;','Add 1 to this object\'s number.'],['  }','End of function.']]),[['  Num a(5);','a holds 5.'],['  ++a;','Same as a.operator++(). n becomes 6.'],['  a.show();','Prints 6.']])
+};
+P.p2=mk([['class Demo {','Blueprint Demo.'],['public:','Open to all.'],['  Demo() { cout << "Hi "; }','Constructor: prints when made.'],['  ~Demo() { cout << "Bye"; }','Destructor: ~ + class name, no parameters. Prints when the object dies.'],['};','End of class.']],[['  Demo d;','Making d prints Hi. When main() ends, d dies and ~Demo() prints Bye. Output: Hi Bye']]);
+document.querySelectorAll('.ex').forEach(el=>{const p=P[el.dataset.p];let i=-1;
+el.innerHTML='<div class="code">'+p.map((l,k)=>`<button class="ln" data-k="${k}"><span class="n">${k+1}</span><code>${esc(l[0])}</code></button>`).join('')+'</div><div class="say">👆 Tap any line, or press Next.</div><div class="row"><button class="b nx">Next ▶</button><button class="b g rs">Reset</button></div>';
+const ls=el.querySelectorAll('.ln'),say=el.querySelector('.say');
+const show=k=>{ls.forEach(x=>x.classList.remove('on'));ls[k].classList.add('on');i=k;say.innerHTML='<b>Line '+(k+1)+':</b> '+esc(p[k][1]);};
+ls.forEach(x=>x.onclick=()=>show(+x.dataset.k));
+el.querySelector('.nx').onclick=()=>show((i+1)%p.length);
+el.querySelector('.rs').onclick=()=>{ls.forEach(x=>x.classList.remove('on'));i=-1;say.textContent='👆 Tap any line, or press Next.';};});
+let tags=[],nid=0;
+function d2(k){const o=$('d2o');if(k==0){tags=[];nid=0;o.textContent='No objects yet';return;}
+if(k==1){if(tags.length>=5){return;}tags.push(++nid);}
+let h=tags.map(t=>`<span class="obj">Tag ${t}</span>`).join('')||'No objects yet';
+if(k==2){if(!tags.length){o.textContent='Make some objects first';return;}h+='<br>main() ends → destructors run in reverse:<br>'+tags.slice().reverse().map(t=>`🧹 Gone${t}`).join(' → ');}
+else h+='<br>'+(tags.length?`Made${tags[tags.length-1]} printed`:'');o.innerHTML=h;}
+function d4(k){const a=+$('oa').value,b=+$('ob').value;$('d4o').innerHTML=[`a + b = a.operator+(b) → new Num holding <b>${a+b}</b>`,`a &gt; b = a.operator&gt;(b) → <b>${a>b?1:0}</b> (${a>b?'true':'false'})`,`++a = a.operator++() → a becomes <b>${a+1}</b>`][k];}
+const R=[['+',1,'Allowed. Binary: takes 1 parameter.'],['-',1,'Allowed.'],['*',1,'Allowed.'],['>',1,'Allowed. Returns 1 or 0.'],['==',1,'Allowed.'],['++',1,'Allowed. Unary: takes 0 parameters.'],['**',0,'Not allowed. It is not an existing operator, and we cannot invent new ones.'],['::',0,'Not allowed. Cannot be overloaded.'],['.',0,'Not allowed. Cannot be overloaded.'],['?:',0,'Not allowed. Cannot be overloaded.'],['sizeof',0,'Not allowed. Cannot be overloaded.']];
+$('chips').innerHTML=R.map((r,i)=>`<button class="chip" onclick="d5(${i})">${esc(r[0])}</button>`).join('');
+function d5(i){const r=R[i];$('d5o').innerHTML=`<code>${esc(r[0])}</code> → ${r[1]?'✅':'❌'} ${esc(r[2])}`;}
+const ans=h=>`<button class="sa" onclick="tg(this)">Show answer</button><div class="ans" hidden>${h}</div>`;
+function tg(b){const d=b.nextElementSibling;d.hidden=!d.hidden;b.textContent=d.hidden?'Show answer':'Hide answer';}
+function all(s){document.querySelectorAll('.ans').forEach(d=>{d.hidden=!s;d.previousElementSibling.textContent=s?'Hide answer':'Show answer';});}
+const T={t1:['What does <code>Num a(5);</code> do?','It makes object a, and the constructor stores 5 in its n.'],t2:['Write the destructor header for a class named Box.','<code>~Box()</code>'],t3:['Objects a, b, c are made in that order. In which order do they die?','c, then b, then a (reverse order).'],t4:['What function name gives <code>-</code> a meaning for our class?','<code>operator-</code>'],t5:['If a holds 6 and b holds 4, what does <code>(a + b).show();</code> print?','<b>10</b>'],t6:['If a holds 2 and b holds 9, what does <code>cout &lt;&lt; (a &gt; b);</code> print?','<b>0</b>, because 2 is not bigger than 9 (false is 0).'],t7:['If a holds 1, what does a.show() print after <code>++a; ++a;</code>?','<b>3</b>'],t8:['Can we make a brand-new operator <code>**</code>?','<b>No.</b> Only existing operators can be overloaded.'],t9:['A binary operator as a member function takes how many parameters?','<b>One</b>: the right-hand object.']};
+document.querySelectorAll('.try').forEach(e=>{const t=T[e.dataset.t];e.innerHTML='✏️ <b>Try it now:</b> '+t[0]+ans(t[1]);});
+const tb=p=>'<table class="lt">'+p.map(l=>`<tr><td>${esc(l[0])}</td><td>${esc(l[1])}</td></tr>`).join('')+'</table>';
+const fill=(id,arr,f)=>{$(id).innerHTML=arr.map((x,i)=>`<li>${f(x,i)}</li>`).join('');};
+const Q1=[['What is a destructor?','A special function that runs automatically when an object dies.'],['Which symbol starts a destructor name?','~ (tilde)'],['What is the destructor name for class Box?','~Box()'],['How many parameters does a destructor have?','None'],['What is the return type of a destructor?','None'],['How many destructors can a class have?','Only one'],['When does a destructor run?','When the object is destroyed, e.g. at the end of main().'],['In what order are objects destroyed?','Reverse order of creation.'],['Which runs first, constructor or destructor?','Constructor'],['Why do we use a destructor?','For clean-up, e.g. giving memory back.'],['What is operator overloading?','Giving an operator a new meaning for our own class objects.'],['Which keyword is used to overload an operator?','operator'],['What is the function name to overload +?','operator+'],['a + b is the same as?','a.operator+(b)'],['Can we create a new operator like **?','No'],['Name one operator that cannot be overloaded.',':: (also . ?: sizeof)'],['How many parameters does a member binary operator take?','One'],['How many parameters does a member unary operator like ++ take?','Zero'],['Can we change the precedence of an operator?','No'],['How many operands must be of our class type?','At least one'],['What does a > b give when it is true?','1'],['Can we change how 2 + 3 works for ints?','No']];
+const Q2=[['A destructor can take parameters.',0,'A destructor has no parameters.'],['A destructor name starts with ~.',1,'~ followed by the class name.'],['Objects are destroyed in reverse order of creation.',1,'Like a stack of plates.'],['We can make a new operator like **.',0,'Only existing operators can be overloaded.'],[':: can be overloaded.',0,':: . ?: and sizeof cannot be overloaded.'],['Overloading can change + from a binary to a unary operator.',0,'The number of operands cannot change.'],['A member binary operator takes one parameter.',1,'The left object calls it; the right one is the parameter.']];
+const Q3=[['What is a destructor?','A special member function named ~ClassName with no parameters and no return type. It runs automatically when the object dies and does clean-up.'],['What is operator overloading?','Giving an existing operator (like +) a new meaning for objects of our own class by writing a function called operator+ (or the matching symbol).'],['Write the function names to overload + and -.','operator+ and operator-'],['Name two operators that cannot be overloaded.',':: (scope) and . (dot). Also ?: and sizeof.']];
+const Q4=[['Differentiate constructor and destructor.','Constructor: same name as class, can take parameters, can be many (overloaded), runs when the object is made. Destructor: ~ + class name, no parameters, only one, runs when the object dies.'],['Explain how a + b works with operator+.','The class has a function Num operator+(Num o). When we write a + b, C++ treats it as a.operator+(b). The left object a calls it and b is the parameter o. The function adds n and o.n into a new Num and returns it.'],['Differentiate unary and binary operator overloading.','Unary has one operand (++a). As a member function it takes no parameter. Binary has two operands (a + b). As a member function it takes one parameter: the right-hand object.']];
+const Q5=[['Explain destructors with features and an example.','Features: name is ~ + class name; no parameters; no return type; only one per class; runs automatically when the object dies; objects die in reverse order; used for clean-up. Example: class Demo has Demo() { cout << "Hi "; } and ~Demo() { cout << "Bye"; }. In main, Demo d; prints Hi and, when main ends, Bye.'],['Explain the rules for overloading operators.','1) Only existing operators can be overloaded; no new ones like **. 2) :: . ?: and sizeof cannot be overloaded. 3) Number of operands cannot change. 4) Precedence cannot change. 5) At least one operand must be an object of our class. 6) As a member, binary takes 1 parameter and unary takes 0. 7) Keep the meaning sensible.']];
+const NC='class Num { public: int n; Num(int v) { n = v; } ';
+const Q6=[['class A { public: A() { cout << "X"; } ~A() { cout << "Y"; } };\nint main() { A a; cout << "-"; return 0; }','X-Y','a is made (X), then "-" prints, then a dies at the end of main (Y).'],['class T { public: int id; T(int x) { id = x; } ~T() { cout << id; } };\nint main() { T a(1); T b(2); return 0; }','21','Reverse order: b dies first (2), then a (1).'],[NC+'void show() { cout << n; }\n Num operator+(Num o) { Num r(0); r.n = n + o.n; return r; } };\nint main() { Num a(4); Num b(6); (a + b).show(); return 0; }','10','a + b is a.operator+(b). It adds 4 + 6 into a new Num and show() prints 10.'],[NC+'void show() { cout << n; }\n void operator++() { n = n + 1; } };\nint main() { Num a(9); ++a; ++a; a.show(); return 0; }','11','Each ++a adds 1: 9, 10, 11.']];
+const OPF=(sym,exp)=>NUMC([['  Num operator'+sym+'(Num o) {','Binary '+sym+': one parameter o, gives back a Num.'],['    Num r(0);','Fresh Num for the answer.'],['    r.n = n '+sym+' o.n;','Left number '+exp+' right number.'],['    return r;','Send it back.'],['  }','End of function.']]);
+const W=[['Class Tag whose destructor prints Closed. Make one object.',mk([['class Tag {','Blueprint.'],['public:','Open.'],['  ~Tag() { cout << "Closed"; }','Destructor prints when the object dies.'],['};','End of class.']],[['  Tag t;','Made. When main ends, t dies and Closed prints.']])],
+['Constructor prints Open and destructor prints Close.',mk([['class Door {','Blueprint.'],['public:','Open.'],['  Door() { cout << "Open "; }','Runs when made.'],['  ~Door() { cout << "Close"; }','Runs when it dies.'],['};','End of class.']],[['  Door d;','Prints Open. At the end of main prints Close.']])],
+['Overload + for Num. Print 2 + 7.',mk(OPF('+','plus'),[['  Num a(2);','a holds 2.'],['  Num b(7);','b holds 7.'],['  (a + b).show();','Prints 9']])],
+['Overload - for Num. Print 9 - 4.',mk(OPF('-','minus'),[['  Num a(9);','a holds 9.'],['  Num b(4);','b holds 4.'],['  (a - b).show();','Prints 5']])],
+['Overload * for Num. Print 3 * 4.',mk(OPF('*','times'),[['  Num a(3);','a holds 3.'],['  Num b(4);','b holds 4.'],['  (a * b).show();','Prints 12']])],
+['Overload > for Num. Print the result for 2 and 8.',mk(NUMC([['  int operator>(Num o) {','Returns 1 or 0.'],['    return n > o.n;','Is left bigger?'],['  }','End of function.']]),[['  Num a(2);','a holds 2.'],['  Num b(8);','b holds 8.'],['  cout << (a > b);','Prints 0']])],
+['Overload ++ for Num starting at 1. Print the number.',mk(NUMC([['  void operator++() {','Unary: no parameter.'],['    n = n + 1;','Add 1.'],['  }','End of function.']]),[['  Num a(1);','a holds 1.'],['  ++a;','n becomes 2.'],['  a.show();','Prints 2']])],
+['Overload -- for Num starting at 5. Print the number.',mk(NUMC([['  void operator--() {','Unary: no parameter.'],['    n = n - 1;','Subtract 1.'],['  }','End of function.']]),[['  Num a(5);','a holds 5.'],['  --a;','n becomes 4.'],['  a.show();','Prints 4']])]];
+fill('q1',Q1,x=>`${esc(x[0])}${ans('<b>'+esc(x[1])+'</b>')}`);
+fill('q2',Q2,x=>`${esc(x[0])}${ans('<b>'+(x[1]?'True ✅':'False ❌')+'</b> – '+esc(x[2]))}`);
+['q3','q4','q5'].forEach((id,k)=>fill(id,[Q3,Q4,Q5][k],x=>`${esc(x[0])}${ans(esc(x[1]))}`));
+fill('q6',Q6,x=>`<pre class="o"><code>${esc('#include <iostream>\nusing namespace std;\n'+x[0])}</code></pre>What is printed?${ans('<b>Output:</b> '+esc(x[1])+'<br>'+esc(x[2]))}`);
+fill('q7',W,x=>`${esc(x[0])}${ans(tb(x[1]))}`);
+</script></body></html>
