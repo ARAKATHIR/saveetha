@@ -1,5 +1,9 @@
 [
   {
+    "title": "Inheritance, Types of inheritance, Virtual Base classes",
+    "file": "pages/c-inheritance-made-easy.html"
+  },
+  {
     "title": "Destructors. Defining Operator Overloading, Overloading Operators, Rules for Overloading Operators.",
     "file": "pages/c-destructors-operator-overloading.html"
   },
