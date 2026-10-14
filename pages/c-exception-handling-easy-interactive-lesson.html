@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>C++ Exception Handling – Easy Interactive Lesson</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--tx:#1d2433;--mut:#5b6478;--pri:#6c4cf1;--ac:#ff7a59;--ok:#12a36b;--code:#0f172a;--ctx:#e6edf7;--line:#e3e7f0;--hl:#fde68a;--ana:#fff4e5;--box:#efeaff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1220;--card:#181d30;--tx:#e8ecf7;--mut:#9aa4bd;--pri:#a18bff;--line:#2b3250;--hl:#6b5a12;--ana:#2b2316;--box:#251f45;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1220;--card:#181d30;--tx:#e8ecf7;--mut:#9aa4bd;--pri:#a18bff;--line:#2b3250;--hl:#6b5a12;--ana:#2b2316;--box:#251f45;color-scheme:dark}
+html{scroll-behavior:smooth;scroll-padding-top:calc(60px + env(safe-area-inset-top,0px))}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:linear-gradient(135deg,#6c4cf1,#ff7a59);color:#fff;padding:28px 16px;text-align:center}
+header h1{margin:0 0 6px;font-size:1.6rem}header p{margin:0;opacity:.95}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--card);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px}
+nav a{flex:none;text-decoration:none;color:var(--tx);background:var(--box);padding:6px 12px;border-radius:99px;font-size:.9rem;white-space:nowrap}
+nav a:hover{background:var(--pri);color:#fff}
+main{max-width:820px;margin:0 auto;padding:12px}
+section{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--pri);border-radius:16px;padding:16px;margin:16px 0}
+section:nth-of-type(even){border-left-color:var(--ac)}
+h2{margin:0 0 8px;font-size:1.3rem}h3{margin:18px 0 6px}
+.ana{background:var(--ana);border-radius:12px;padding:10px 12px;margin:10px 0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.flow div{flex:1 1 140px;background:var(--box);border-radius:12px;padding:10px;text-align:center}
+pre.code{background:var(--code);color:var(--ctx);border-radius:12px;padding:10px 0;overflow-x:auto;margin:8px 0;font:14px/1.5 ui-monospace,Menlo,Consolas,monospace}
+.ln{padding:0 12px;white-space:pre;cursor:pointer}.ln:hover{background:#ffffff18}.ln.on{background:var(--hl);color:inherit;color:#111}
+.info,.out{background:var(--box);border-radius:10px;padding:8px 12px;margin:6px 0;min-height:1.4em}
+.out{font-family:ui-monospace,Menlo,monospace;white-space:pre-wrap}
+.btn{background:var(--pri);color:#fff;border:0;border-radius:10px;padding:8px 14px;font-size:.95rem;cursor:pointer;margin:4px 4px 4px 0}
+.btn.sm{padding:5px 10px;font-size:.85rem}.btn.alt{background:var(--ac)}.btn.ok{background:var(--ok)}
+.btn:disabled{opacity:.5}
+.q{border:1px dashed var(--line);border-radius:12px;padding:10px;margin:8px 0}.q p{margin:0 0 6px}
+.try{background:var(--box);border-radius:12px;padding:10px;margin-top:14px}.try b{color:var(--pri)}
+.ans{background:#12a36b22;border-left:4px solid var(--ok);padding:8px 10px;margin-top:8px;border-radius:8px;white-space:pre-wrap}
+.ans[hidden]{display:none}
+table{border-collapse:collapse;width:100%;font-size:.88rem;margin-top:6px}td{border:1px solid var(--line);padding:4px 8px;vertical-align:top}td:first-child{font-family:ui-monospace,Menlo,monospace;white-space:pre}
+.tw{overflow-x:auto}
+input{font-size:1rem;padding:7px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--tx);width:6em}
+details{background:var(--box);border-radius:10px;padding:8px 12px;margin:6px 0}summary{cursor:pointer;font-weight:600}
+.bar{position:sticky;bottom:calc(8px + env(safe-area-inset-bottom,0px));text-align:center}
+</style></head><body>
+<header><h1>🚨 C++ Exception Handling</h1><p>Throw • Catch • Rethrow • Specify — explained very simply</p></header>
+<nav id="nav"></nav>
+<main>
+<section id="s1"><h2>1️⃣ Quick refresher (tools we will use)</h2>
+<p>Only these tiny things appear in our examples:</p>
+<ul><li><b>cout</b> – prints on screen. <b>cin</b> – reads what you type. <b>endl</b> – goes to a new line.</li>
+<li><b>int</b> – a whole number box. <b>if</b> – asks a yes/no question.</li>
+<li><b>function</b> – a small named job (like <code>void inner()</code>) that <code>main</code> can call.</li></ul>
+<div class="ana">🍳 <b>Analogy:</b> a function is like a recipe card. You call its name and it does the steps.</div>
+<div class="try" data-t="0"></div></section>
+
+<section id="s2"><h2>2️⃣ What is an exception?</h2>
+<p>An <b>exception</b> is a problem that happens <i>while the program is running</i>, like dividing by zero. <b>Exception handling</b> means we plan what to do when it happens, so the program does not crash.</p>
+<div class="ana">🛞 <b>Analogy:</b> You ride a bike to school and the tyre gets a puncture. A smart rider keeps a repair kit, so the day is not ruined.</div>
+<div class="try" data-t="1"></div></section>
+
+<section id="s3"><h2>3️⃣ The mechanism: try → throw → catch</h2>
+<div class="flow"><div>🧪 <b>try</b><br>"Let me try this risky code."</div><div>🚨 <b>throw</b><br>"Problem found!"</div><div>🪣 <b>catch</b><br>"I will handle it."</div></div>
+<details><summary>👆 Tap: the bike story</summary>try = riding to school. throw = shouting "Puncture!". catch = the mechanic who fixes it.</details>
+<details><summary>👆 Tap: what happens to the code after throw?</summary>It is skipped! The program jumps straight to the matching catch.</details>
+<div class="try" data-t="2"></div></section>
+
+<section id="s4"><h2>4️⃣ Throwing an exception</h2>
+<p>We use the word <b>throw</b> followed by a value (like <code>throw 10;</code>). The value tells the catcher what went wrong. Tap any line, or press Next step.</p>
+<div data-prog="p1"></div>
+<div class="out"><b>Output:</b> Before throw ⏎ Caught: 10</div>
+<div class="ana">🔔 <b>Analogy:</b> throw is pulling a fire alarm. Everything normal stops at once.</div>
+<div class="try" data-t="3"></div></section>
+
+<section id="s5"><h2>5️⃣ Catching an exception</h2>
+<p><b>catch(int e)</b> catches a thrown <i>int</i>. It must come <i>right after</i> the try block. If no catch matches the type, the program stops (crashes).</p>
+<p>🎮 <b>Type and see:</b> we divide 10 by your number.</p>
+<div data-prog="p2"></div>
+<p>Divide 10 by: <input id="dv" type="text" inputmode="numeric" value="2"> <button class="btn" id="run">Run ▶</button></p>
+<div class="out" id="dout">Press Run</div>
+<div class="ana">🧤 <b>Analogy:</b> a goalkeeper (catch) only stops the ball (throw) that comes to his goal.</div>
+<div class="try" data-t="4"></div></section>
+
+<section id="s6"><h2>6️⃣ Many catch blocks and catch(...)</h2>
+<p>One try can have many catch blocks, each for a different type. <b>catch(...)</b> (three dots) catches <i>anything</i>. Put it last.</p>
+<div data-prog="p3"></div>
+<p>Choose what to throw:</p>
+<button class="btn" data-th="int">throw 5</button><button class="btn alt" data-th="char">throw 'A'</button><button class="btn ok" data-th="dbl">throw 2.5</button>
+<div class="out" id="mout">Tap a button</div>
+<div class="ana">🏥 <b>Analogy:</b> a hospital has special doctors. The receptionist sends you to the matching one. catch(...) is the general doctor who treats everyone else.</div>
+<div class="try" data-t="5"></div></section>
+
+<section id="s7"><h2>7️⃣ Rethrowing an exception</h2>
+<p>Sometimes a catch handles a little, then passes the <i>same</i> exception upward using <b>throw;</b> (no value). The caller can then catch it too. Press Next step to follow it.</p>
+<div data-prog="p4"></div>
+<div class="out"><b>Output:</b> inner caught 7 ⏎ main caught 7</div>
+<div class="ana">👷 <b>Analogy:</b> a junior mechanic looks at the bike, writes a note, and passes it to the senior mechanic.</div>
+<div class="try" data-t="6"></div></section>
+
+<section id="s8"><h2>8️⃣ Specifying exceptions</h2>
+<p>A function can announce which exceptions it may throw. <b>throw(int)</b> after the name means "I may throw only an int". <b>noexcept</b> means "I will throw nothing".</p>
+<div data-prog="p5"></div>
+<div class="out"><b>Output:</b> Bad number -1 ⏎ I never throw</div>
+<div class="ana">💊 <b>Analogy:</b> a medicine label lists its side effects, so you know what to expect.</div>
+<p>⚠️ Note: <code>throw(int)</code> is the old style from many textbooks. Newer C++ (C++17) removed it, so use an older setting like C++11 to run it. <code>noexcept</code> works everywhere.</p>
+<div class="try" data-t="7"></div></section>
+
+<section id="s9"><h2>9️⃣ Practice questions</h2>
+<p>All answers are hidden. Try first, then tap <b>Show answer</b>.</p>
+<div id="quiz"></div></section>
+</main>
+<div class="bar"><button class="btn ok" id="sa">Show all answers</button><button class="btn alt" id="ha">Hide all</button></div>
+<script>
+const H="#include <iostream> // Lets us use cout and cin.\nusing namespace std; // Lets us write cout instead of std::cout.\n";
+const PR={
+p1:{l:H+`int main() { // Every program starts here.
+  try { // Start of the risky code.
+    cout << "Before throw" << endl; // Prints Before throw.
+    throw 10; // Throws the number 10 and jumps out of try.
+    cout << "Never printed" << endl; // Skipped because of the throw.
+  } // End of try.
+  catch (int x) { // Catches a thrown int and keeps it in x.
+    cout << "Caught: " << x << endl; // Prints Caught: 10.
+  } // End of catch.
+  return 0; // Program ends well.
+}`,s:[[2,"Program starts, enter try."],[4,"Prints Before throw."],[5,"throw 10 → jump!"],[8,"catch(int x) matches. x = 10."],[9,"Prints Caught: 10."],[12,"Program ends."]]},
+p2:{l:H+`int main() { // Start.
+  int b; // A box for your number.
+  cin >> b; // Reads the number you type into b.
+  try { // Risky code starts.
+    if (b == 0) throw 0; // If b is zero, throw an int.
+    cout << 10 / b << endl; // Otherwise prints 10 divided by b.
+  } // End of try.
+  catch (int e) { // Catches the thrown int.
+    cout << "Cannot divide by zero!" << endl; // Friendly message.
+  } // End of catch.
+  return 0; // End.
+}`},
+p3:{l:H+`int main() { // Start.
+  try { // Risky code.
+    throw 'A'; // Throws a character.
+  } // End of try.
+  catch (int x) { // For int only.
+    cout << "int " << x << endl; // Prints for int.
+  }
+  catch (char c) { // For char only.
+    cout << "char " << c << endl; // Prints for char.
+  }
+  catch (...) { // For every other type.
+    cout << "something else" << endl; // Prints for others.
+  }
+  return 0; // End.
+}`},
+p4:{l:H+`void inner() { // A small job.
+  try { // Risky code.
+    throw 7; // Throws 7.
+  } // End of try.
+  catch (int x) { // inner catches it.
+    cout << "inner caught " << x << endl; // Prints message.
+    throw; // Rethrow: sends the SAME exception to the caller.
+  } // End of catch.
+} // End of inner.
+int main() { // Start.
+  try { // main tries.
+    inner(); // Calls inner.
+  } // End of try.
+  catch (int y) { // main catches the rethrown int.
+    cout << "main caught " << y << endl; // Prints message.
+  } // End of catch.
+  return 0; // End.
+}`,s:[[10,"Program starts in main."],[11,"main enters try."],[12,"main calls inner()."],[3,"inner enters its try."],[4,"throw 7 → jump to catch."],[6,"inner's catch gets x = 7."],[7,"Prints inner caught 7."],[8,"throw; passes the same exception up to main."],[13,"Control goes to main's catch."],[15,"main's catch gets y = 7."],[16,"Prints main caught 7."]]},
+p5:{l:H+`void check(int n) throw(int) { // This function may throw only an int.
+  if (n < 0) throw n; // Throws n if it is negative.
+  cout << "OK" << endl; // Prints OK for good numbers.
+} // End of check.
+void safe() noexcept { // This function promises to throw nothing.
+  cout << "I never throw" << endl; // Prints message.
+} // End of safe.
+int main() { // Start.
+  try { // Risky code.
+    check(-1); // Calls check with -1, so it throws.
+  } // End of try.
+  catch (int e) { // Catches the int.
+    cout << "Bad number " << e << endl; // Prints Bad number -1.
+  } // End of catch.
+  safe(); // Calls safe.
+  return 0; // End.
+}`}
+};
+const TRY=[["What does cout do?","It prints (shows) text or values on the screen."],["Give one real example of an exception.","Dividing a number by zero (or opening a file that does not exist)."],["Put in order: catch, try, throw.","try → throw → catch."],["What is printed?",'13\nThe 1 prints, then throw 5 jumps to catch, which prints 3. The 2 is skipped.','try { cout << "1"; throw 5; cout << "2"; }\ncatch (int x) { cout << "3"; }'],["If you type 5 in the divide program, what prints?","2 (10 ÷ 5 = 2). No exception is thrown, so catch is skipped."],["With catch(int), catch(char) and catch(...), which one handles throw 2.5; ?","catch(...). 2.5 is a double, not an int or char."],["What does throw; (with no value) do?","It rethrows the same exception to the outer catch."],["What does void f() noexcept mean?","f promises that it will not throw any exception."]];
+const ONE=[["Which keyword sends an exception?","throw"],["Which block holds the risky code?","try"],["Which block handles the exception?","catch"],["What is an exception?","A problem that happens while the program is running."],["Can a try block exist without a catch?","No. At least one catch is needed."],["How do we rethrow an exception?","throw; (with no value)"],["What is catch(...) called?","A catch-all handler."],["What happens if no catch matches?","The program stops (terminates)."],["Where is the catch block placed?","Right after the try block."],["What does throw 5; catch(int x){cout<<x;} print?","5"],["Which comes first, try or catch?","try"],["Can we throw a char?","Yes, e.g. throw 'A';"],["Is code after throw (inside try) run?","No, it is skipped."],["Which keyword says a function throws nothing?","noexcept"],["What does void f() throw(int) mean?","f may throw only an int."],["Can one try have many catch blocks?","Yes."],["Does catch(int) catch a thrown double?","No. The types must match."],["What is passing the same exception to the caller called?","Rethrowing."],["Why use exception handling?","To keep normal code and error code separate and avoid crashes."],["Which header gives us cout?","iostream"],["Where should catch(...) be placed?","Last, after all other catch blocks."]];
+const TF=[["A try block can be written without any catch.",0,"At least one catch must follow."],["throw can send an int value.",1,"Yes, like throw 10;"],["catch(...) can catch any type.",1,"The three dots mean anything."],["Code after throw inside try still runs.",0,"The program jumps to catch."],["throw; with no value rethrows the current exception.",1,"It passes the same exception up."],["catch(int) can catch a thrown char.",0,"Types must match."],["A function can state the exceptions it may throw.",1,"Using throw(int) or noexcept."],["An unhandled exception stops the program.",1,"No catch means termination."]];
+const TWO=[["Define exception handling.","It is a way to detect and handle runtime problems using try, throw and catch, so the program does not crash. (2 marks)"],["What is rethrowing? Show its syntax.","A catch block passes the same exception to an outer handler using throw; with no value. (2 marks)"],["What is catch(...)?","A catch-all block. It handles any exception type that earlier catch blocks did not match. It is written last. (2 marks)"]];
+const THREE=[["Explain try, throw and catch with a tiny example.","try holds risky code.\nthrow sends a value when a problem occurs.\ncatch receives it and handles it.\nExample: try { throw 10; } catch(int x) { cout << x; } prints 10. (3 marks)"],["Differentiate throw and throw;","throw value; creates a NEW exception with that value, e.g. throw 10;\nthrow; (no value) is used inside a catch to pass the SAME exception to the outer handler.\nSo one starts an exception, the other forwards it. (3 marks)"]];
+const FIVE=[["Explain the exception handling mechanism with a program.","1. Risky code is put in a try block.\n2. When a problem occurs, throw sends a value and the rest of the try is skipped.\n3. The program looks for a catch with the same type; many catch blocks and catch(...) are possible.\n4. The matching catch handles it and the program continues after it. With no match, the program stops.\n5. A catch may rethrow with throw; and a function may list exceptions with throw(int) or noexcept.\nProgram: the divide program in section 5, with b = 0, prints Cannot divide by zero!. (5 marks)"]];
+const GO=[[`try { cout << "A"; throw 1; cout << "B"; }\ncatch (int x) { cout << "C"; }\ncout << "D";`,"ACD","A prints, throw 1 jumps to catch which prints C, B is skipped, then D prints after the catch."],[`try { throw 'x'; }\ncatch (int a) { cout << "int"; }\ncatch (...) { cout << "other"; }`,"other","'x' is a char, so catch(int) does not match. catch(...) catches it."],[`int b = 0;\ntry { if (b == 0) throw b; cout << "fine"; }\ncatch (int e) { cout << "zero " << e; }`,"zero 0","b is 0, so it throws 0. catch prints zero 0. fine is skipped."],[PR.p4.l.split('\n').slice(2).map(r=>r.split(' // ')[0]).join('\n'),"inner caught 7\nmain caught 7","inner catches 7, prints, and rethrows with throw;. main catches the same 7 and prints."]];
+const WP=[["Throw and catch the number 10.",H+`int main() { // Start.
+  try { throw 10; } // Throws 10.
+  catch (int x) { cout << x << endl; } // Prints 10.
+  return 0; // End.
+}`],["Read your age. If it is below 0, throw an error.",H+`int main() { // Start.
+  int age; // Box for age.
+  cin >> age; // Reads age.
+  try { // Risky code.
+    if (age < 0) throw age; // Negative is wrong, so throw.
+    cout << "Age OK" << endl; // Prints for good age.
+  }
+  catch (int e) { cout << "Wrong age" << endl; } // Prints for wrong age.
+  return 0; // End.
+}`],["Divide 10 by a number and handle zero.",PR.p2.l],["Catch an int and a char with separate catch blocks.",H+`int main() { // Start.
+  try { throw 'Z'; } // Throws a char.
+  catch (int x) { cout << "int" << endl; } // Not used here.
+  catch (char c) { cout << "char " << c << endl; } // Prints char Z.
+  return 0; // End.
+}`],["Use catch(...) to catch any exception.",H+`int main() { // Start.
+  try { throw 2.5; } // Throws a decimal number.
+  catch (...) { cout << "Caught something" << endl; } // Catches anything.
+  return 0; // End.
+}`],["Rethrow an exception from a function.",PR.p4.l]];
+const $=s=>document.querySelector(s),el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e};
+const parse=l=>l.split('\n').map(r=>{const i=r.indexOf(' // ');return i<0?[r,'']:[r.slice(0,i),r.slice(i+4)]});
+function table(rows){const w=el('div','tw'),t=el('table');rows.forEach(r=>{const tr=el('tr');tr.append(el('td','',r[0]),el('td','',r[1]));t.append(tr)});w.append(t);return w}
+function code(rows){const p=el('pre','code');rows.forEach(r=>p.append(el('div','ln',r[0]||' ')));return p}
+function prog(host,k){const P=PR[k],rows=parse(P.l),pre=code(rows),L=[...pre.children],info=el('div','info','👆 Tap a code line to see what it means.');
+ const on=i=>{L.forEach(x=>x.classList.remove('on'));if(i>=0)L[i].classList.add('on')};
+ L.forEach((d,i)=>d.onclick=()=>{on(i);info.textContent='👉 '+rows[i][1]});
+ host.append(pre,info);
+ if(P.s){let n=0;const nx=el('button','btn','▶ Next step'),rs=el('button','btn alt','↺ Reset');
+  nx.onclick=()=>{if(n>=P.s.length){info.textContent='🎉 Finished! Press Reset to replay.';on(-1);return}const s=P.s[n++];on(s[0]);L[s[0]].scrollIntoView({block:'nearest'});info.textContent='Step '+n+': '+s[1]};
+  rs.onclick=()=>{n=0;on(-1);info.textContent='Press Next step to start.'};host.append(nx,rs)}
+ const ex=el('button','btn ok','📖 Explain all lines'),tb=table(rows);tb.hidden=true;ex.onclick=()=>{tb.hidden=!tb.hidden;ex.textContent=tb.hidden?'📖 Explain all lines':'Hide explanation'};host.append(ex,tb)}
+function QA(q,a,c){const d=el('div','q');d.append(el('p','',q));if(c)d.append(el('pre','code',c).cloneNode(true));
+ const b=el('button','btn sm','Show answer'),A=el('div','ans');A.hidden=true;typeof a==='string'?A.textContent=a:A.append(a);
+ d._s=v=>{A.hidden=!v;b.textContent=v?'Hide answer':'Show answer'};b.onclick=()=>d._s(A.hidden);d.append(b,A);return d}
+document.querySelectorAll('[data-prog]').forEach(h=>prog(h,h.dataset.prog));
+document.querySelectorAll('.try').forEach(h=>{const t=TRY[h.dataset.t];h.append(el('b','','✏️ Try it now'),QA(t[0],t[1],t[2]))});
+document.querySelectorAll('section').forEach(s=>{const a=el('a','',s.querySelector('h2').textContent.slice(0,2));a.href='#'+s.id;$('#nav').append(a)});
+$('#dv').nextElementSibling.onclick=()=>{const v=$('#dv').value.trim(),n=Number(v),o=$('#dout');
+ o.textContent=(v===''||!Number.isInteger(n))?'Please type a whole number.':n===0?'Cannot divide by zero! (the exception was caught)':String(Math.trunc(10/n))};
+document.querySelectorAll('[data-th]').forEach(b=>b.onclick=()=>{const k=b.dataset.th;$('#mout').textContent=k==='int'?'Caught by catch (int x) → prints: int 5':k==='char'?"Caught by catch (char c) → prints: char A":'No int or char match → catch (...) → prints: something else'});
+function sec(t,m,items){const h=el('h3','',t+' ('+m+')');const w=el('div');$('#quiz').append(h,w);items.forEach((x,i)=>w.append(QA((i+1)+'. '+x[0],x[1],x[2])))}
+sec('📝 Section A: One-mark questions','1 mark each',ONE);
+sec('✅ Section B: True or False','1 mark each',TF.map(x=>['True or False: '+x[0],(x[1]?'True':'False')+'. '+x[2]]));
+sec('✍️ Section C: Short answers','2 marks each',TWO);
+sec('📘 Section D: Explain / Differentiate','3 marks each',THREE);
+sec('📚 Section E: Long answer','5 marks',FIVE);
+sec('🔍 Section F: Guess the output','2 marks each',GO.map(x=>['What is the output?','Output:\n'+x[1]+'\n\nWhy: '+x[2],x[0]]));
+sec('💻 Section G: Write a program','5 marks each',WP.map(x=>[x[0],(()=>{const r=parse(x[1]),d=el('div');d.append(code(r),table(r));return d})()]));
+const all=v=>document.querySelectorAll('#quiz .q').forEach(d=>d._s(v));
+$('#sa').onclick=()=>all(true);$('#ha').onclick=()=>all(false);
+</script></body></html>
