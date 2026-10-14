@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>C++: Constructors, Abstract &amp; Member Classes</title>
+<style>
+:root{
+  --bg:#f5f6fc; --card:#ffffff; --text:#1f2542; --muted:#5a6285; --line:#e1e5f4;
+  --c1:#6c5ce7; --c2:#00a383; --c3:#e8505b; --c4:#e0a100; --c5:#0984e3;
+  --t1:#efeaff; --t2:#dff7ef; --t3:#ffe9ea; --t4:#fff4d1; --t5:#e1f0ff;
+  --code-bg:#1d2043; --code-text:#e9ecff; --code-line:#2a2e5c;
+  --k:#ff9de2; --s:#a5f3b4; --c:#8c93c0; --n:#ffd479; --p:#8fd3ff;
+  --run-bg:#ffe08a; --run-text:#2b2300;
+  --shadow:0 4px 14px rgba(40,50,120,.10);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10122a; --card:#1b1e3d; --text:#eceeff; --muted:#a9afd8; --line:#2f3568;
+    --c1:#a99bff; --c2:#3ddbb4; --c3:#ff8a93; --c4:#ffcb4d; --c5:#5db4ff;
+    --t1:#2a2564; --t2:#10403a; --t3:#4a2332; --t4:#4a3d12; --t5:#143a62;
+    --code-bg:#0d0f26; --code-text:#e9ecff; --code-line:#232859;
+    --shadow:0 4px 14px rgba(0,0,0,.35);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10122a; --card:#1b1e3d; --text:#eceeff; --muted:#a9afd8; --line:#2f3568;
+  --c1:#a99bff; --c2:#3ddbb4; --c3:#ff8a93; --c4:#ffcb4d; --c5:#5db4ff;
+  --t1:#2a2564; --t2:#10403a; --t3:#4a2332; --t4:#4a3d12; --t5:#143a62;
+  --code-bg:#0d0f26; --code-text:#e9ecff; --code-line:#232859;
+  --shadow:0 4px 14px rgba(0,0,0,.35);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.65;font-size:17px}
+[hidden]{display:none !important}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--t1);color:var(--text);padding:.1em .38em;border-radius:6px;font-size:.9em;word-break:break-word}
+a{color:var(--c5)}
+.wrap{max-width:860px;margin:0 auto;padding:0 14px 60px}
+
+/* top bar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--card);border-bottom:1px solid var(--line);box-shadow:var(--shadow)}
+.topbar .in{max-width:860px;margin:0 auto;display:flex;align-items:center;gap:6px;padding:8px 10px}
+.topbar nav{flex:1;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.topbar nav::-webkit-scrollbar{display:none}
+.topbar nav a{flex:0 0 auto;text-decoration:none;color:var(--text);background:var(--t1);border-radius:999px;padding:5px 12px;font-size:.85rem;font-weight:600;white-space:nowrap;border:2px solid transparent}
+.topbar nav a b{color:var(--c1);margin-right:3px}
+.topbar nav a.on{border-color:var(--c1);background:var(--card)}
+.iconbtn{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;width:38px;height:38px;font-size:1.1rem;cursor:pointer}
+
+/* hero */
+.hero{margin:18px 0 8px;border-radius:22px;padding:26px 20px;color:#fff;background:linear-gradient(135deg,#6c5ce7,#00b4d8 60%,#00c9a7);box-shadow:var(--shadow)}
+.hero h1{margin:0 0 6px;font-size:1.9rem;line-height:1.2}
+.hero p{margin:4px 0;font-size:1.02rem;opacity:.96}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.legend span{background:rgba(255,255,255,.2);border-radius:999px;padding:4px 12px;font-size:.85rem}
+
+/* sections */
+section{margin:26px 0;scroll-margin-top:70px}
+h2{font-size:1.45rem;line-height:1.3;margin:0 0 12px;display:flex;align-items:center;gap:10px}
+h2 .num{flex:0 0 auto;width:38px;height:38px;border-radius:12px;background:var(--c1);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:1.05rem}
+h3{margin:18px 0 8px;font-size:1.1rem}
+p{margin:8px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin:12px 0;box-shadow:var(--shadow)}
+.card>:first-child{margin-top:0}.card>:last-child{margin-bottom:0}
+.analogy{background:var(--t4);border-color:transparent}
+.key{background:var(--t2);border-color:transparent}
+.warn{background:var(--t3);border-color:transparent}
+.info-card{background:var(--t5);border-color:transparent}
+.tag{display:inline-block;font-weight:700;font-size:.8rem;letter-spacing:.02em;text-transform:uppercase;margin-bottom:4px;color:var(--muted)}
+ul.clean{padding-left:1.2em;margin:6px 0}
+ul.clean li{margin:4px 0}
+
+/* buttons */
+.btn{font:inherit;font-weight:700;font-size:.95rem;border:0;border-radius:12px;padding:10px 16px;background:var(--c1);color:#fff;cursor:pointer;min-height:42px;touch-action:manipulation}
+.btn:active{transform:scale(.97)}
+.btn.small{padding:7px 14px;font-size:.88rem;min-height:36px;background:var(--c5)}
+.btn.ghost{background:var(--t1);color:var(--text)}
+.btn.green{background:#00916f}
+.btn.red{background:#d63a46}
+.btn:focus-visible,.iconbtn:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--c4);outline-offset:2px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+
+/* code + program widget */
+.prog{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px;margin:14px 0;box-shadow:var(--shadow)}
+.prog-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;font-weight:700;margin-bottom:8px}
+.prog-head small{font-weight:500;color:var(--muted)}
+.codebox,pre.code{background:var(--code-bg);color:var(--code-text);border-radius:14px;padding:8px 0;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.84rem;line-height:1.6;-webkit-overflow-scrolling:touch}
+pre.code{margin:8px 0;padding:10px 14px;white-space:pre}
+.ln{display:flex;cursor:pointer;padding:0 10px 0 0;min-width:max-content;border-left:4px solid transparent}
+.ln:hover{background:var(--code-line)}
+.ln .no{flex:0 0 2.4em;text-align:right;padding-right:10px;color:#7b82b8;user-select:none}
+.ln .tx{white-space:pre}
+.ln.sel{border-left-color:#5db4ff;background:var(--code-line)}
+.ln.run{background:var(--run-bg);color:var(--run-text);border-left-color:#ff7a00}
+.ln.run .no{color:#7a5a00}
+.ln.run .tx span{color:inherit}
+.t-k{color:var(--k);font-weight:600}.t-s{color:var(--s)}.t-c{color:var(--c);font-style:italic}.t-n{color:var(--n)}.t-p{color:var(--p)}
+.info{margin:10px 0 0;padding:10px 12px;border-radius:12px;background:var(--t5);font-size:.95rem;min-height:3.2em}
+.console{margin-top:10px;background:#0b0d20;color:#9dffb5;border-radius:12px;padding:10px 14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.88rem;min-height:3em}
+.console .ph{color:#6f78a8}
+.console .err{color:#ff8a93}
+.console .ol::before{content:"> ";color:#6f78a8}
+.ltable{margin-top:10px;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+th{background:var(--t1)}
+td.no{color:var(--muted);width:2.2em;text-align:right}
+.tablewrap{overflow-x:auto;margin:8px 0}
+
+/* demos */
+.demo{background:var(--t1);border-radius:18px;padding:14px;margin:12px 0}
+.demo .tag{color:var(--c1)}
+.demo input[type=text]{font:inherit;padding:9px 12px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--text);min-width:0;width:100%;max-width:260px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.outbox{background:#0b0d20;color:#9dffb5;border-radius:12px;padding:8px 12px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9rem;min-height:2.4em;margin-top:8px}
+.family{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:600px){.family{grid-template-columns:1fr 1fr}}
+.fbox{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:10px 12px;transition:all .3s}
+.fbox h4{margin:0 0 6px}
+.trait{display:inline-block;background:var(--t2);border-radius:999px;padding:3px 10px;margin:3px 3px 3px 0;font-size:.88rem}
+.trait.own{background:var(--t4)}
+.trait.inh{background:var(--t1);border:2px dashed var(--c1)}
+.fbox.glow{border-color:var(--c2);box-shadow:0 0 0 4px rgba(0,200,150,.18)}
+.diagram{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--card);border:2px dashed var(--line);border-radius:14px;padding:10px 14px;margin:10px 0;white-space:pre;overflow-x:auto;line-height:1.4;font-size:.95rem}
+.diagram b{color:var(--c1)}
+.reveal-btn{width:100%;text-align:left;display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--card);color:var(--text);border:2px solid var(--line);border-radius:14px;padding:12px 14px;font:inherit;font-weight:700;cursor:pointer;margin-top:8px;min-height:48px}
+.reveal-btn[aria-expanded="true"]{border-color:var(--c1)}
+.reveal-body{background:var(--card);border:2px solid var(--line);border-top:0;border-radius:0 0 14px 14px;padding:8px 14px 12px;margin-top:-6px}
+.mem{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+.mem .part{background:var(--card);border:2px solid var(--line);border-radius:12px;padding:8px;text-align:center;font-size:.9rem}
+.mem .mini{background:var(--t4);border-radius:8px;padding:6px;margin:6px 0;font-size:.85rem}
+.mem .mini.one{grid-column:1/-1}
+.tabox{border:3px solid var(--c1);border-radius:16px;padding:10px;background:var(--card)}
+.tabox .ttl{font-weight:700;text-align:center;margin-bottom:8px}
+.shared{background:var(--t2);border:2px solid var(--c2);border-radius:10px;padding:8px;text-align:center;margin-bottom:8px;font-size:.9rem}
+.msg{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--t5);min-height:3em}
+.msg.bad{background:var(--t3)}.msg.good{background:var(--t2)}
+.shake{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.seg{display:inline-flex;border:2px solid var(--c1);border-radius:12px;overflow:hidden}
+.seg button{border:0;background:var(--card);color:var(--text);font:inherit;font-weight:700;padding:9px 14px;cursor:pointer;min-height:42px}
+.seg button.on{background:var(--c1);color:#fff}
+.syn span.b{color:var(--c3);font-weight:700}.syn span.d{color:var(--c2);font-weight:700}
+
+/* questions */
+.qa{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin:10px 0;box-shadow:var(--shadow)}
+.qa.try{background:var(--t1);border-color:transparent}
+.q{display:flex;gap:10px;align-items:flex-start}
+.qn{flex:0 0 auto;min-width:30px;height:30px;border-radius:9px;background:var(--c1);color:#fff;font-weight:700;font-size:.85rem;display:inline-flex;align-items:center;justify-content:center;padding:0 6px}
+.qt{flex:1;min-width:0}
+.qt pre.code{margin-top:8px}
+.qa>.btn{margin-top:10px}
+.ans{margin-top:10px;background:var(--t2);border-radius:12px;padding:10px 12px}
+.ans p:first-child{margin-top:0}
+.qgroup h3{background:var(--c1);color:#fff;border-radius:12px;padding:8px 14px;margin:26px 0 6px}
+.qbar{position:sticky;top:calc(env(safe-area-inset-top,0px) + 58px);z-index:20;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px 10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow)}
+.qbar span{flex:1;font-weight:700;min-width:120px}
+.to-top{position:fixed;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);z-index:60;width:46px;height:46px;border-radius:50%;border:0;background:var(--c1);color:#fff;font-size:1.3rem;cursor:pointer;box-shadow:var(--shadow)}
+footer{text-align:center;color:var(--muted);font-size:.9rem;margin:30px 0}
+@media(max-width:520px){body{font-size:16px}.hero h1{font-size:1.5rem}h2{font-size:1.25rem}}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.shake{animation:none}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="in">
+    <nav id="menu" aria-label="Sections">
+      <a href="#s1"><b>1</b>Refresher</a>
+      <a href="#s2"><b>2</b>Constructor</a>
+      <a href="#s3"><b>3</b>With values</a>
+      <a href="#s4"><b>4</b>Derived</a>
+      <a href="#s5"><b>5</b>Pass values</a>
+      <a href="#s6"><b>6</b>Destructor</a>
+      <a href="#s7"><b>7</b>Abstract</a>
+      <a href="#s8"><b>8</b>Abstract+</a>
+      <a href="#s9"><b>9</b>Member object</a>
+      <a href="#s10"><b>10</b>Member ctor</a>
+      <a href="#s11"><b>11</b>Nested</a>
+      <a href="#s12"><b>12</b>Summary</a>
+      <a href="#s13"><b>13</b>Practice</a>
+    </nav>
+    <button class="iconbtn" id="themeBtn" aria-label="Switch light or dark mode" title="Light / Dark">🌓</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+<div class="hero">
+  <h1>🏗️ Constructors, Abstract &amp; Member Classes</h1>
+  <p>Abstract classes • Constructors in derived classes • Member classes</p>
+  <p>Made for complete beginners. Simple English. Real-life examples. Tap, type and try!</p>
+  <div class="legend"><span>🌍 Real-life analogy</span><span>💻 Step-by-step program</span><span>✍️ Try it now</span><span>📝 Practice questions</span></div>
+</div>
+
+<div class="card info-card">
+  <span class="tag">How to use this page</span>
+  <ul class="clean">
+    <li>Read the sections in order (use the menu on top).</li>
+    <li>In every program: <b>tap a line</b> to see what it means, or press <b>▶ Next step</b> to run it like a computer.</li>
+    <li>After each idea there is a <b>✍️ Try it now</b> question. Think first, then press <b>Show answer</b>.</li>
+    <li>Lots of practice questions are at the end (Section 13).</li>
+  </ul>
+</div>
+
+<!-- 1 -->
+<section id="s1">
+  <h2><span class="num">1</span> Quick Refresher: Class, Object &amp; Inheritance 🏠</h2>
+  <p>Let us first meet the small words used in every program. Nothing else will appear in the code later!</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>A <b>class</b> is a <b>house plan</b> 📐. An <b>object</b> is a <b>real house</b> 🏠 built from that plan. <b>Inheritance</b> is like a child getting features from a parent 👨‍👧.</p></div>
+  <div class="tablewrap"><table>
+    <tr><th>Word</th><th>Simple meaning</th></tr>
+    <tr><td><code>#include &lt;iostream&gt;</code></td><td>Brings in the tool for printing on the screen.</td></tr>
+    <tr><td><code>#include &lt;string&gt;</code></td><td>Brings in the tool for text.</td></tr>
+    <tr><td><code>using namespace std;</code></td><td>Lets us write <code>cout</code> instead of <code>std::cout</code>.</td></tr>
+    <tr><td><code>cout &lt;&lt; "Hi" &lt;&lt; endl;</code></td><td>Prints Hi. <code>endl</code> moves to a new line. You can chain many <code>&lt;&lt;</code>.</td></tr>
+    <tr><td><code>int</code> and <code>string</code></td><td><code>int</code> is a whole number like 5. <code>string</code> is text like "Tommy".</td></tr>
+    <tr><td><code>+</code> and <code>*</code></td><td>Work like in maths. <code>2 + 3</code> is 5 and <code>4 * 4</code> is 16.</td></tr>
+    <tr><td><code>=</code></td><td>Puts a value into a variable: <code>marks = 90;</code></td></tr>
+    <tr><td><code>class</code> ... <code>};</code></td><td>The blueprint. It ends with a semicolon.</td></tr>
+    <tr><td><code>public:</code></td><td>Everything below it can be used from outside the class.</td></tr>
+    <tr><td>data member</td><td>A variable inside a class, like <code>string name;</code></td></tr>
+    <tr><td>member function</td><td>A function inside a class. <code>void</code> means it gives nothing back.</td></tr>
+    <tr><td>object</td><td>A real thing made from a class: <code>Animal a;</code></td></tr>
+    <tr><td>dot <code>.</code></td><td>Reaches inside an object: <code>a.name</code> or <code>a.eat()</code></td></tr>
+    <tr><td><code>class Dog : public Animal</code></td><td>Dog <b>inherits</b> from Animal. Animal is the <b>base</b> (parent) class and Dog is the <b>derived</b> (child) class. Dog gets Animal's members.</td></tr>
+    <tr><td><code>main()</code></td><td>The place where every program starts.</td></tr>
+  </table></div>
+  <div class="demo">
+    <span class="tag">🎮 Type &amp; see</span>
+    <div class="row">
+      <input type="text" id="d1name" value="Tommy" maxlength="14" aria-label="Animal name">
+      <button class="btn green" id="d1run">▶ Run the program</button>
+    </div>
+    <div class="diagram" id="d1code" style="margin-bottom:0"></div>
+    <div class="outbox" id="d1out">Press Run…</div>
+  </div>
+  <div class="prog" data-prog="basics"></div>
+  <div data-try="s1"></div>
+</section>
+
+<!-- 2 -->
+<section id="s2">
+  <h2><span class="num">2</span> What is a Constructor? 🔧</h2>
+  <p>A <b>constructor</b> is a special function inside a class. It runs <b>by itself</b> at the moment an object is created. We never call it ourselves.</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>When you switch on a <b>new phone</b> 📱 for the first time, a welcome setup runs <b>automatically</b>. You did not press any "setup" button. A constructor is that automatic setup for an object.</p></div>
+  <div class="card key"><span class="tag">✅ Three rules</span>
+    <ul class="clean">
+      <li>The name is <b>the same as the class name</b>.</li>
+      <li>It has <b>no return type</b>, not even <code>void</code>.</li>
+      <li>It runs <b>automatically</b> when the object is created.</li>
+    </ul>
+    <p>A constructor with <b>no values</b> in the brackets is called a <b>default constructor</b>.</p>
+  </div>
+  <div class="demo">
+    <span class="tag">🎮 Tap to create objects</span>
+    <div class="ctrl"><button class="btn green" id="c2make"><code style="background:none;color:inherit">Animal a;</code> ➕ Make an object</button><button class="btn ghost" id="c2reset">↺ Reset</button></div>
+    <div class="outbox" id="c2out">No objects yet.</div>
+    <div class="msg" id="c2msg">Every new object prints the message <b>by itself</b>. We never wrote a line to call the constructor.</div>
+  </div>
+  <div class="prog" data-prog="ctor1"></div>
+  <div data-try="s2"></div>
+</section>
+
+<!-- 3 -->
+<section id="s3">
+  <h2><span class="num">3</span> Constructor with Values 🍕</h2>
+  <p>A constructor can <b>receive values</b>. It is then called a <b>parameterized constructor</b>. The values go inside the brackets when we create the object.</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>When you order a pizza 🍕 you say the <b>size</b> and <b>topping</b> while ordering. The kitchen then makes <b>exactly that</b> pizza. The values you give while creating an object are used to set it up.</p></div>
+  <div class="card info-card"><span class="tag">New word: parameter</span><p>A <b>parameter</b> is a small box in the brackets that <b>receives a value</b>. In <code>Animal(string n)</code>, the box <code>n</code> receives the name. We then copy it: <code>name = n;</code></p></div>
+  <div class="diagram">Animal <b>a</b>(<b>"Tommy"</b>);
+       ↑      ↑
+   object   value sent to the constructor</div>
+  <div class="card warn"><span class="tag">⚠️ Be careful</span><p>If a class has only a constructor that needs a value, you <b>must</b> give the value when you create the object. <code>Animal a;</code> would then be an error.</p></div>
+  <div class="demo">
+    <span class="tag">🎮 Type &amp; see</span>
+    <div class="row"><input type="text" id="c3name" value="Tommy" maxlength="14" aria-label="Name"><button class="btn green" id="c3run">▶ Create the object</button></div>
+    <div class="diagram" id="c3code" style="margin-bottom:0"></div>
+    <div class="outbox" id="c3out">Press the button…</div>
+  </div>
+  <div class="prog" data-prog="ctor2"></div>
+  <div data-try="s3"></div>
+</section>
+
+<!-- 4 -->
+<section id="s4">
+  <h2><span class="num">4</span> Constructors in Derived Classes 🏗️</h2>
+  <p>When we create an object of a <b>derived</b> class, <b>two</b> constructors run: first the <b>base</b> class constructor, then the <b>derived</b> class constructor.</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>To build a house 🏠 you must first build the <b>foundation</b> (base). Only then can you build the <b>walls</b> (derived). The base is always ready before the child.</p></div>
+  <div class="card key"><span class="tag">✅ Rule</span><p><b>Base first ➜ Derived next.</b> This happens automatically. We do not write anything extra for it.</p></div>
+  <div class="demo">
+    <span class="tag">🎮 Tap to build</span>
+    <div id="chain4"></div>
+  </div>
+  <div class="prog" data-prog="derived1"></div>
+  <div data-try="s4"></div>
+</section>
+
+<!-- 5 -->
+<section id="s5">
+  <h2><span class="num">5</span> Sending Values to the Base Constructor 📨</h2>
+  <p>What if the base constructor needs a value? The derived constructor must <b>pass it on</b>. We write a colon <code>:</code> after the brackets, then the base class name with the value. This is called an <b>initializer list</b>.</p>
+  <div class="diagram">Dog(string <b>n</b>, int a) <b>:</b> Animal(<b>n</b>) {
+    // Dog's own work
+}</div>
+  <ul class="clean">
+    <li><code>Dog(string n, int a)</code> receives <b>two</b> values.</li>
+    <li><code>: Animal(n)</code> says "call Animal's constructor and give it <code>n</code>".</li>
+    <li>You can pass any value, such as <code>n</code> or even <code>y + 1</code>.</li>
+    <li>If the base class needs a value, the derived class <b>must</b> pass it.</li>
+  </ul>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>A birth certificate 📜 needs the baby's name. The <b>parents</b> (derived constructor) take the name they received and <b>hand it over</b> to the office (base constructor).</p></div>
+  <div class="demo">
+    <span class="tag">🎮 Type &amp; see</span>
+    <div class="row">
+      <label>Name: <input type="text" id="c5name" value="Tommy" maxlength="14"></label>
+      <label>Age: <input type="text" id="c5age" value="3" maxlength="3" inputmode="numeric" style="max-width:90px"></label>
+    </div>
+    <div class="diagram" id="c5code" style="margin-bottom:0"></div>
+    <div class="outbox" id="c5out"></div>
+  </div>
+  <div class="prog" data-prog="derived2"></div>
+  <div data-try="s5"></div>
+</section>
+
+<!-- 6 -->
+<section id="s6">
+  <h2><span class="num">6</span> Destructors &amp; the Order of Calls 🔄</h2>
+  <p>A <b>destructor</b> is the opposite of a constructor. It runs <b>automatically when an object is removed</b>. For our programs, that happens when <code>main()</code> ends.</p>
+  <div class="card key"><span class="tag">✅ Rules for a destructor</span>
+    <ul class="clean">
+      <li>Name = tilde <code>~</code> + class name, like <code>~Animal()</code>.</li>
+      <li>No return type and <b>no values</b> in the brackets.</li>
+      <li>Runs by itself when the object ends.</li>
+    </ul>
+  </div>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>You put on <b>socks</b> first, then <b>shoes</b> 👟. To undress, you take off the <b>shoes</b> first, then the <b>socks</b>. Removing happens in the <b>reverse</b> order.</p></div>
+  <div class="card key"><span class="tag">✅ Order</span><p>Constructors: <b>Base ➜ Derived</b>.<br>Destructors: <b>Derived ➜ Base</b> (reverse).</p></div>
+  <p>This program uses a <b>chain</b>: SportsCar inherits from Car, and Car inherits from Vehicle. Each class inherits from the one above it.</p>
+  <div class="card info-card"><span class="tag">Good to know</span><p>If a class has two parents, like <code>class C : public A, public B</code>, the constructors run in the order the parents are written: A first, then B.</p></div>
+  <div class="demo">
+    <span class="tag">🎮 Tap to build and remove</span>
+    <div id="chain6"></div>
+  </div>
+  <div class="prog" data-prog="chain"></div>
+  <div data-try="s6"></div>
+</section>
+
+<!-- 7 -->
+<section id="s7">
+  <h2><span class="num">7</span> Abstract Classes 🎭</h2>
+  <p>An <b>abstract class</b> is an <b>incomplete</b> class. It is made only to be a base for other classes. You <b>cannot create an object</b> from it.</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>Nobody can draw "a shape" ✏️. You can only draw a <b>circle</b> or a <b>square</b>. "Shape" is just an idea. It says: "every shape must be able to tell its area", but it does not say how. Each real shape decides for itself.</p></div>
+  <div class="card info-card">
+    <span class="tag">New idea: pure virtual function</span>
+    <div class="diagram" style="margin-bottom:6px">virtual void area() <b>= 0</b>;</div>
+    <ul class="clean">
+      <li>It has <b>no body</b>. It is only a promise: "my children will write this."</li>
+      <li>We write <code>virtual</code> at the start and <code>= 0</code> at the end.</li>
+      <li>A class with <b>at least one</b> pure virtual function is an <b>abstract class</b>.</li>
+      <li>A child class must <b>write the function</b> (with a body). Then the child is a normal class and objects can be created.</li>
+      <li>If the child forgets, the child is <b>also abstract</b>.</li>
+    </ul>
+  </div>
+  <div class="demo">
+    <span class="tag">🎮 Try the switches</span>
+    <p><b>1.</b> How is <code>area()</code> written in Shape?</p>
+    <div class="seg" role="group" aria-label="shape type"><button id="aPure" class="on">= 0 (pure virtual)</button><button id="aNorm">normal, with a body</button></div>
+    <p><b>2.</b> Does Square write its own <code>area()</code>?</p>
+    <div class="seg" role="group" aria-label="square writes"><button id="aYes" class="on">Yes</button><button id="aNo">No</button></div>
+    <div class="msg" id="aMsg" style="margin-top:12px"></div>
+  </div>
+  <div class="prog" data-prog="abs1"></div>
+  <p>And here is what happens if we try to create an object of the abstract class:</p>
+  <div class="prog" data-prog="absErr"></div>
+  <div data-try="s7"></div>
+</section>
+
+<!-- 8 -->
+<section id="s8">
+  <h2><span class="num">8</span> Abstract Classes with Data &amp; Constructors 🧰</h2>
+  <p>An abstract class is still a class. It can have <b>data members</b>, a <b>constructor</b> and normal functions. Its children send values to it with the initializer list, just like in Section 5.</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>Every employee in a company has a <b>name</b> and joins in the same way. But what each one <b>works on</b> is different: a teacher teaches 📚, a driver drives 🚌. "Employee" is the abstract idea. Teacher and Driver are real jobs.</p></div>
+  <button class="reveal-btn" aria-expanded="false"><span>👩‍🏫 Tap: what does Teacher write?</span><span>＋</span></button>
+  <div class="reveal-body" hidden><p>Teacher writes its own <code>work()</code>: it prints <code>"&lt;name&gt; teaches students"</code>. It also passes the name up with <code>: Employee(n)</code>.</p></div>
+  <button class="reveal-btn" aria-expanded="false"><span>🚌 Tap: what does Driver write?</span><span>＋</span></button>
+  <div class="reveal-body" hidden><p>Driver writes its own <code>work()</code>: it prints <code>"&lt;name&gt; drives the bus"</code>. It also passes the name up with <code>: Employee(n)</code>.</p></div>
+  <div class="prog" data-prog="abs2"></div>
+  <div data-try="s8"></div>
+</section>
+
+<!-- 9 -->
+<section id="s9">
+  <h2><span class="num">9</span> Member Classes: Objects Inside a Class 🚗</h2>
+  <p>A class can keep an <b>object of another class</b> as one of its members. This is called a <b>member object</b> (also called <b>containership</b>). It shows a <b>has-a</b> relationship.</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>A car 🚗 <b>has an</b> engine ⚙️. The car is <b>not</b> a kind of engine. So the Engine is a <b>part inside</b> the Car. Inheritance says "is a". Member objects say "has a".</p></div>
+  <div class="tablewrap"><table>
+    <tr><th></th><th>Inheritance</th><th>Member object</th></tr>
+    <tr><td>Relationship</td><td><b>is-a</b></td><td><b>has-a</b></td></tr>
+    <tr><td>Example</td><td>Dog is an Animal</td><td>Car has an Engine</td></tr>
+    <tr><td>How we write it</td><td><code>class Dog : public Animal</code></td><td><code>Engine engine;</code> inside Car</td></tr>
+  </table></div>
+  <div class="card warn"><span class="tag">⚠️ Order of writing</span><p>The <code>Engine</code> class must be written <b>before</b> the <code>Car</code> class. Car can only use something that is already known.</p></div>
+  <div class="demo">
+    <span class="tag">🎮 Is it "is-a" or "has-a"?</span>
+    <div id="hasGame"></div>
+  </div>
+  <div class="prog" data-prog="member1"></div>
+  <div data-try="s9"></div>
+</section>
+
+<!-- 10 -->
+<section id="s10">
+  <h2><span class="num">10</span> Constructors with Member Objects 🔩</h2>
+  <p>When we create a Car, its <b>Engine</b> member must be built too. The rules:</p>
+  <div class="card key">
+    <ul class="clean">
+      <li><b>Member objects are built first</b>, then the body of the Car's constructor runs.</li>
+      <li>To give the Engine a value, use the initializer list with the <b>member's name</b>: <code>Car(int h) : engine(h)</code></li>
+      <li>Remember: for a base class we write the <b>class name</b>. For a member object we write the <b>object name</b>.</li>
+      <li>Removing is in <b>reverse</b>: Car's destructor first, then Engine's.</li>
+    </ul>
+  </div>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>A factory fits the <b>engine</b> into a car body <b>before</b> the car is finished and handed over. When the car is scrapped, the car is taken apart first and then the engine is removed.</p></div>
+  <div class="demo">
+    <span class="tag">🎮 Tap to build and remove</span>
+    <div id="chain10"></div>
+  </div>
+  <div class="prog" data-prog="member2"></div>
+  <div data-try="s10"></div>
+</section>
+
+<!-- 11 -->
+<section id="s11">
+  <h2><span class="num">11</span> Nested Classes: A Class Inside a Class 🪆</h2>
+  <p>A <b>nested class</b> is a class written <b>inside</b> another class. It belongs to the outer class.</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>Think of Russian nesting dolls 🪆. A smaller doll lives <b>inside</b> the bigger doll. A <code>Keyboard</code> class written inside a <code>Computer</code> class is like that.</p></div>
+  <div class="card info-card"><span class="tag">New symbol: ::</span><p>The <b>scope resolution</b> operator <code>::</code> means "that lives inside". <code>Computer::Keyboard</code> means "the Keyboard that lives inside Computer". We use it to create an object of a nested class.</p></div>
+  <div class="card key"><span class="tag">✅ Do not mix up</span><p><b>Member object</b> = an <b>object</b> kept inside a class (Section 9).<br><b>Nested class</b> = a whole <b>class</b> (blueprint) written inside a class.</p></div>
+  <div class="demo">
+    <span class="tag">🎮 Type &amp; see</span>
+    <div class="row">
+      <label>Outer: <input type="text" id="nOut" value="Computer" maxlength="16"></label>
+      <label>Inner: <input type="text" id="nIn" value="Keyboard" maxlength="16"></label>
+    </div>
+    <div class="diagram syn" id="nCode" style="margin-bottom:0"></div>
+    <div class="msg" id="nMsg"></div>
+  </div>
+  <div class="prog" data-prog="nested"></div>
+  <div data-try="s11"></div>
+</section>
+
+<!-- 12 -->
+<section id="s12">
+  <h2><span class="num">12</span> Quick Summary 📌</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Idea</th><th>One line</th><th>Syntax</th></tr>
+    <tr><td><b>Constructor</b></td><td>Runs automatically when the object is created</td><td><code>Animal() { }</code></td></tr>
+    <tr><td><b>Parameterized</b></td><td>Receives values</td><td><code>Animal(string n) { }</code></td></tr>
+    <tr><td><b>Derived constructor</b></td><td>Base runs first, then derived</td><td><code>Dog() { }</code></td></tr>
+    <tr><td><b>Pass to base</b></td><td>Initializer list</td><td><code>Dog(string n) : Animal(n) { }</code></td></tr>
+    <tr><td><b>Destructor</b></td><td>Runs when the object is removed, in reverse order</td><td><code>~Animal() { }</code></td></tr>
+    <tr><td><b>Abstract class</b></td><td>Has a pure virtual function. No objects.</td><td><code>virtual void area() = 0;</code></td></tr>
+    <tr><td><b>Member object</b></td><td>has-a. Built before the container body.</td><td><code>Engine engine;</code></td></tr>
+    <tr><td><b>Nested class</b></td><td>A class inside a class</td><td><code>Computer::Keyboard k;</code></td></tr>
+  </table></div>
+  <div class="card key">
+    <span class="tag">✅ Five golden rules</span>
+    <ul class="clean">
+      <li>Constructor: same name as the class and no return type.</li>
+      <li>Constructors run <b>Base ➜ Derived</b>. Destructors run in <b>reverse</b>.</li>
+      <li>Pass values to the base with <code>: Base(value)</code>.</li>
+      <li>A class with a pure virtual function is abstract. You cannot make an object of it.</li>
+      <li>Member objects are built <b>before</b> the body of the container's constructor.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 13 -->
+<section id="s13">
+  <h2><span class="num">13</span> Practice Questions 📝</h2>
+  <p>Try to answer each question in your notebook first. Then press <b>Show answer</b>. All answers are hidden now.</p>
+  <div class="qbar">
+    <span>📚 All answers</span>
+    <button class="btn green small" data-all="show" style="background:#00916f">👀 Show all answers</button>
+    <button class="btn red small" data-all="hide" style="background:#d63a46">🙈 Hide all</button>
+  </div>
+  <div id="qRoot"></div>
+  <div class="qbar" style="position:static;margin-top:20px">
+    <span>📚 All answers</span>
+    <button class="btn green small" data-all="show" style="background:#00916f">👀 Show all answers</button>
+    <button class="btn red small" data-all="hide" style="background:#d63a46">🙈 Hide all</button>
+  </div>
+</section>
+
+<footer>🎉 Great job! Keep practising — these ideas will soon feel easy.</footer>
+</main>
+
+<button class="to-top" id="toTop" aria-label="Back to top">↑</button>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- helpers ---------- */
+function $(s,r){return (r||document).querySelector(s);}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+var KW=/^(class|public|virtual|void|int|string|return|using|namespace)$/;
+function hl(s){
+  var re=/(\/\/.*$)|("(?:[^"\\]|\\.)*")|(#include\s*<[^>]*>)|([A-Za-z_]\w*)|(\d+)/g,out="",last=0,m;
+  while((m=re.exec(s))){
+    out+=esc(s.slice(last,m.index));
+    var t=m[0],cls=null;
+    if(m[1])cls="c";else if(m[2])cls="s";else if(m[3])cls="p";else if(m[4]){if(KW.test(t))cls="k";}else if(m[5])cls="n";
+    out+=cls?'<span class="t-'+cls+'">'+esc(t)+'</span>':esc(t);
+    last=m.index+t.length;
+  }
+  return out+esc(s.slice(last));
+}
+
+/* ---------- program data ---------- */
+function mk(title,rows,trace,out){
+  var lines=rows.replace(/^\n+|\n+$/g,"").split("\n").map(function(r){
+    var i=r.indexOf(" ||| ");
+    if(i<0){ if(r.slice(-4)===" |||"){return [r.slice(0,-4),""];} return [r,""]; }
+    return [r.slice(0,i),r.slice(i+5)];
+  });
+  return {title:title,lines:lines,trace:trace||[],out:out};
+}
+var H2="#include <iostream> ||| Brings in the tool for printing (cout).\nusing namespace std; ||| Lets us write cout instead of std::cout.\n";
+var H3="#include <iostream> ||| Brings in the tool for printing (cout).\n#include <string> ||| Brings in the tool for text (string).\nusing namespace std; ||| Lets us write cout instead of std::cout.\n";
+var MAIN_START=["int main() {","","The program starts at main()."];
+var RET=["return 0;","","main() finishes. The program ends. 🎉"];
+
+var PROGS={};
+PROGS.basics=mk("Refresher: Animal ➜ Dog",H3+`
+class Animal { ||| The base class (parent).
+public: ||| Open for everyone.
+    string name; ||| Data member: the animal's name.
+    void eat() { ||| Member function eat().
+        cout << name << " is eating" << endl; ||| Prints "<name> is eating".
+    } ||| End of eat().
+}; ||| End of Animal.
+
+class Dog : public Animal { ||| Dog inherits from Animal. Dog gets name and eat().
+public: ||| Open for everyone.
+    void bark() { ||| Dog's own function.
+        cout << name << " says Woof!" << endl; ||| Uses the inherited name.
+    } ||| End of bark().
+}; ||| End of Dog.
+
+int main() { ||| The program starts here.
+    Dog d; ||| Make a Dog object named d.
+    d.name = "Tommy"; ||| The dot reaches inside d. name came from Animal.
+    d.eat(); ||| eat() also came from Animal.
+    d.bark(); ||| bark() belongs to Dog.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[MAIN_START,
+ ["Dog d;","","Object d is created from the Dog blueprint."],
+ ["d.name =","","name becomes Tommy."],
+ ["d.eat();","","We call eat(), which Dog got from Animal."],
+ ["cout << name << \" is eating\"","Tommy is eating","Prints the name and the words."],
+ ["d.bark();","","We call bark(), Dog's own function."],
+ ["cout << name << \" says Woof!\"","Tommy says Woof!","bark() uses the inherited name."],
+ RET]);
+
+PROGS.ctor1=mk("Our first constructor",H2+`
+class Animal { ||| We start a class named Animal.
+public: ||| Open for everyone.
+    Animal() { ||| The constructor: same name as the class, no return type, no values.
+        cout << "An animal is born!" << endl; ||| This runs every time an Animal object is created.
+    } ||| End of the constructor.
+}; ||| End of the class.
+
+int main() { ||| The program starts here.
+    Animal a; ||| Make object a. The constructor runs by itself!
+    Animal b; ||| Make object b. The constructor runs again.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[MAIN_START,
+ ["Animal a;","","Object a is created. C++ calls the constructor automatically."],
+ ["cout << \"An animal","An animal is born!","The constructor body runs and prints."],
+ ["Animal b;","","Object b is created. The constructor runs once more."],
+ ["cout << \"An animal","An animal is born!","Same message again, for the second object."],
+ RET]);
+
+PROGS.ctor2=mk("Constructor with a value",H3+`
+class Animal { ||| We start a class named Animal.
+public: ||| Open for everyone.
+    string name; ||| Data member: the name.
+    Animal(string n) { ||| Constructor with a parameter. The box n receives a name.
+        name = n; ||| Copy the received value into the data member.
+        cout << name << " is born!" << endl; ||| Prints the name and the words.
+    } ||| End of the constructor.
+    void show() { ||| A normal member function.
+        cout << "Name: " << name << endl; ||| Prints the stored name.
+    } ||| End of show().
+}; ||| End of the class.
+
+int main() { ||| The program starts here.
+    Animal a("Tommy"); ||| Make object a and send the value Tommy to the constructor.
+    a.show(); ||| Call show() of a.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[MAIN_START,
+ ["Animal a(\"Tommy\");","","Object a is created. The value Tommy is sent to the constructor, so n = Tommy."],
+ ["name = n;","","The data member name now holds Tommy."],
+ ["cout << name << \" is born!\"","Tommy is born!","The constructor prints a message."],
+ ["a.show();","","We call show() on a."],
+ ["cout << \"Name: \"","Name: Tommy","Prints the stored name."],
+ RET]);
+
+PROGS.derived1=mk("Constructors in a derived class: base first",H2+`
+class Animal { ||| The base class.
+public: ||| Open for everyone.
+    Animal() { ||| Base class constructor.
+        cout << "Animal constructor" << endl; ||| Prints a message.
+    } ||| End of Animal's constructor.
+}; ||| End of Animal.
+
+class Dog : public Animal { ||| Dog inherits from Animal.
+public: ||| Open for everyone.
+    Dog() { ||| Derived class constructor.
+        cout << "Dog constructor" << endl; ||| Prints a message.
+    } ||| End of Dog's constructor.
+}; ||| End of Dog.
+
+int main() { ||| The program starts here.
+    Dog d; ||| Make a Dog object. Both constructors will run.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[MAIN_START,
+ ["Dog d;","","A Dog object is created. Before Dog's constructor, C++ first builds the base part."],
+ ["cout << \"Animal constructor\"","Animal constructor","Base first! Animal's constructor runs and prints."],
+ ["cout << \"Dog constructor\"","Dog constructor","Now Dog's own constructor runs."],
+ RET]);
+
+PROGS.derived2=mk("Sending values to the base constructor",H3+`
+class Animal { ||| The base class.
+public: ||| Open for everyone.
+    string name; ||| Data member: the name.
+    Animal(string n) { ||| Base constructor. It needs one value.
+        name = n; ||| Store the name.
+        cout << "Animal " << name << " created" << endl; ||| Prints a message.
+    } ||| End of Animal's constructor.
+}; ||| End of Animal.
+
+class Dog : public Animal { ||| Dog inherits from Animal.
+public: ||| Open for everyone.
+    int age; ||| Dog's own data member.
+    Dog(string n, int a) : Animal(n) { ||| Takes two values. After the colon, n is passed to Animal's constructor.
+        age = a; ||| Store the age.
+        cout << "Dog aged " << age << " created" << endl; ||| Prints a message.
+    } ||| End of Dog's constructor.
+}; ||| End of Dog.
+
+int main() { ||| The program starts here.
+    Dog d("Tommy", 3); ||| Make a Dog. Send two values: Tommy and 3.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[MAIN_START,
+ ["Dog d(\"Tommy\", 3);","","Two values go to Dog's constructor: n = Tommy and a = 3."],
+ ["Dog(string n, int a)","","Before the body runs, Animal(n) is called and Tommy is passed to the base."],
+ ["name = n;","","Inside Animal's constructor: name becomes Tommy."],
+ ["cout << \"Animal \"","Animal Tommy created","The base constructor prints."],
+ ["age = a;","","Now Dog's own body runs. age becomes 3."],
+ ["cout << \"Dog aged \"","Dog aged 3 created","The derived constructor prints."],
+ RET]);
+
+PROGS.chain=mk("Constructors and destructors in a chain",H2+`
+class Vehicle { ||| The top class.
+public: ||| Open for everyone.
+    Vehicle() { ||| Vehicle's constructor.
+        cout << "Vehicle built" << endl; ||| Prints a message.
+    } ||| End of constructor.
+    ~Vehicle() { ||| Vehicle's destructor: tilde + class name.
+        cout << "Vehicle removed" << endl; ||| Prints a message when removed.
+    } ||| End of destructor.
+}; ||| End of Vehicle.
+
+class Car : public Vehicle { ||| Car inherits from Vehicle.
+public: ||| Open for everyone.
+    Car() { ||| Car's constructor.
+        cout << "Car built" << endl; ||| Prints a message.
+    } ||| End of constructor.
+    ~Car() { ||| Car's destructor.
+        cout << "Car removed" << endl; ||| Prints a message when removed.
+    } ||| End of destructor.
+}; ||| End of Car.
+
+class SportsCar : public Car { ||| SportsCar inherits from Car.
+public: ||| Open for everyone.
+    SportsCar() { ||| SportsCar's constructor.
+        cout << "SportsCar built" << endl; ||| Prints a message.
+    } ||| End of constructor.
+    ~SportsCar() { ||| SportsCar's destructor.
+        cout << "SportsCar removed" << endl; ||| Prints a message when removed.
+    } ||| End of destructor.
+}; ||| End of SportsCar.
+
+int main() { ||| The program starts here.
+    SportsCar s; ||| Make a SportsCar. Three constructors will run.
+    cout << "Driving..." << endl; ||| A normal message in main.
+    return 0; ||| main ends, so s is removed. Destructors run now.
+} ||| End of main().`,
+[MAIN_START,
+ ["SportsCar s;","","s is created. C++ builds from the top: Vehicle, then Car, then SportsCar."],
+ ["cout << \"Vehicle built\"","Vehicle built","First, the top class is built."],
+ ["cout << \"Car built\"","Car built","Next, the middle class."],
+ ["cout << \"SportsCar built\"","SportsCar built","Last, the bottom class."],
+ ["cout << \"Driving...\"","Driving...","A normal line in main."],
+ ["return 0;","","main is ending, so object s is removed. Destructors run in REVERSE order."],
+ ["cout << \"SportsCar removed\"","SportsCar removed","The last one built is removed first."],
+ ["cout << \"Car removed\"","Car removed","Then the middle class."],
+ ["cout << \"Vehicle removed\"","Vehicle removed","The first one built is removed last."]]);
+
+PROGS.abs1=mk("An abstract class: Shape",H2+`
+class Shape { ||| An abstract class, because of the pure virtual function below.
+public: ||| Open for everyone.
+    virtual void area() = 0; ||| Pure virtual function: no body, "= 0". Children must write it.
+}; ||| End of Shape.
+
+class Square : public Shape { ||| Square inherits Shape.
+public: ||| Open for everyone.
+    int side; ||| Square's own data: the side.
+    void area() { ||| Square writes the body of area(). Now Square is a normal class.
+        cout << "Square area: " << side * side << endl; ||| Prints side times side.
+    } ||| End of area().
+}; ||| End of Square.
+
+class Rectangle : public Shape { ||| Rectangle inherits Shape too.
+public: ||| Open for everyone.
+    int width; ||| Rectangle's width.
+    int height; ||| Rectangle's height.
+    void area() { ||| Rectangle writes its own area().
+        cout << "Rectangle area: " << width * height << endl; ||| Prints width times height.
+    } ||| End of area().
+}; ||| End of Rectangle.
+
+int main() { ||| The program starts here.
+    Square sq; ||| Allowed: Square is not abstract.
+    sq.side = 5; ||| Set the side to 5.
+    sq.area(); ||| Call Square's area().
+    Rectangle r; ||| Allowed: Rectangle is not abstract.
+    r.width = 4; ||| Set the width.
+    r.height = 6; ||| Set the height.
+    r.area(); ||| Call Rectangle's area().
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[MAIN_START,
+ ["Square sq;","","A Square object is made. This is fine because Square wrote area()."],
+ ["sq.side =","","side becomes 5."],
+ ["sq.area();","","We call Square's own version of area()."],
+ ["cout << \"Square area: \"","Square area: 25","5 * 5 = 25."],
+ ["Rectangle r;","","A Rectangle object is made. Also fine."],
+ ["r.width =","","width becomes 4."],
+ ["r.height =","","height becomes 6."],
+ ["r.area();","","We call Rectangle's own version of area()."],
+ ["cout << \"Rectangle area: \"","Rectangle area: 24","4 * 6 = 24."],
+ RET]);
+
+PROGS.absErr=mk("Trying to make an object of an abstract class (ERROR)",H2+`
+class Shape { ||| An abstract class.
+public: ||| Open for everyone.
+    virtual void area() = 0; ||| Pure virtual function: no body.
+}; ||| End of Shape.
+
+int main() { ||| The program starts here.
+    Shape s; ||| ERROR! Shape is incomplete, so no object can be made.
+    return 0; ||| We never reach this line.
+} ||| End of main().`,
+[MAIN_START,
+ ["Shape s;","❌ Compile error: cannot declare variable 's' to be of abstract type 'Shape'","Shape has a function with no body, so C++ refuses to create an object of it."]]);
+PROGS.absErr.endMsg="💥 The program stopped with an error. Press Reset to see it again.";
+
+PROGS.abs2=mk("Abstract class with a constructor: Employee",H3+`
+class Employee { ||| An abstract class (it has a pure virtual function).
+public: ||| Open for everyone.
+    string name; ||| Data member: the name.
+    Employee(string n) { ||| Constructor that receives a name.
+        name = n; ||| Store the name.
+        cout << "Employee " << name << " joined" << endl; ||| Prints a message.
+    } ||| End of the constructor.
+    virtual void work() = 0; ||| Pure virtual: every child must write work().
+}; ||| End of Employee.
+
+class Teacher : public Employee { ||| Teacher inherits Employee.
+public: ||| Open for everyone.
+    Teacher(string n) : Employee(n) { ||| Passes the name up to Employee's constructor.
+        cout << "Teacher is ready" << endl; ||| Prints a message.
+    } ||| End of the constructor.
+    void work() { ||| Teacher's own version of work().
+        cout << name << " teaches students" << endl; ||| Prints what a teacher does.
+    } ||| End of work().
+}; ||| End of Teacher.
+
+class Driver : public Employee { ||| Driver inherits Employee.
+public: ||| Open for everyone.
+    Driver(string n) : Employee(n) { ||| Passes the name up to Employee's constructor.
+        cout << "Driver is ready" << endl; ||| Prints a message.
+    } ||| End of the constructor.
+    void work() { ||| Driver's own version of work().
+        cout << name << " drives the bus" << endl; ||| Prints what a driver does.
+    } ||| End of work().
+}; ||| End of Driver.
+
+int main() { ||| The program starts here.
+    Teacher t("Asha"); ||| Make a Teacher. Employee's constructor runs first.
+    Driver d("Ravi"); ||| Make a Driver. Employee's constructor runs first again.
+    t.work(); ||| Teacher's work().
+    d.work(); ||| Driver's work().
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[MAIN_START,
+ ["Teacher t(\"Asha\");","","Teacher is created with the value Asha."],
+ ["Teacher(string n)","","Employee(n) is called first and receives Asha."],
+ ["name = n;","","Inside Employee's constructor: name becomes Asha."],
+ ["cout << \"Employee \"","Employee Asha joined","The base constructor prints."],
+ ["cout << \"Teacher is ready\"","Teacher is ready","Now Teacher's own constructor body runs."],
+ ["Driver d(\"Ravi\");","","Driver is created with the value Ravi."],
+ ["Driver(string n)","","Employee(n) is called first and receives Ravi."],
+ ["name = n;","","Inside Employee's constructor: name becomes Ravi."],
+ ["cout << \"Employee \"","Employee Ravi joined","The base constructor prints."],
+ ["cout << \"Driver is ready\"","Driver is ready","Now Driver's own constructor body runs."],
+ ["t.work();","","We call Teacher's work()."],
+ ["cout << name << \" teaches students\"","Asha teaches students","Prints what a teacher does."],
+ ["d.work();","","We call Driver's work()."],
+ ["cout << name << \" drives the bus\"","Ravi drives the bus","Prints what a driver does."],
+ RET]);
+
+PROGS.member1=mk("A member object: Car has an Engine",H2+`
+class Engine { ||| Written first, so Car can use it.
+public: ||| Open for everyone.
+    void start() { ||| Engine's function.
+        cout << "Engine started" << endl; ||| Prints a message.
+    } ||| End of start().
+}; ||| End of Engine.
+
+class Car { ||| Car does not inherit. It HAS an Engine.
+public: ||| Open for everyone.
+    Engine engine; ||| A member object: an Engine named engine lives inside every Car.
+    void drive() { ||| Car's function.
+        engine.start(); ||| Car asks its engine to start (dot reaches inside).
+        cout << "Car is moving" << endl; ||| Prints a message.
+    } ||| End of drive().
+}; ||| End of Car.
+
+int main() { ||| The program starts here.
+    Car c; ||| Make a Car. Its Engine is made inside it.
+    c.drive(); ||| Call Car's drive().
+    c.engine.start(); ||| Reach the engine inside c with two dots.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[MAIN_START,
+ ["Car c;","","c is created. A ready-made Engine called engine is created inside it."],
+ ["c.drive();","","We call drive() of the car."],
+ ["engine.start();","","Inside drive(), the car asks its engine to start."],
+ ["cout << \"Engine started\"","Engine started","The engine prints."],
+ ["cout << \"Car is moving\"","Car is moving","Then the car prints."],
+ ["c.engine.start();","","c.engine is the engine inside c. We call start() on it directly."],
+ ["cout << \"Engine started\"","Engine started","The engine prints again."],
+ RET]);
+
+PROGS.member2=mk("Constructors and a member object",H2+`
+class Engine { ||| Written first.
+public: ||| Open for everyone.
+    int hp; ||| Data member: horse power.
+    Engine(int h) { ||| Engine's constructor. It receives a value.
+        hp = h; ||| Store the value.
+        cout << "Engine ready: " << hp << " hp" << endl; ||| Prints a message.
+    } ||| End of the constructor.
+    ~Engine() { ||| Engine's destructor.
+        cout << "Engine removed" << endl; ||| Prints a message when removed.
+    } ||| End of the destructor.
+}; ||| End of Engine.
+
+class Car { ||| Car has an Engine.
+public: ||| Open for everyone.
+    Engine engine; ||| The member object.
+    Car(int h) : engine(h) { ||| After the colon: build the member engine and give it h. We write the object name, engine.
+        cout << "Car ready" << endl; ||| Prints a message.
+    } ||| End of the constructor.
+    ~Car() { ||| Car's destructor.
+        cout << "Car removed" << endl; ||| Prints a message when removed.
+    } ||| End of the destructor.
+}; ||| End of Car.
+
+int main() { ||| The program starts here.
+    Car c(100); ||| Make a Car and send 100.
+    return 0; ||| main ends, so c is removed.
+} ||| End of main().`,
+[MAIN_START,
+ ["Car c(100);","","c is created. 100 goes to Car's constructor, so h = 100."],
+ ["Car(int h)","","Before Car's body, the member engine is built using engine(h)."],
+ ["hp = h;","","Inside Engine's constructor: hp becomes 100."],
+ ["cout << \"Engine ready: \"","Engine ready: 100 hp","The member object is ready first."],
+ ["cout << \"Car ready\"","Car ready","Now Car's own body runs."],
+ ["return 0;","","main ends, so c is removed. Destructors run in reverse order."],
+ ["cout << \"Car removed\"","Car removed","The Car's destructor runs first."],
+ ["cout << \"Engine removed\"","Engine removed","Then the member Engine is removed."]]);
+
+PROGS.nested=mk("A nested class: Keyboard inside Computer",H2+`
+class Computer { ||| The outer class.
+public: ||| Open for everyone.
+    class Keyboard { ||| A class written INSIDE Computer: a nested class.
+    public: ||| Open for everyone.
+        void type() { ||| Keyboard's function.
+            cout << "Typing on the keyboard" << endl; ||| Prints a message.
+        } ||| End of type().
+    }; ||| End of Keyboard.
+    void turnOn() { ||| Computer's own function.
+        cout << "Computer is on" << endl; ||| Prints a message.
+    } ||| End of turnOn().
+}; ||| End of Computer.
+
+int main() { ||| The program starts here.
+    Computer pc; ||| Make a Computer object.
+    pc.turnOn(); ||| Call Computer's function.
+    Computer::Keyboard k; ||| Make a Keyboard object. :: means "the Keyboard that lives inside Computer".
+    k.type(); ||| Call Keyboard's function.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[MAIN_START,
+ ["Computer pc;","","An object pc of the outer class is created."],
+ ["pc.turnOn();","","We call turnOn() of the computer."],
+ ["cout << \"Computer is on\"","Computer is on","Prints a message."],
+ ["Computer::Keyboard k;","","We create an object of the nested class using ::"],
+ ["k.type();","","We call type() of the keyboard."],
+ ["cout << \"Typing on the keyboard\"","Typing on the keyboard","Prints a message."],
+ RET]);
+
+/* guess-the-output programs */
+var GUESS=[
+ mk("",H2+`
+class A {
+public:
+    A() {
+        cout << "A" << endl;
+    }
+};
+
+class B : public A {
+public:
+    B() {
+        cout << "B" << endl;
+    }
+};
+
+int main() {
+    B b;
+    return 0;
+}`,[],"A\nB"),
+ mk("",H2+`
+class A {
+public:
+    A() {
+        cout << "A made" << endl;
+    }
+    ~A() {
+        cout << "A gone" << endl;
+    }
+};
+
+class B : public A {
+public:
+    B() {
+        cout << "B made" << endl;
+    }
+    ~B() {
+        cout << "B gone" << endl;
+    }
+};
+
+int main() {
+    B b;
+    cout << "Hello" << endl;
+    return 0;
+}`,[],"A made\nB made\nHello\nB gone\nA gone"),
+ mk("",H2+`
+class P {
+public:
+    P(int x) {
+        cout << "P" << x << endl;
+    }
+};
+
+class C : public P {
+public:
+    C(int y) : P(y + 1) {
+        cout << "C" << y << endl;
+    }
+};
+
+int main() {
+    C c(5);
+    return 0;
+}`,[],"P6\nC5"),
+ mk("",H2+`
+class Wheel {
+public:
+    Wheel() {
+        cout << "Wheel" << endl;
+    }
+};
+
+class Bike {
+public:
+    Wheel w;
+    Bike() {
+        cout << "Bike" << endl;
+    }
+};
+
+int main() {
+    Bike b;
+    return 0;
+}`,[],"Wheel\nBike"),
+ mk("",H2+`
+class Animal {
+public:
+    virtual void sound() = 0;
+};
+
+class Dog : public Animal {
+public:
+    void sound() {
+        cout << "Woof" << endl;
+    }
+};
+
+class Cat : public Animal {
+public:
+    void sound() {
+        cout << "Meow" << endl;
+    }
+};
+
+int main() {
+    Dog d;
+    Cat c;
+    d.sound();
+    c.sound();
+    c.sound();
+    return 0;
+}`,[],"Woof\nMeow\nMeow"),
+ mk("",H2+`
+class Animal {
+public:
+    Animal() {
+        cout << "Animal" << endl;
+    }
+    virtual void sound() = 0;
+};
+
+class Dog : public Animal {
+public:
+    Dog() {
+        cout << "Dog" << endl;
+    }
+    void sound() {
+        cout << "Woof" << endl;
+    }
+};
+
+int main() {
+    Dog d;
+    d.sound();
+    return 0;
+}`,[],"Animal\nDog\nWoof")
+];
+var GUESS_WHY=[
+ "Creating <code>b</code> runs the <b>base</b> constructor first (prints A), then the derived constructor (prints B).",
+ "Constructors run Base ➜ Derived: <b>A made</b>, <b>B made</b>. Then main prints <b>Hello</b>. When main ends, destructors run in reverse: <b>B gone</b>, then <b>A gone</b>.",
+ "<code>C c(5)</code> sends 5 to C's constructor, so y = 5. <code>: P(y + 1)</code> sends 6 to P's constructor, which prints <b>P6</b> first. Then C's body prints <b>C5</b>.",
+ "The member object <code>w</code> is built <b>before</b> the body of Bike's constructor runs. So <b>Wheel</b> prints first, then <b>Bike</b>.",
+ "Animal is abstract, but Dog and Cat both write <code>sound()</code>, so we can create their objects. <code>d.sound()</code> prints Woof. <code>c.sound()</code> is called twice, so Meow prints twice.",
+ "An abstract class can have a constructor. Base first: <b>Animal</b>, then <b>Dog</b>. Then <code>d.sound()</code> prints <b>Woof</b>."
+];
+
+var WRITE=[
+ {t:"Write a nested class program: a class <code>School</code> with a nested class <code>Library</code>. <code>Library</code> has a function <code>open()</code> that prints a message. Create a <code>Library</code> object in <code>main()</code> and call <code>open()</code>.",
+  p:mk("",H2+`
+class School { ||| The outer class.
+public: ||| Open for everyone.
+    class Library { ||| A nested class: written inside School.
+    public: ||| Open for everyone.
+        void open() { ||| Library's function.
+            cout << "Library is open" << endl; ||| Prints a message.
+        } ||| End of open().
+    }; ||| End of Library.
+}; ||| End of School.
+
+int main() { ||| Program starts.
+    School::Library lib; ||| Make a Library object. :: means "the Library inside School".
+    lib.open(); ||| Call open().
+    return 0; ||| End well.
+} ||| End of main().`,[],"Library is open")},
+ {t:"Write a class <code>Student</code> with a <b>constructor</b> that prints <code>Student created</code>. Create two objects in <code>main()</code>.",
+  p:mk("",H2+`
+class Student { ||| A class named Student.
+public: ||| Open for everyone.
+    Student() { ||| Constructor: same name as the class, no return type.
+        cout << "Student created" << endl; ||| Runs for every new object.
+    } ||| End of constructor.
+}; ||| End of Student.
+
+int main() { ||| Program starts.
+    Student s1; ||| First object: constructor runs.
+    Student s2; ||| Second object: constructor runs again.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Student created\nStudent created")},
+ {t:"Write a class <code>Student</code> with <code>string name</code> and <code>int marks</code>. Use a <b>parameterized constructor</b> to set both. Add a function <code>show()</code> that prints them. Create <code>Student s(\"Asha\", 90);</code> and call <code>show()</code>.",
+  p:mk("",H3+`
+class Student { ||| A class named Student.
+public: ||| Open for everyone.
+    string name; ||| Data member: the name.
+    int marks; ||| Data member: the marks.
+    Student(string n, int m) { ||| Constructor with two parameters.
+        name = n; ||| Copy the name.
+        marks = m; ||| Copy the marks.
+    } ||| End of constructor.
+    void show() { ||| Prints the details.
+        cout << "Name: " << name << " Marks: " << marks << endl; ||| Prints both values.
+    } ||| End of show().
+}; ||| End of Student.
+
+int main() { ||| Program starts.
+    Student s("Asha", 90); ||| Make s and send two values.
+    s.show(); ||| Call show().
+    return 0; ||| End well.
+} ||| End of main().`,[],"Name: Asha Marks: 90")},
+ {t:"Write a program with base class <code>Person</code> (constructor takes <code>string n</code>, stores it in <code>name</code>) and derived class <code>Student</code> (constructor takes <code>string n</code> and <code>int r</code>, passes <code>n</code> to Person, stores <code>r</code> in <code>roll</code>). Print both in Student's constructor.",
+  p:mk("",H3+`
+class Person { ||| Base class.
+public: ||| Open for everyone.
+    string name; ||| Data member: the name.
+    Person(string n) { ||| Base constructor with one value.
+        name = n; ||| Store the name.
+    } ||| End of Person's constructor.
+}; ||| End of Person.
+
+class Student : public Person { ||| Student inherits Person.
+public: ||| Open for everyone.
+    int roll; ||| Student's own data: roll number.
+    Student(string n, int r) : Person(n) { ||| Pass n to Person's constructor.
+        roll = r; ||| Store the roll number.
+        cout << name << " has roll number " << roll << endl; ||| Prints both values.
+    } ||| End of Student's constructor.
+}; ||| End of Student.
+
+int main() { ||| Program starts.
+    Student s("Meena", 12); ||| Make s and send two values.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Meena has roll number 12")},
+ {t:"Write a three-level program: <code>GrandFather</code> ➜ <code>Father</code> ➜ <code>Son</code>. Each class has a constructor and a destructor that print a message (for example <code>GrandFather built</code> and <code>GrandFather removed</code>). Create a <code>Son</code> object.",
+  p:mk("",H2+`
+class GrandFather { ||| Top class.
+public: ||| Open for everyone.
+    GrandFather() { ||| Constructor.
+        cout << "GrandFather built" << endl; ||| Prints a message.
+    } ||| End of constructor.
+    ~GrandFather() { ||| Destructor.
+        cout << "GrandFather removed" << endl; ||| Prints a message.
+    } ||| End of destructor.
+}; ||| End of GrandFather.
+
+class Father : public GrandFather { ||| Middle class.
+public: ||| Open for everyone.
+    Father() { ||| Constructor.
+        cout << "Father built" << endl; ||| Prints a message.
+    } ||| End of constructor.
+    ~Father() { ||| Destructor.
+        cout << "Father removed" << endl; ||| Prints a message.
+    } ||| End of destructor.
+}; ||| End of Father.
+
+class Son : public Father { ||| Bottom class.
+public: ||| Open for everyone.
+    Son() { ||| Constructor.
+        cout << "Son built" << endl; ||| Prints a message.
+    } ||| End of constructor.
+    ~Son() { ||| Destructor.
+        cout << "Son removed" << endl; ||| Prints a message.
+    } ||| End of destructor.
+}; ||| End of Son.
+
+int main() { ||| Program starts.
+    Son s; ||| Constructors: GrandFather, Father, Son.
+    return 0; ||| main ends: destructors in reverse order.
+} ||| End of main().`,[],"GrandFather built\nFather built\nSon built\nSon removed\nFather removed\nGrandFather removed")},
+ {t:"Write an abstract class <code>Shape</code> with <code>virtual void area() = 0;</code>. Derive a class <code>Rectangle</code> with <code>int w</code> and <code>int h</code>, and write <code>area()</code> so it prints w × h. Use w = 4 and h = 6.",
+  p:mk("",H2+`
+class Shape { ||| Abstract class.
+public: ||| Open for everyone.
+    virtual void area() = 0; ||| Pure virtual function.
+}; ||| End of Shape.
+
+class Rectangle : public Shape { ||| Rectangle inherits Shape.
+public: ||| Open for everyone.
+    int w; ||| Width.
+    int h; ||| Height.
+    void area() { ||| Writes the body, so Rectangle is a normal class.
+        cout << "Area: " << w * h << endl; ||| Prints width times height.
+    } ||| End of area().
+}; ||| End of Rectangle.
+
+int main() { ||| Program starts.
+    Rectangle r; ||| Allowed: Rectangle is not abstract.
+    r.w = 4; ||| Set the width.
+    r.h = 6; ||| Set the height.
+    r.area(); ||| Prints 24.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Area: 24")},
+ {t:"Write an abstract class <code>Animal</code> with a pure virtual function <code>sound()</code>. Derive <code>Dog</code> (prints <code>Woof</code>) and <code>Cat</code> (prints <code>Meow</code>). Call <code>sound()</code> for one Dog and one Cat.",
+  p:mk("",H2+`
+class Animal { ||| Abstract class.
+public: ||| Open for everyone.
+    virtual void sound() = 0; ||| Pure virtual function.
+}; ||| End of Animal.
+
+class Dog : public Animal { ||| Dog inherits Animal.
+public: ||| Open for everyone.
+    void sound() { ||| Dog's version.
+        cout << "Woof" << endl; ||| Prints Woof.
+    } ||| End of sound().
+}; ||| End of Dog.
+
+class Cat : public Animal { ||| Cat inherits Animal.
+public: ||| Open for everyone.
+    void sound() { ||| Cat's version.
+        cout << "Meow" << endl; ||| Prints Meow.
+    } ||| End of sound().
+}; ||| End of Cat.
+
+int main() { ||| Program starts.
+    Dog d; ||| Make a Dog.
+    Cat c; ||| Make a Cat.
+    d.sound(); ||| Dog's sound.
+    c.sound(); ||| Cat's sound.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Woof\nMeow")},
+ {t:"Write an abstract class <code>Vehicle</code> with <code>string brand</code>, a constructor that stores the brand, and a pure virtual function <code>move()</code>. Derive <code>Bike</code> whose constructor passes the brand up, and whose <code>move()</code> prints <code>&lt;brand&gt; is riding</code>.",
+  p:mk("",H3+`
+class Vehicle { ||| Abstract class.
+public: ||| Open for everyone.
+    string brand; ||| Data member: the brand.
+    Vehicle(string b) { ||| Constructor that receives a brand.
+        brand = b; ||| Store the brand.
+    } ||| End of constructor.
+    virtual void move() = 0; ||| Pure virtual function.
+}; ||| End of Vehicle.
+
+class Bike : public Vehicle { ||| Bike inherits Vehicle.
+public: ||| Open for everyone.
+    Bike(string b) : Vehicle(b) { ||| Pass b up to Vehicle's constructor.
+    } ||| The body is empty. The base did the work.
+    void move() { ||| Bike's own version.
+        cout << brand << " is riding" << endl; ||| Prints the brand and the words.
+    } ||| End of move().
+}; ||| End of Bike.
+
+int main() { ||| Program starts.
+    Bike b("Hero"); ||| Make a Bike and send Hero.
+    b.move(); ||| Prints Hero is riding.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Hero is riding")},
+ {t:"Write a member object program: class <code>Engine</code> has a function <code>start()</code>. Class <code>Car</code> has an <code>Engine</code> member and a function <code>drive()</code> that starts the engine and then prints <code>Car is moving</code>. Call <code>drive()</code>.",
+  p:mk("",H2+`
+class Engine { ||| Written first.
+public: ||| Open for everyone.
+    void start() { ||| Engine's function.
+        cout << "Engine started" << endl; ||| Prints a message.
+    } ||| End of start().
+}; ||| End of Engine.
+
+class Car { ||| Car has an Engine.
+public: ||| Open for everyone.
+    Engine engine; ||| The member object.
+    void drive() { ||| Car's function.
+        engine.start(); ||| Start the engine first.
+        cout << "Car is moving" << endl; ||| Then print.
+    } ||| End of drive().
+}; ||| End of Car.
+
+int main() { ||| Program starts.
+    Car c; ||| Make a Car.
+    c.drive(); ||| Call drive().
+    return 0; ||| End well.
+} ||| End of main().`,[],"Engine started\nCar is moving")},
+ {t:"Write a member object program with constructors: class <code>Wheel</code> has a constructor <code>Wheel(int s)</code> that prints <code>Wheel size &lt;s&gt;</code>. Class <code>Bike</code> has a <code>Wheel</code> member and a constructor <code>Bike(int s)</code> that passes <code>s</code> to the wheel and prints <code>Bike ready</code>. Create <code>Bike b(26);</code>.",
+  p:mk("",H2+`
+class Wheel { ||| Written first.
+public: ||| Open for everyone.
+    Wheel(int s) { ||| Wheel's constructor receives a size.
+        cout << "Wheel size " << s << endl; ||| Prints the size.
+    } ||| End of constructor.
+}; ||| End of Wheel.
+
+class Bike { ||| Bike has a Wheel.
+public: ||| Open for everyone.
+    Wheel w; ||| The member object.
+    Bike(int s) : w(s) { ||| Build the member w and give it s. We write the object name w.
+        cout << "Bike ready" << endl; ||| Prints after the wheel is built.
+    } ||| End of constructor.
+}; ||| End of Bike.
+
+int main() { ||| Program starts.
+    Bike b(26); ||| Make a Bike and send 26.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Wheel size 26\nBike ready")}
+];
+
+/* ---------- program widget ---------- */
+function tableHtml(def){
+  var r="<table><tr><th>#</th><th>Code line</th><th>Meaning</th></tr>";
+  def.lines.forEach(function(l,i){
+    if(!l[0].trim())return;
+    r+='<tr><td class="no">'+(i+1)+'</td><td><code>'+hl(l[0].trim())+'</code></td><td>'+esc(l[1])+'</td></tr>';
+  });
+  return r+"</table>";
+}
+function codeLinesHtml(def){
+  return def.lines.map(function(l,i){
+    return '<div class="ln" data-i="'+i+'"><span class="no">'+(i+1)+'</span><span class="tx">'+(hl(l[0])||"&nbsp;")+'</span></div>';
+  }).join("");
+}
+function plainCodeHtml(def){
+  return '<pre class="code">'+def.lines.map(function(l){return hl(l[0]);}).join("\n")+'</pre>';
+}
+function outputHtml(text){
+  return '<div class="console" style="margin-top:6px">'+text.split("\n").map(function(t){return '<div class="ol">'+esc(t)+'</div>';}).join("")+'</div>';
+}
+function resolveTrace(def){
+  return def.trace.map(function(t){
+    var idx=-1;
+    if(typeof t[0]==="number")idx=t[0];
+    else for(var i=0;i<def.lines.length;i++){if(def.lines[i][0].trim().indexOf(t[0])>=0){idx=i;break;}}
+    if(idx<0)throw new Error("Trace line not found: "+t[0]+" in "+def.title);
+    return {i:idx,out:t[1]||"",note:t[2]||""};
+  });
+}
+function buildProg(host,def){
+  var trace=resolveTrace(def);
+  host.innerHTML=
+    '<div class="prog-head"><span>💻 '+esc(def.title)+'</span><small>tap a line 👆 or run step by step</small></div>'+
+    '<div class="codebox">'+codeLinesHtml(def)+'</div>'+
+    '<div class="info" aria-live="polite"></div>'+
+    '<div class="ctrl"><button class="btn green go">▶ Next step</button><button class="btn ghost rs">↺ Reset</button><button class="btn ghost tb">📖 Line-by-line table</button></div>'+
+    '<div class="console" aria-label="Program output"></div>'+
+    '<div class="ltable" hidden>'+tableHtml(def)+'</div>';
+  var info=$(".info",host),con=$(".console",host),go=$(".go",host),lns=$$(".ln",host),step=0;
+  var hint="👆 Tap any line to see what it means, or press ▶ Next step.";
+  function clearMarks(c){lns.forEach(function(l){l.classList.remove(c);});}
+  function reset(){
+    step=0;clearMarks("run");clearMarks("sel");
+    info.textContent=hint;
+    con.innerHTML='<div class="ph">Output will appear here…</div>';
+    go.textContent="▶ Next step";
+  }
+  function next(){
+    if(step>=trace.length){info.textContent=def.endMsg||"🎉 Program finished! Press ↺ Reset to play again.";return;}
+    var t=trace[step];
+    clearMarks("run");clearMarks("sel");
+    lns[t.i].classList.add("run");
+    var m=def.lines[t.i][1];
+    info.textContent="Step "+(step+1)+" of "+trace.length+" — line "+(t.i+1)+": "+(t.note||m);
+    if(t.out){
+      var ph=$(".ph",con);if(ph)con.removeChild(ph);
+      var d=document.createElement("div");d.className="ol"+(t.out.indexOf("❌")===0?" err":"");d.textContent=t.out;con.appendChild(d);
+    }
+    if(lns[t.i].scrollIntoView&&false){lns[t.i].scrollIntoView({block:"nearest"});}
+    step++;
+    if(step>=trace.length)go.textContent="✅ Done — press Reset";
+  }
+  lns.forEach(function(l){
+    l.addEventListener("click",function(){
+      var i=+l.getAttribute("data-i");
+      clearMarks("sel");l.classList.add("sel");
+      var code=def.lines[i][0].trim();
+      info.textContent=code?("Line "+(i+1)+" → "+(def.lines[i][1]||"")):"Line "+(i+1)+" is empty. A blank line just keeps the code neat.";
+    });
+  });
+  go.addEventListener("click",next);
+  $(".rs",host).addEventListener("click",reset);
+  $(".tb",host).addEventListener("click",function(){var t=$(".ltable",host);t.hidden=!t.hidden;this.textContent=t.hidden?"📖 Line-by-line table":"🙈 Hide table";});
+  reset();
+}
+$$("[data-prog]").forEach(function(h){buildProg(h,PROGS[h.getAttribute("data-prog")]);});
+
+/* ---------- question blocks ---------- */
+function qa(label,q,a,cls){
+  return '<div class="qa '+(cls||"")+'"><div class="q">'+(label?'<span class="qn">'+label+'</span>':'')+'<div class="qt">'+q+'</div></div>'+
+    '<button class="btn small show" aria-expanded="false">👀 Show answer</button><div class="ans" hidden>'+a+'</div></div>';
+}
+function fullAns(def){
+  return '<p><b>Full program:</b></p>'+plainCodeHtml(def)+'<p><b>Output:</b></p>'+outputHtml(def.out)+'<p><b>Line-by-line explanation:</b></p><div class="tablewrap">'+tableHtml(def)+'</div>';
+}
+function tryAns(id){return PROGS[id]?outputHtml(PROGS[id].out||""):"";}
+
+var TRY={
+ s1:["Dog gets <code>name</code> from Animal. In the program, what will <code>d.name = \"Rani\"; d.eat();</code> print?","It prints <code>Rani is eating</code>."],
+ s2:["If we write <code>Animal a; Animal b; Animal c;</code> in main(), how many times does the constructor message print?","<b>3 times</b>, once for each object. The constructor runs automatically every time an object is created."],
+ s3:["Write the line that creates an Animal object named <code>x</code> with the name \"Rani\".","<code>Animal x(\"Rani\");</code>"],
+ s4:["Dog inherits Animal. When we write <code>Dog d;</code>, which constructor runs first: Animal's or Dog's?","<b>Animal's</b> (the base class). Base first, then derived."],
+ s5:["Fill in the blank to pass <code>n</code> to the base: <code>Cat(string n) ______ Animal(n) { }</code>","A colon <code>:</code><br><code>Cat(string n) : Animal(n) { }</code>"],
+ s6:["In the chain Vehicle ➜ Car ➜ SportsCar, which destructor runs first when the object is removed?","<b>SportsCar's</b> destructor runs first. Then Car's, then Vehicle's (reverse of the constructors)."],
+ s7:["Shape has <code>virtual void area() = 0;</code>. Can we write <code>Shape s;</code> in main()? Why?","<b>No.</b> Shape is an abstract class because it has a pure virtual function (no body). We cannot create an object of an abstract class."],
+ s8:["In the Employee class, which line makes it an abstract class?","<code>virtual void work() = 0;</code>. It is the pure virtual function."],
+ s9:["Write the line inside class <code>Car</code> that makes an <code>Engine</code> member object named <code>engine</code>.","<code>Engine engine;</code>"],
+ s10:["For <code>Car c(100);</code> (Car has an Engine member), which prints first: \"Engine ready\" or \"Car ready\"?","<b>Engine ready.</b> The member object is built before the body of Car's constructor runs."],
+ s11:["Write the line that creates an object <code>k</code> of the nested class <code>Keyboard</code> that lives inside <code>Computer</code>.","<code>Computer::Keyboard k;</code>"]
+};
+$$("[data-try]").forEach(function(h){
+  var d=TRY[h.getAttribute("data-try")];
+  h.outerHTML=qa("✍️ Try it now",d[0],d[1],"try");
+});
+
+var ONE=[
+ ["What is a constructor?","A special member function that runs automatically when an object is created."],
+ ["What is the name of a constructor?","The same as the class name."],
+ ["Does a constructor have a return type?","No. It has no return type, not even <code>void</code>."],
+ ["When does a constructor run?","At the moment the object is created."],
+ ["What is a default constructor?","A constructor that takes no values."],
+ ["What is a parameterized constructor?","A constructor that receives values (parameters)."],
+ ["Which symbol is used at the start of a destructor name?","The tilde <code>~</code>"],
+ ["When does a destructor run?","When the object is removed (for example, when main() ends)."],
+ ["In inheritance, which constructor runs first: base or derived?","The <b>base</b> class constructor."],
+ ["In inheritance, which destructor runs first: base or derived?","The <b>derived</b> class destructor (reverse order)."],
+ ["Which feature is used to send a value to the base constructor?","The initializer list, like <code>Dog(string n) : Animal(n)</code>"],
+ ["Which symbol is written before the initializer list?","The colon <code>:</code>"],
+ ["What is a pure virtual function?","A virtual function with no body, written with <code>= 0</code>."],
+ ["Write a pure virtual function named <code>area</code> that returns nothing.","<code>virtual void area() = 0;</code>"],
+ ["What is an abstract class?","A class that has at least one pure virtual function."],
+ ["Can we create an object of an abstract class?","No."],
+ ["What must a derived class do with a pure virtual function so that its objects can be created?","Write the body of the function (define it)."],
+ ["What happens if a derived class does not write the pure virtual function?","The derived class also stays abstract."],
+ ["Which keyword is used at the start of a pure virtual function?","<code>virtual</code>"],
+ ["Can an abstract class have data members and a constructor?","Yes."],
+ ["What is a member object?","An object of one class kept as a member inside another class."],
+ ["“A Car has an Engine” shows which relationship?","The <b>has-a</b> relationship (member object / containership)."],
+ ["“A Dog is an Animal” shows which relationship?","The <b>is-a</b> relationship (inheritance)."],
+ ["Car has an Engine member. When a Car object is created, which is built first?","The member object, the Engine."],
+ ["When a Car with an Engine member is removed, which destructor runs first?","The Car's destructor first, then the Engine's."],
+ ["What is a nested class?","A class written inside another class."],
+ ["Which operator is used in <code>Computer::Keyboard k;</code>?","The scope resolution operator <code>::</code>"]
+];
+var TF=[
+ ["A constructor has the return type <code>void</code>.",false,"A constructor has no return type at all."],
+ ["A constructor runs automatically when an object is created.",true,"We never call it ourselves."],
+ ["In inheritance, the base constructor runs before the derived constructor.",true,"Base first, then derived."],
+ ["Destructors run in the same order as constructors.",false,"They run in the reverse order."],
+ ["We can create an object of an abstract class.",false,"An abstract class is incomplete, so no object can be made."],
+ ["<code>virtual void f() = 0;</code> is a pure virtual function.",true,"It has no body and ends with <code>= 0</code>."],
+ ["If the base constructor needs a value, the derived constructor must pass it using the initializer list.",true,"For example <code>Dog(string n) : Animal(n)</code>."],
+ ["A member object is built before the body of the container's constructor runs.",true,"For example the Engine is built before the Car's body."],
+ ["An abstract class cannot have data members.",false,"It can have data members, constructors and normal functions."],
+ ["A nested class is a class written inside another class.",true,"For example, Keyboard inside Computer."],
+ ["“Car has an Engine” is an example of inheritance.",false,"It is a member object (has-a). Inheritance is is-a."]
+];
+var TWO=[
+ ["What is a constructor? Write an example.","<p>A constructor is a special member function that runs automatically when an object is created. It has the same name as the class and no return type.</p><p>Example: <code>Animal() { cout &lt;&lt; \"An animal is born!\" &lt;&lt; endl; }</code></p>"],
+ ["Write any two features of a constructor.","<p>1) Its name is the same as the class name.</p><p>2) It has no return type and runs automatically when the object is created.</p>"],
+ ["What is the order of constructor calls in inheritance? What about destructors?","<p>Constructors: base class first, then derived class.</p><p>Destructors: the reverse order, derived class first, then base class.</p>"],
+ ["What is a pure virtual function? Write its syntax.","<p>A virtual function that has no body. It only promises that child classes will write it.</p><p>Syntax: <code>virtual void area() = 0;</code></p>"],
+ ["What is a member object (containership)? Give an example.","<p>An object of one class used as a data member in another class. It shows a has-a relationship.</p><p>Example: <code>class Car { public: Engine engine; };</code> A car has an engine.</p>"],
+ ["What is a nested class? Write the syntax to create its object.","<p>A nested class is a class written inside another class.</p><p>Object: <code>Computer::Keyboard k;</code> where Keyboard is inside Computer.</p>"]
+];
+var THREE=[
+ ["Explain the order of constructors and destructors in inheritance with an example.","<p>When a derived object is created, the <b>base</b> constructor runs first and then the <b>derived</b> constructor. When the object is removed, the <b>derived</b> destructor runs first and then the <b>base</b> destructor (reverse order).</p><p>Example with A ➜ B (B derived): output is <code>A made, B made</code>, and at the end <code>B gone, A gone</code>.</p>"],
+ ["Differentiate between an abstract class and a normal (concrete) class.","<div class=\"tablewrap\"><table><tr><th>Abstract class</th><th>Normal class</th></tr><tr><td>Has at least one pure virtual function</td><td>All functions have bodies</td></tr><tr><td>Objects cannot be created</td><td>Objects can be created</td></tr><tr><td>Made to be a base for other classes</td><td>Can be used directly</td></tr></table></div>"],
+ ["Differentiate between inheritance and a member object.","<div class=\"tablewrap\"><table><tr><th>Inheritance</th><th>Member object</th></tr><tr><td>is-a relationship</td><td>has-a relationship</td></tr><tr><td><code>class Dog : public Animal</code></td><td><code>Engine engine;</code> inside Car</td></tr><tr><td>Dog is an Animal</td><td>Car has an Engine</td></tr></table></div>"],
+ ["Explain how values are passed to a base class constructor.","<p>The derived constructor uses an <b>initializer list</b>. After the brackets we write a colon and the base class name with the value.</p><p>Example: <code>Dog(string n, int a) : Animal(n) { age = a; }</code></p><p>Here <code>n</code> goes to Animal's constructor first. Then Dog's body runs.</p>"]
+];
+var FIVE=[
+ ["Explain abstract classes. Mention pure virtual function and the rules. Write a program.","<p><b>Abstract class:</b> a class with at least one pure virtual function. It is incomplete, so it is only used as a base class.</p><p><b>Pure virtual function:</b> a virtual function with no body: <code>virtual void area() = 0;</code></p><p><b>Rules:</b> 1) No object can be created from an abstract class. 2) A child class must write the function body, otherwise the child is also abstract. 3) An abstract class can have data members and constructors.</p>{{CODE:abs1}}<p><b>Output:</b></p>{{OUT:abs1}}"],
+ ["Explain constructors in derived classes. Show the order of calls and how to pass values to the base class. Write a program.","<p>When a derived object is created, the base constructor runs first and then the derived constructor. If the base constructor needs values, the derived constructor passes them with an initializer list: <code>Dog(string n, int a) : Animal(n)</code>.</p><p>Destructors run in reverse order.</p>{{CODE:derived2}}<p><b>Output:</b></p>{{OUT:derived2}}<p>Animal's constructor runs first with the name, then Dog's body runs.</p>"],
+ ["Explain member classes: member objects and nested classes. Write a program for member objects with constructors.","<p><b>Member object (containership):</b> an object of one class is kept inside another class. It is a has-a relationship. Member objects are built before the body of the container's constructor, and they are given values with the initializer list using the object's name: <code>Car(int h) : engine(h)</code>. They are removed in reverse order.</p><p><b>Nested class:</b> a class written inside another class. Its object is made with <code>::</code>, like <code>Computer::Keyboard k;</code></p>{{CODE:member2}}<p><b>Output:</b></p>{{OUT:member2}}"]
+];
+function expand(h){
+  return h.replace(/\{\{CODE:(\w+)\}\}/g,function(_,n){return plainCodeHtml(PROGS[n]);})
+          .replace(/\{\{OUT:(\w+)\}\}/g,function(_,n){var t=PROGS[n].trace.map(function(x){return x.length>1?x[1]:"";}).filter(Boolean).join("\n");return outputHtml(t);});
+}
+function group(title,items){return '<div class="qgroup"><h3>'+title+'</h3>'+items.join("")+'</div>';}
+var html="";
+html+=group("A. 1-mark questions ("+ONE.length+")",ONE.map(function(q,i){return qa(i+1,q[0],q[1]);}));
+html+=group("B. True or False ("+TF.length+")",TF.map(function(q,i){return qa(i+1,q[0],(q[1]?"<b>✅ True.</b> ":"<b>❌ False.</b> ")+q[2]);}));
+html+=group("C. 2-mark short answers ("+TWO.length+")",TWO.map(function(q,i){return qa(i+1,q[0],q[1]);}));
+html+=group("D. 3-mark: explain / differentiate ("+THREE.length+")",THREE.map(function(q,i){return qa(i+1,q[0],q[1]);}));
+html+=group("E. 5-mark long answers ("+FIVE.length+")",FIVE.map(function(q,i){return qa(i+1,q[0],expand(q[1]));}));
+html+=group("F. Guess the output ("+GUESS.length+")",GUESS.map(function(g,i){
+  return qa(i+1,"What is the output of this program?"+plainCodeHtml(g),"<p><b>Output:</b></p>"+outputHtml(g.out)+"<p><b>Why?</b> "+GUESS_WHY[i]+"</p>");
+}));
+html+=group("G. Write a program ("+WRITE.length+")",WRITE.map(function(w,i){
+  return qa(i+1,w.t,fullAns(w.p));
+}));
+$("#qRoot").innerHTML=html;
+
+/* ---------- show / hide answers ---------- */
+function setAns(box,open){
+  var a=$(".ans",box),b=$(".show",box);
+  a.hidden=!open;
+  b.setAttribute("aria-expanded",open?"true":"false");
+  b.textContent=open?"🙈 Hide answer":"👀 Show answer";
+}
+document.addEventListener("click",function(e){
+  var t=e.target;
+  var sb=t.closest?t.closest(".show"):null;
+  if(sb){var box=sb.parentNode;setAns(box,box.querySelector(".ans").hidden);return;}
+  var all=t.closest?t.closest("[data-all]"):null;
+  if(all){var open=all.getAttribute("data-all")==="show";$$(".qa").forEach(function(b){setAns(b,open);});}
+});
+
+/* ---------- generic reveal ---------- */
+$$(".reveal-btn").forEach(function(b){
+  b.addEventListener("click",function(){
+    var body=b.nextElementSibling,open=body.hidden;
+    body.hidden=!open;b.setAttribute("aria-expanded",open?"true":"false");
+    b.lastChild.textContent=open?"－":"＋";
+  });
+});
+
+/* ---------- demos ---------- */
+function clean(s){return s.replace(/[^A-Za-z0-9_]/g,"");}
+function cleanText(s){return s.replace(/["\\]/g,"");}
+function lines(el,arr,cls){
+  el.innerHTML="";
+  arr.forEach(function(t){var d=document.createElement("div");d.textContent=t;if(cls)d.className=cls;el.appendChild(d);});
+}
+
+/* section 1 */
+function d1update(){$("#d1code").innerHTML=hl('d.name = "'+cleanText($("#d1name").value)+'";')+"\n"+hl("d.eat();")+"\n"+hl("d.bark();");}
+$("#d1name").addEventListener("input",function(){d1update();$("#d1out").textContent="Press Run…";});
+$("#d1run").addEventListener("click",function(){
+  var n=cleanText($("#d1name").value).trim()||"(nobody)";
+  lines($("#d1out"),[n+" is eating",n+" says Woof!"]);
+});
+d1update();
+
+/* section 2 */
+var c2n=0;
+$("#c2make").addEventListener("click",function(){
+  c2n++;var o=$("#c2out");
+  if(c2n===1)o.innerHTML="";
+  var d=document.createElement("div");d.textContent="Object "+c2n+" created ➜ An animal is born!";o.appendChild(d);
+  $("#c2msg").textContent="Objects made: "+c2n+". The constructor ran "+c2n+" time"+(c2n>1?"s":"")+", once for each object, all by itself.";
+});
+$("#c2reset").addEventListener("click",function(){c2n=0;$("#c2out").textContent="No objects yet.";$("#c2msg").textContent="Every new object prints the message by itself. We never wrote a line to call the constructor.";});
+
+/* section 3 */
+function c3update(){$("#c3code").innerHTML=hl('Animal a("'+cleanText($("#c3name").value)+'");');}
+$("#c3name").addEventListener("input",function(){c3update();$("#c3out").textContent="Press the button…";});
+$("#c3run").addEventListener("click",function(){
+  var n=cleanText($("#c3name").value).trim();
+  $("#c3out").textContent=(n||"(empty name)")+" is born!";
+});
+c3update();
+
+/* section 5 */
+function c5update(){
+  var n=cleanText($("#c5name").value),a=$("#c5age").value.replace(/[^0-9]/g,"");
+  $("#c5code").innerHTML=hl('Dog d("'+n+'", '+(a||"0")+');');
+  lines($("#c5out"),["Animal "+(n.trim()||"(empty)")+" created","Dog aged "+(a||"0")+" created"]);
+}
+$("#c5name").addEventListener("input",c5update);$("#c5age").addEventListener("input",c5update);c5update();
+
+/* build / remove demo */
+function chainDemo(host,names,wordMake,wordGone){
+  host.innerHTML='<div class="ctrl"><button class="btn green mk">🏗️ Create object</button><button class="btn red rm">💥 End of main (remove it)</button><button class="btn ghost rs">↺ Reset</button></div><div class="outbox"></div><div class="msg"></div>';
+  var out=$(".outbox",host),msg=$(".msg",host),made=false,logs=[];
+  function show(){if(!logs.length){out.textContent="Nothing yet. Press Create object.";}else{lines(out,logs);}}
+  function setMsg(t,c){msg.className="msg "+(c||"");msg.textContent=t;}
+  $(".mk",host).addEventListener("click",function(){
+    if(made){setMsg("The object already exists. Remove it first, or press Reset.","bad");return;}
+    made=true;
+    names.forEach(function(n,i){logs.push((i+1)+". "+n+" "+wordMake);});
+    show();setMsg("Built from the top: "+names[0]+" first, "+names[names.length-1]+" last.","good");
+  });
+  $(".rm",host).addEventListener("click",function(){
+    if(!made){setMsg("There is no object to remove. Create one first.","bad");return;}
+    made=false;
+    names.slice().reverse().forEach(function(n,i){logs.push((i+1)+". "+n+" "+wordGone);});
+    show();setMsg("Removed in the reverse order: "+names[names.length-1]+" first, "+names[0]+" last.","good");
+  });
+  $(".rs",host).addEventListener("click",function(){made=false;logs=[];show();setMsg("Press a button to try.","");});
+  show();setMsg("Press a button to try.","");
+}
+chainDemo($("#chain4"),["Animal (base)","Dog (derived)"],"constructor runs","destructor runs");
+chainDemo($("#chain6"),["Vehicle","Car","SportsCar"],"constructor runs","destructor runs");
+chainDemo($("#chain10"),["Engine (member object)","Car"],"constructor runs","destructor runs");
+
+/* section 7 */
+var aPure=true,aYes=true;
+function aRender(){
+  $("#aPure").classList.toggle("on",aPure);$("#aNorm").classList.toggle("on",!aPure);
+  $("#aYes").classList.toggle("on",aYes);$("#aNo").classList.toggle("on",!aYes);
+  var shapeOk=!aPure,squareOk=!aPure||aYes;
+  var m=$("#aMsg");m.innerHTML="";
+  function line(code,ok,why){var d=document.createElement("div");d.textContent=(ok?"✅ ":"❌ ")+code+"  →  "+(ok?"works":"error")+" ("+why+")";m.appendChild(d);}
+  line("Shape s;",shapeOk,aPure?"Shape is abstract":"Shape has no pure virtual function");
+  line("Square q;",squareOk,!aPure?"Shape is a normal class":(aYes?"Square wrote area(), so it is complete":"Square did not write area(), so it is also abstract"));
+  m.className="msg "+((shapeOk&&squareOk)?"good":"bad");
+}
+$("#aPure").addEventListener("click",function(){aPure=true;aRender();});
+$("#aNorm").addEventListener("click",function(){aPure=false;aRender();});
+$("#aYes").addEventListener("click",function(){aYes=true;aRender();});
+$("#aNo").addEventListener("click",function(){aYes=false;aRender();});
+aRender();
+
+/* section 9 game */
+var HAS=[["Dog and Animal","is"],["Car and Engine","has"],["Student and Person","is"],["School and Library","has"],["Computer and Keyboard","has"],["Teacher and Employee","is"]];
+$("#hasGame").innerHTML=HAS.map(function(h,i){
+  return '<div class="row" style="justify-content:space-between"><b>'+h[0]+'</b><span><button class="btn small" data-g="'+i+'" data-v="is">is-a</button> <button class="btn small ghost" data-g="'+i+'" data-v="has">has-a</button></span></div><div class="msg" id="gm'+i+'" style="min-height:0;padding:4px 10px;margin:0 0 6px"></div>';
+}).join("");
+$$("[data-g]").forEach(function(b){
+  b.addEventListener("click",function(){
+    var i=+b.getAttribute("data-g"),v=b.getAttribute("data-v"),h=HAS[i],m=$("#gm"+i);
+    var ok=v===h[1];
+    m.className="msg "+(ok?"good":"bad");
+    m.textContent=ok?("✅ Correct! It is "+(v==="is"?"inheritance (is-a).":"a member object (has-a)."))
+                    :("❌ Not quite. Ask: \"Is it a kind of the other?\" Here the answer is "+(h[1]==="is"?"yes, so it is is-a (inheritance).":"no, one is a part of the other, so it is has-a (member object)."));
+  });
+});
+
+/* section 11 builder */
+function nRender(){
+  var o=clean($("#nOut").value),n=clean($("#nIn").value),msg=$("#nMsg"),out=$("#nCode");
+  if(!o||!n||/^\d/.test(o)||/^\d/.test(n)){
+    out.textContent="___::___ x;";msg.className="msg bad";msg.textContent="Type two names. A name must start with a letter. Only letters, numbers and _ are allowed.";return;
+  }
+  out.innerHTML="";
+  var s1=document.createElement("span");s1.className="b";s1.textContent=o;
+  var s2=document.createElement("span");s2.className="d";s2.textContent=n;
+  out.appendChild(s1);out.appendChild(document.createTextNode("::"));out.appendChild(s2);out.appendChild(document.createTextNode(" x;"));
+  if(o===n){msg.className="msg bad";msg.textContent="Use two different names.";return;}
+  msg.className="msg good";msg.textContent=n+" is the nested class that lives inside "+o+". So we write "+o+"::"+n+" to make an object x.";
+}
+$("#nOut").addEventListener("input",nRender);$("#nIn").addEventListener("input",nRender);nRender();
+
+/* ---------- theme, menu, top button ---------- */
+function isDark(){
+  var t=document.documentElement.getAttribute("data-theme");
+  if(t)return t==="dark";
+  return !!(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches);
+}
+$("#themeBtn").addEventListener("click",function(){
+  document.documentElement.setAttribute("data-theme",isDark()?"light":"dark");
+});
+$("#toTop").addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"});});
+var links=$$("#menu a");
+if("IntersectionObserver" in window){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){
+      if(en.isIntersecting){
+        links.forEach(function(a){
+          var on=a.getAttribute("href")==="#"+en.target.id;
+          a.classList.toggle("on",on);
+          if(on&&a.scrollIntoView&&$("#menu").scrollTo){
+            var nav=$("#menu");nav.scrollTo({left:a.offsetLeft-nav.clientWidth/2+a.clientWidth/2,behavior:"smooth"});
+          }
+        });
+      }
+    });
+  },{rootMargin:"-30% 0px -60% 0px"});
+  $$("section").forEach(function(s){io.observe(s);});
+}
+
+window.__data={PROGS:PROGS,GUESS:GUESS,WRITE:WRITE,TRY:TRY,counts:{one:ONE.length,tf:TF.length,two:TWO.length,three:THREE.length,five:FIVE.length,guess:GUESS.length,write:WRITE.length}};
+})();
+</script>
+</body>
+</html>
