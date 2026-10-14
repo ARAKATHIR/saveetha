@@ -1,5 +1,9 @@
 [
   {
+    "title": "Pointers, Pointers to Objects, this pointer, Pointer to Derived Classes.",
+    "file": "pages/c-pointers-this-derived-classes.html"
+  },
+  {
     "title": "Abstract classes, Constructors in Derived Classes, Member Classes.",
     "file": "pages/c-constructors-abstract-member-classes.html"
   },
