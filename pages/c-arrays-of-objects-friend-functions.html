@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>C++ Arrays of Objects & Friend Functions</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--tx:#1d2433;--mu:#5b6478;--ac:#5b5bf0;--cd:#eef0ff;--ok:#12a36b;--bd:#dde2f0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1220;--card:#1a1e33;--tx:#e8ebf8;--mu:#9aa3c0;--ac:#8c8cff;--cd:#262b4a;--ok:#3ddc97;--bd:#2d3354}}
+:root[data-theme="dark"]{--bg:#0f1220;--card:#1a1e33;--tx:#e8ebf8;--mu:#9aa3c0;--ac:#8c8cff;--cd:#262b4a;--ok:#3ddc97;--bd:#2d3354}
+*{box-sizing:border-box}html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 60px);scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{padding:28px 16px 12px;text-align:center}h1{margin:0;font-size:1.6rem}header p{color:var(--mu);margin:6px 0 0}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--card);border-bottom:1px solid var(--bd);display:flex;gap:6px;overflow-x:auto;padding:8px 10px}
+nav a{white-space:nowrap;text-decoration:none;color:var(--tx);background:var(--cd);padding:6px 12px;border-radius:99px;font-size:.9rem}
+main{max-width:820px;margin:auto;padding:12px 14px 60px}
+section{background:var(--card);border:1px solid var(--bd);border-left:6px solid var(--c,var(--ac));border-radius:16px;padding:16px;margin:16px 0}
+h2{margin:0 0 8px;font-size:1.3rem}h3{margin:18px 0 6px;font-size:1.05rem}
+.an{background:var(--cd);border-radius:12px;padding:10px 12px;margin:10px 0}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--cd);padding:1px 5px;border-radius:5px;font-size:.92em}
+.code{background:#14172b;color:#e6e9ff;border-radius:12px;padding:6px;overflow-x:auto;margin:8px 0}
+.code code{background:none;color:inherit;white-space:pre;font-size:.88rem}
+.ln{display:flex;gap:10px;width:100%;text-align:left;background:none;border:0;color:inherit;padding:3px 6px;border-radius:6px;cursor:pointer;font:inherit}
+.ln .n{color:#7d84b8;min-width:1.5em;text-align:right}.ln.on{background:#3a3fa8}.ln:hover{background:#262a55}
+.say{background:var(--cd);border-radius:10px;padding:8px 12px;min-height:44px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.b,.sa{background:var(--ac);color:#fff;border:0;border-radius:10px;padding:8px 14px;font:inherit;cursor:pointer}
+.b.g,.sa{background:var(--cd);color:var(--tx);border:1px solid var(--bd)}.sa{padding:5px 12px;font-size:.9rem;margin-top:6px}
+input{width:70px;padding:7px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit}
+.demo{border:2px dashed var(--ac);border-radius:12px;padding:12px;margin:12px 0}.demo h4{margin:0 0 8px}
+.out{margin-top:8px;font-weight:600}
+.try{background:var(--cd);border:2px solid #f59e0b;border-radius:12px;padding:10px 12px;margin:12px 0}
+details{background:var(--cd);border-radius:10px;padding:8px 12px;margin:8px 0}summary{cursor:pointer;font-weight:600}
+.ans{background:var(--card);border-left:4px solid var(--ok);padding:6px 12px;margin-top:6px;border-radius:6px}
+ol{padding-left:22px}li{margin:10px 0}
+table{border-collapse:collapse;width:100%;font-size:.88rem;overflow-x:auto;display:block}td,th{border-top:1px solid var(--bd);padding:4px 8px;vertical-align:top;text-align:left}
+.lt td:first-child{white-space:pre;font-family:ui-monospace,Menlo,monospace}
+.top{position:sticky;top:calc(env(safe-area-inset-top,0px) + 52px);z-index:8;display:flex;gap:8px;justify-content:center;padding:6px}
+pre.o{background:#14172b;color:#e6e9ff;padding:10px;border-radius:10px;overflow-x:auto;margin:6px 0}
+pre.o code{background:none;color:#e6e9ff;padding:0;font-size:.88rem}
+.lock{display:inline-block;min-width:92px;margin:4px;padding:8px;border-radius:10px;background:var(--cd);border:2px solid var(--ac);color:var(--tx);cursor:pointer;font:inherit}
+</style></head><body>
+<header><h1>🗄️ Arrays of Objects & 🤝 Friend Functions</h1><p>C++ for absolute beginners</p></header>
+<nav><a href="#s1">1 Recap</a><a href="#s2">2 Array of Objects</a><a href="#s3">3 Friend Functions</a><a href="#s4">4 Practice</a></nav>
+<main>
+
+<section id="s1" style="--c:#f59e0b"><h2>1️⃣ Quick Recap 🧰</h2>
+<div class="an">🍪 <b>Analogy:</b> A <b>class</b> is a cookie cutter. An <b>object</b> is a real cookie.</div>
+<ul><li><code>class</code> = blueprint, ends with <code>};</code> &nbsp; <code>public:</code> = anyone can use. <code>private:</code> = only the class (and its friends!) can use.</li>
+<li>Make an object: <code>Student s;</code> Use a member with a dot: <code>s.roll</code></li>
+<li>A <b>member function</b> is a function inside the class. <code>void</code> = gives nothing back. <code>(int r)</code> = a value we hand in.</li>
+<li><code>cout &lt;&lt; roll &lt;&lt; " ";</code> prints the number, then a space. Words in "quotes" print as they are.</li></ul>
+<div class="ex" data-p="p1"></div><div class="try" data-t="t1"></div></section>
+
+<section id="s2" style="--c:#ec4899"><h2>2️⃣ Arrays of Objects 🗄️</h2>
+<h3>2.1 First, an array of numbers</h3>
+<div class="an">🥚 <b>Analogy:</b> An <b>egg tray</b> with 3 slots numbered <b>0, 1, 2</b>. Counting starts at 0!</div>
+<ul><li><code>int m[3];</code> = 3 slots: <code>m[0]</code>, <code>m[1]</code>, <code>m[2]</code>.</li>
+<li><b>for loop:</b> <code>for (int i = 0; i &lt; 3; i++)</code> = "start i at 0, go on while i is less than 3, add 1 (<code>i++</code>) each round".</li></ul>
+<div class="ex" data-p="p0"></div><div class="try" data-t="t2"></div>
+<h3>2.2 Now, an array of objects</h3>
+<div class="an">🔐 <b>Analogy:</b> A row of <b>school lockers</b>. Every locker is the same type and holds one student card. Locker numbers also start at 0.</div>
+<ul><li><code>Student s[3];</code> makes <b>3 Student objects</b> in one go: <code>s[0]</code>, <code>s[1]</code>, <code>s[2]</code>.</li>
+<li>Use a member of one object: <code>s[1].roll</code>. Call its function: <code>s[1].show();</code></li>
+<li>All objects in the array must be of the <b>same class</b>.</li>
+<li>A loop lets us handle every object with little code. <code>*</code> means multiply.</li></ul>
+<div class="ex" data-p="p2"></div>
+<div class="demo"><h4>🎮 Fill the lockers</h4>Rolls: <input id="r0" type="number" value="10"> <input id="r1" type="number" value="20"> <input id="r2" type="number" value="30"> <button class="b" onclick="d1()">Fill array</button><div class="out" id="d1o">Tap "Fill array"</div></div>
+<div class="try" data-t="t3"></div><div class="try" data-t="t4"></div>
+<h3>2.3 Calling a function on each object</h3>
+<p>Each object can have its own values. The loop hands different numbers to <code>setData</code> each round.</p>
+<div class="ex" data-p="p3"></div><div class="try" data-t="t5"></div></section>
+
+<section id="s3" style="--c:#06b6d4"><h2>3️⃣ Friendly Functions 🤝</h2>
+<h3>3.1 What is a friend function?</h3>
+<div class="an">🏠 <b>Analogy:</b> Your house has a locked room (private data). Strangers can't enter. But <b>you</b>, the owner, can give your <b>trusted friend</b> a key. A friend function is that friend: <b>not a family member (not a member function)</b>, yet allowed inside.</div>
+<ul><li>The class gives permission by writing <code>friend</code> <b>inside the class</b>.</li>
+<li>It is <b>not a member</b>. We write it <b>outside</b>, with <b>no</b> <code>ClassName::</code>.</li>
+<li>We call it <b>without a dot</b>: <code>area(b)</code>, not <code>b.area()</code>.</li>
+<li>The object comes in as a <b>parameter</b>: <code>int area(Box b)</code> means "hand me a Box named b". Inside, <code>b.length</code> works even though length is private.</li></ul>
+<div class="demo"><h4>🎮 Who may open the private room?</h4>Length <input id="fl" type="number" value="5"> Width <input id="fw" type="number" value="3"> <div class="row"><button class="b" onclick="d2(1)">Friend: area(b)</button> <button class="b g" onclick="d2(0)">Stranger: main() uses b.length</button></div><div class="out" id="d2o">Tap a button</div></div>
+<div class="try" data-t="t6"></div>
+<div class="ex" data-p="p4"></div><div class="try" data-t="t7"></div>
+<h3>3.2 One friend, two objects</h3>
+<p>A friend can take more than one object. Handy when one function must look inside two different objects.</p>
+<div class="ex" data-p="p5"></div><div class="try" data-t="t8"></div>
+<h3>3.3 Friend vs member function</h3>
+<table><tr><th></th><th>Member function</th><th>Friend function</th></tr><tr><td>Declared</td><td>inside class</td><td>inside class with <code>friend</code></td></tr><tr><td>Belongs to class?</td><td>Yes</td><td>No</td></tr><tr><td>Defined outside with ::?</td><td>Yes (Box::area)</td><td>No</td></tr><tr><td>Called as</td><td>b.area()</td><td>area(b)</td></tr><tr><td>Reaches private data?</td><td>Yes</td><td>Yes (given permission)</td></tr></table>
+<details><summary>🤔 Tap: is being a friend risky?</summary>A little. Too many friends weaken the hiding of data. Give the key only to functions that really need it.</details>
+<div class="try" data-t="t9"></div></section>
+
+<section id="s4" style="--c:#ef4444"><h2>4️⃣ Practice Time ✍️</h2>
+<p>Every answer is hidden. Think first, then tap <b>Show answer</b>.</p>
+<div class="top"><button class="b" onclick="all(1)">Show all answers</button><button class="b g" onclick="all(0)">Hide all</button></div>
+<h3>4.1 One-mark questions (22)</h3><ol id="q1"></ol>
+<h3>4.2 True / False (7)</h3><ol id="q2"></ol>
+<h3>4.3 Two-mark short answers (4)</h3><ol id="q3"></ol>
+<h3>4.4 Three-mark: explain / differentiate (3)</h3><ol id="q4"></ol>
+<h3>4.5 Five-mark long answers (2)</h3><ol id="q5"></ol>
+<h3>4.6 Guess the output (4)</h3><ol id="q6"></ol>
+<h3>4.7 Write a program (8)</h3><ol id="q7"></ol></section>
+</main>
+<script>
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const H=[['#include <iostream>','Brings in cout (printing).'],['using namespace std;','Lets us write cout, not std::cout.']];
+const mk=(h,b)=>[...H,...h,['int main() {','Program starts.'],...b,['  return 0;','Done.'],['}','End of main.']];
+const P={
+p0:mk([],[['  int m[3];','Egg tray with 3 slots: 0, 1, 2.'],['  m[0] = 4;','Slot 0 gets 4.'],['  m[1] = 5;','Slot 1 gets 5.'],['  m[2] = 6;','Slot 2 gets 6.'],['  for (int i = 0; i < 3; i++) {','Repeat with i = 0, 1, 2.'],['    cout << m[i] << " ";','Print slot i and a space.'],['  }','End of loop. Output: 4 5 6']]),
+p1:mk([['class Student {','Blueprint Student.'],['public:','Open to all.'],['  int roll;','Every student has a roll.'],['  void setRoll(int r) { roll = r; }','Takes r and stores it in roll.'],['  void show() { cout << roll; }','Prints the roll.'],['};','End of class.']],[['  Student s;','Make one object s.'],['  s.setRoll(7);','Call its function with 7.'],['  s.show();','Prints 7.']]),
+p2:mk([['class Student {','Blueprint Student.'],['public:','Open to all.'],['  int roll;','Roll number.'],['  void show() { cout << roll << " "; }','Prints roll and a space.'],['};','End of class.']],[['  Student s[3];','3 Student objects: s[0], s[1], s[2].'],['  for (int i = 0; i < 3; i++) {','Loop with i = 0, 1, 2.'],['    s[i].roll = (i + 1) * 10;','Object i gets 10, 20, 30.'],['  }','End of first loop.'],['  for (int i = 0; i < 3; i++) {','Loop again.'],['    s[i].show();','Each object prints its roll.'],['  }','End. Output: 10 20 30']]),
+p3:mk([['class Student {','Blueprint Student.'],['public:','Open to all.'],['  int roll;','Roll.'],['  int marks;','Marks.'],['  void setData(int r, int m) {','Takes two numbers.'],['    roll = r;','Store the roll.'],['    marks = m;','Store the marks.'],['  }','End of setData.'],['  void show() { cout << roll << ":" << marks << " "; }','Prints like 1:50 .'],['};','End of class.']],[['  Student s[3];','3 objects.'],['  for (int i = 0; i < 3; i++) {','Loop i = 0, 1, 2.'],['    s[i].setData(i + 1, 50 + i * 10);','Gives (1,50), (2,60), (3,70).'],['  }','End of loop.'],['  for (int i = 0; i < 3; i++) {','Loop again.'],['    s[i].show();','Print each object.'],['  }','Output: 1:50 2:60 3:70']]),
+p4:mk([['class Box {','Blueprint Box.'],['private:','Hidden room.'],['  int length;','Hidden length.'],['  int width;','Hidden width.'],['public:','Open part.'],['  void setSize(int l, int w) { length = l; width = w; }','Stores the sizes.'],['  friend int area(Box b);','Gives the key to a friend named area. It is NOT a member.'],['};','End of class.'],['int area(Box b) {','Outside, no Box::. Receives a Box named b.'],['  return b.length * b.width;','Friend may open the private room. Sends back 15.'],['}','End of area.']],[['  Box b;','Make b.'],['  b.setSize(5, 3);','Set 5 and 3.'],['  cout << area(b);','Call without a dot. Prints 15.']]),
+p5:mk([['class Box {','Blueprint Box.'],['private:','Hidden room.'],['  int length;','Hidden length.'],['  int width;','Hidden width.'],['public:','Open part.'],['  void setSize(int l, int w) { length = l; width = w; }','Stores sizes.'],['  friend int totalArea(Box a, Box c);','A friend that takes two Boxes.'],['};','End of class.'],['int totalArea(Box a, Box c) {','Receives two boxes.'],['  return a.length * a.width + c.length * c.width;','Opens both private rooms, adds the two areas.'],['}','End of function.']],[['  Box b1;','First box.'],['  Box b2;','Second box.'],['  b1.setSize(5, 3);','Area 15.'],['  b2.setSize(2, 2);','Area 4.'],['  cout << totalArea(b1, b2);','15 + 4 = 19. Prints 19.']])
+};
+document.querySelectorAll('.ex').forEach(el=>{const p=P[el.dataset.p];let i=-1;
+el.innerHTML='<div class="code">'+p.map((l,k)=>`<button class="ln" data-k="${k}"><span class="n">${k+1}</span><code>${esc(l[0])}</code></button>`).join('')+'</div><div class="say">👆 Tap any line, or press Next.</div><div class="row"><button class="b nx">Next ▶</button><button class="b g rs">Reset</button></div>';
+const ls=el.querySelectorAll('.ln'),say=el.querySelector('.say');
+const show=k=>{ls.forEach(x=>x.classList.remove('on'));ls[k].classList.add('on');i=k;say.innerHTML='<b>Line '+(k+1)+':</b> '+esc(p[k][1]);};
+ls.forEach(x=>x.onclick=()=>show(+x.dataset.k));
+el.querySelector('.nx').onclick=()=>show((i+1)%p.length);
+el.querySelector('.rs').onclick=()=>{ls.forEach(x=>x.classList.remove('on'));i=-1;say.textContent='👆 Tap any line, or press Next.';};});
+function d1(){let h='';for(let i=0;i<3;i++)h+=`<button class="lock" onclick="lk(${i})">🔐 s[${i}]<br>roll=${+document.getElementById('r'+i).value}</button>`;document.getElementById('d1o').innerHTML=h+'<div id="lko">Tap a locker to call show() on it.</div>';}
+function lk(i){document.getElementById('lko').innerHTML=`s[${i}].show(); prints <b>${+document.getElementById('r'+i).value}</b>`;}
+function d2(f){const l=+document.getElementById('fl').value,w=+document.getElementById('fw').value;document.getElementById('d2o').innerHTML=f?`🤝 area(b) is a friend, so it may open the private room.<br>Returns ${l} × ${w} = <b>${l*w}</b>`:`❌ Error: <code>length</code> is private. main() is a stranger, not a friend.`;}
+const ans=h=>`<button class="sa" onclick="tg(this)">Show answer</button><div class="ans" hidden>${h}</div>`;
+function tg(b){const d=b.nextElementSibling;d.hidden=!d.hidden;b.textContent=d.hidden?'Show answer':'Hide answer';}
+function all(s){document.querySelectorAll('.ans').forEach(d=>{d.hidden=!s;d.previousElementSibling.textContent=s?'Hide answer':'Show answer';});}
+const T={t1:['What does <code>s.setRoll(7);</code> do?','It stores 7 in the roll of object s.'],t2:['In <code>int m[3];</code>, what is the index of the last slot?','2 (indexes are 0, 1, 2).'],t3:['Write the line that makes 4 Student objects named s.','<code>Student s[4];</code>'],t4:['In the lockers program, what is <code>s[2].roll</code>?','(2 + 1) × 10 = <b>30</b>.'],t5:['In the setData program, what does s[1] print?','<b>2:60</b> (roll = 1+1, marks = 50+1×10).'],t6:['Why can\'t main() use <code>b.length</code> when length is private?','Only the class\'s own functions and its friends may use private data. main() is neither.'],t7:['How do we call the friend function area for object b?','<code>area(b);</code> – no dot.'],t8:['In the two-box program, what if b1 is 1×1 and b2 is 2×3?','1 + 6 = <b>7</b>.'],t9:['True or false: a friend function is called like <code>b.area()</code>.','<b>False.</b> It is called <code>area(b)</code>.']};
+document.querySelectorAll('.try').forEach(e=>{const t=T[e.dataset.t];e.innerHTML='✏️ <b>Try it now:</b> '+t[0]+ans(t[1]);});
+const tb=p=>'<table class="lt">'+p.map(l=>`<tr><td>${esc(l[0])}</td><td>${esc(l[1])}</td></tr>`).join('')+'</table>';
+const fill=(id,arr,f)=>{document.getElementById(id).innerHTML=arr.map((x,i)=>`<li>${f(x,i)}</li>`).join('');};
+const Q1=[['What is an array of objects?','Many objects of the same class stored in one array.'],['Write the line to make 5 Student objects named s.','Student s[5];'],['What is the index of the first object?','0 (s[0])'],['What is the last object of s[5]?','s[4]'],['Which loop visits all objects easily?','for loop'],['How do you call show() of the third object s?','s[2].show();'],['Which operator joins an object and its member?','The dot .'],['Can one array hold objects of different classes?','No, only the same class.'],['Which keyword makes a friend function?','friend'],['Is a friend function a member of the class?','No'],['Where is the friend declaration written?','Inside the class'],['Do we write ClassName:: when defining a friend outside?','No'],['How is a friend function called?','Without a dot, e.g. area(b);'],['Can a friend function use private data?','Yes'],['Can a normal main() use private data directly?','No'],['Which keyword hides data?','private'],['How does a friend function get the object?','As a parameter'],['What does void mean?','The function returns nothing.'],['What does i++ do?','Adds 1 to i'],['A class is a ___ and an object is a ___.','Blueprint; real item'],['How many objects does Student s[4]; make?','4'],['What ends a class definition?','};']];
+const Q2=[['All objects in one array must be of the same class.',1,'An array holds one type.'],['Student s[3] has indexes 1, 2, 3.',0,'Indexes are 0, 1, 2.'],['A friend function is a member function.',0,'It is outside the class.'],['A friend function is called with object dot, like b.area().',0,'It is called area(b).'],['A friend function can read private members.',1,'The class gave it permission.'],['The word friend is written inside the class.',1,'The class grants the permission.'],['A friend function needs ClassName:: when defined outside.',0,'It is not a member, so no ::.']];
+const Q3=[['What is an array of objects?','A group of objects of the same class kept in one array, e.g. Student s[3]; Each is reached by index: s[0], s[1], s[2].'],['What is a friend function?','A non-member function that the class allows to use its private members. It is declared with the keyword friend inside the class.'],['Why use a for loop with an array of objects?','The loop uses i as the index, so one short piece of code can handle every object: s[i].show();'],['Why is friend written inside the class?','Because the class itself gives the permission. A function cannot make itself a friend.']];
+const Q4=[['Differentiate member and friend functions.','Member: belongs to the class, defined with ClassName::, called as b.area(). Friend: not a member, declared with friend inside the class, defined without ::, called as area(b). Both can use private data.'],['Differentiate array of numbers and array of objects.','Array of numbers (int m[3]) holds plain values, used as m[0]. Array of objects (Student s[3]) holds objects, each with its own data and functions, used as s[0].roll or s[0].show().'],['Explain how a friend function reaches private data. Give an example.','The class declares friend int area(Box b); inside it. The function is written outside and receives the object as a parameter, so it can write b.length * b.width even though they are private. Example: area(b) gives 15 for 5 and 3.']];
+const Q5=[['Explain array of objects with an example.','1) Make a class (Student with roll, show()). 2) Write Student s[3]; to make 3 objects. 3) Index starts at 0: s[0] to s[2]. 4) Use a for loop to fill: s[i].roll = (i + 1) * 10; 5) Use another loop to call s[i].show(); Output: 10 20 30. All objects must be of the same class.'],['Explain friend function with its features and an example.','Features: declared inside the class with friend; not a member; defined outside without ::; called without a dot; takes the object as a parameter; can use private data. Example: class Box has private length and width and friend int area(Box b);. Outside: int area(Box b) { return b.length * b.width; } In main: Box b; b.setSize(5, 3); cout << area(b); prints 15.']];
+const Q6=[['class A { public: int n; };\nint main() { A a[3]; a[0].n = 1; a[1].n = 2; a[2].n = 3;\n cout << a[0].n + a[2].n; return 0; }','4','a[0].n is 1 and a[2].n is 3, so 1 + 3 = 4.'],['class S { public: int r; void show() { cout << r << " "; } };\nint main() { S s[2];\n for (int i = 0; i < 2; i++) { s[i].r = i * 5; }\n for (int i = 0; i < 2; i++) { s[i].show(); } return 0; }','0 5','i = 0 gives 0 × 5 = 0. i = 1 gives 5. Each prints with a space.'],['class Box { private: int l; public: void set(int x) { l = x; } friend int twice(Box b); };\nint twice(Box b) { return b.l * 2; }\nint main() { Box b; b.set(4); cout << twice(b); return 0; }','8','The friend opens private l (4) and returns 4 × 2 = 8.'],['class Box { private: int l; public: void set(int x) { l = x; } friend int add(Box a, Box c); };\nint add(Box a, Box c) { return a.l + c.l; }\nint main() { Box p; Box q; p.set(3); q.set(6); cout << add(p, q); return 0; }','9','The friend adds the private values 3 + 6 = 9.']];
+const NUM=[['class Num {','Blueprint Num.'],['private:','Hidden.'],['  int n;','Hidden number.'],['public:','Open part.'],['  void set(int x) { n = x; }','Stores x.'],['  friend int twice(Num x);','Friend named twice.'],['};','End of class.'],['int twice(Num x) {','Outside, no ::.'],['  return x.n * 2;','Friend opens n and doubles it.'],['}','End of twice.']];
+const W=[['Make an array of 3 Student objects with public roll. Set rolls 1, 2, 3 and print them.',mk([['class Student {','Blueprint.'],['public:','Open.'],['  int roll;','Roll.'],['};','End of class.']],[['  Student s[3];','3 objects.'],['  for (int i = 0; i < 3; i++) {','Loop.'],['    s[i].roll = i + 1;','Rolls 1, 2, 3.'],['    cout << s[i].roll << " ";','Prints 1 2 3'],['  }','End loop.']])],
+['Class Book with public pages and show(). Make 2 books with 100 and 200 pages and show both.',mk([['class Book {','Blueprint.'],['public:','Open.'],['  int pages;','Pages.'],['  void show() { cout << pages << " "; }','Prints pages.'],['};','End of class.']],[['  Book b[2];','2 books.'],['  b[0].pages = 100;','First book.'],['  b[1].pages = 200;','Second book.'],['  b[0].show();','Prints 100'],['  b[1].show();','Prints 200']])],
+['Array of 3 Box objects with member function area(). Print each area for sizes (i+1) by 2.',mk([['class Box {','Blueprint.'],['public:','Open.'],['  int length;','Length.'],['  int width;','Width.'],['  int area() { return length * width; }','Gives back length × width.'],['};','End of class.']],[['  Box b[3];','3 boxes.'],['  for (int i = 0; i < 3; i++) {','Loop.'],['    b[i].length = i + 1;','1, 2, 3.'],['    b[i].width = 2;','Always 2.'],['    cout << b[i].area() << " ";','Prints 2 4 6'],['  }','End loop.']])],
+['Class Num with private n. Write a friend function showNum() that prints n.',mk([['class Num {','Blueprint.'],['private:','Hidden.'],['  int n;','Hidden number.'],['public:','Open.'],['  void set(int x) { n = x; }','Stores x.'],['  friend void showNum(Num x);','Friend, returns nothing.'],['};','End of class.'],['void showNum(Num x) {','Outside, no ::.'],['  cout << x.n;','Friend reads private n.'],['}','End.']],[['  Num k;','Make k.'],['  k.set(9);','Store 9.'],['  showNum(k);','Call without dot. Prints 9']])],
+['Friend function area(Box b) for a Box with private length and width. Use 4 and 5.',mk([['class Box {','Blueprint.'],['private:','Hidden.'],['  int length;','Hidden.'],['  int width;','Hidden.'],['public:','Open.'],['  void setSize(int l, int w) { length = l; width = w; }','Stores sizes.'],['  friend int area(Box b);','Friend.'],['};','End of class.'],['int area(Box b) {','Outside.'],['  return b.length * b.width;','Gives 20.'],['}','End.']],[['  Box b;','Make b.'],['  b.setSize(4, 5);','Set sizes.'],['  cout << area(b);','Prints 20']])],
+['Friend function totalArea that adds the areas of two Box objects (2x3 and 4x1).',mk([['class Box {','Blueprint.'],['private:','Hidden.'],['  int length;','Hidden.'],['  int width;','Hidden.'],['public:','Open.'],['  void setSize(int l, int w) { length = l; width = w; }','Stores sizes.'],['  friend int totalArea(Box a, Box c);','Friend with 2 boxes.'],['};','End of class.'],['int totalArea(Box a, Box c) {','Outside.'],['  return a.length * a.width + c.length * c.width;','6 + 4.'],['}','End.']],[['  Box p;','First.'],['  Box q;','Second.'],['  p.setSize(2, 3);','Area 6.'],['  q.setSize(4, 1);','Area 4.'],['  cout << totalArea(p, q);','Prints 10']])],
+['Friend function twice() that returns double of a private number. Print twice for n = 6.',mk(NUM,[['  Num k;','Make k.'],['  k.set(6);','Store 6.'],['  cout << twice(k);','Prints 12']])],
+['Array of 3 Num objects. Set n to 1, 2, 3 with a loop and print twice() of the last one.',mk(NUM,[['  Num a[3];','3 objects.'],['  for (int i = 0; i < 3; i++) {','Loop.'],['    a[i].set(i + 1);','1, 2, 3.'],['  }','End loop.'],['  cout << twice(a[2]);','One array element goes to the friend. Prints 6']])]];
+fill('q1',Q1,x=>`${esc(x[0])}${ans('<b>'+esc(x[1])+'</b>')}`);
+fill('q2',Q2,x=>`${esc(x[0])}${ans('<b>'+(x[1]?'True ✅':'False ❌')+'</b> – '+esc(x[2]))}`);
+['q3','q4','q5'].forEach((id,k)=>fill(id,[Q3,Q4,Q5][k],x=>`${esc(x[0])}${ans(esc(x[1]))}`));
+fill('q6',Q6,x=>`<pre class="o"><code>${esc('#include <iostream>\nusing namespace std;\n'+x[0])}</code></pre>What is printed?${ans('<b>Output:</b> '+esc(x[1])+'<br>'+esc(x[2]))}`);
+fill('q7',W,x=>`${esc(x[0])}${ans(tb(x[1]))}`);
+</script></body></html>
