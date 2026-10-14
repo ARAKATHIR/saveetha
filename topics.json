@@ -1,5 +1,9 @@
 [
   {
+    "title": "Abstract classes, Constructors in Derived Classes, Member Classes.",
+    "file": "pages/c-constructors-abstract-member-classes.html"
+  },
+  {
     "title": "Inheritance, Types of inheritance, Virtual Base classes",
     "file": "pages/c-inheritance-made-easy.html"
   },
