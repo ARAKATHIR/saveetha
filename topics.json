@@ -1,5 +1,9 @@
 [
   {
+    "title": "Arrays of Objects, Friendly Functions.",
+    "file": "pages/c-arrays-of-objects-friend-functions.html"
+  },
+  {
     "title": "Specifying a class, Member Functions, Arrays within a class, Static Member Functions, Arrays of Objects, Friendly Functions.",
     "file": "pages/c-classes-for-beginners.html"
   },
