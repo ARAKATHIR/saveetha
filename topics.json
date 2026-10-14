@@ -1,5 +1,9 @@
 [
   {
+    "title": "Exception Handling Mechanism, Throwing-Catching-Rethrowing an Exception. Specifying Exception",
+    "file": "pages/c-exception-handling-easy-interactive-lesson.html"
+  },
+  {
     "title": "Virtual Functions, Pure Virtual Function, Runtime Polymorphism",
     "file": "pages/c-virtual-functions-easy-guide.html"
   },
