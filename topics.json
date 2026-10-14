@@ -1,5 +1,9 @@
 [
   {
+    "title": "Virtual Functions, Pure Virtual Function, Runtime Polymorphism",
+    "file": "pages/c-virtual-functions-easy-guide.html"
+  },
+  {
     "title": "Pointers, Pointers to Objects, this pointer, Pointer to Derived Classes.",
     "file": "pages/c-pointers-this-derived-classes.html"
   },
