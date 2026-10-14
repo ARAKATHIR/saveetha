@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>C++: Pointers, this &amp; Derived Classes</title>
+<style>
+:root{
+  --bg:#f5f6fc; --card:#ffffff; --text:#1f2542; --muted:#5a6285; --line:#e1e5f4;
+  --c1:#6c5ce7; --c2:#00a383; --c3:#e8505b; --c4:#e0a100; --c5:#0984e3;
+  --t1:#efeaff; --t2:#dff7ef; --t3:#ffe9ea; --t4:#fff4d1; --t5:#e1f0ff;
+  --code-bg:#1d2043; --code-text:#e9ecff; --code-line:#2a2e5c;
+  --k:#ff9de2; --s:#a5f3b4; --c:#8c93c0; --n:#ffd479; --p:#8fd3ff;
+  --run-bg:#ffe08a; --run-text:#2b2300;
+  --shadow:0 4px 14px rgba(40,50,120,.10);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10122a; --card:#1b1e3d; --text:#eceeff; --muted:#a9afd8; --line:#2f3568;
+    --c1:#a99bff; --c2:#3ddbb4; --c3:#ff8a93; --c4:#ffcb4d; --c5:#5db4ff;
+    --t1:#2a2564; --t2:#10403a; --t3:#4a2332; --t4:#4a3d12; --t5:#143a62;
+    --code-bg:#0d0f26; --code-text:#e9ecff; --code-line:#232859;
+    --shadow:0 4px 14px rgba(0,0,0,.35);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10122a; --card:#1b1e3d; --text:#eceeff; --muted:#a9afd8; --line:#2f3568;
+  --c1:#a99bff; --c2:#3ddbb4; --c3:#ff8a93; --c4:#ffcb4d; --c5:#5db4ff;
+  --t1:#2a2564; --t2:#10403a; --t3:#4a2332; --t4:#4a3d12; --t5:#143a62;
+  --code-bg:#0d0f26; --code-text:#e9ecff; --code-line:#232859;
+  --shadow:0 4px 14px rgba(0,0,0,.35);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.65;font-size:17px}
+[hidden]{display:none !important}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--t1);color:var(--text);padding:.1em .38em;border-radius:6px;font-size:.9em;word-break:break-word}
+a{color:var(--c5)}
+.wrap{max-width:860px;margin:0 auto;padding:0 14px 60px}
+
+/* top bar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--card);border-bottom:1px solid var(--line);box-shadow:var(--shadow)}
+.topbar .in{max-width:860px;margin:0 auto;display:flex;align-items:center;gap:6px;padding:8px 10px}
+.topbar nav{flex:1;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.topbar nav::-webkit-scrollbar{display:none}
+.topbar nav a{flex:0 0 auto;text-decoration:none;color:var(--text);background:var(--t1);border-radius:999px;padding:5px 12px;font-size:.85rem;font-weight:600;white-space:nowrap;border:2px solid transparent}
+.topbar nav a b{color:var(--c1);margin-right:3px}
+.topbar nav a.on{border-color:var(--c1);background:var(--card)}
+.iconbtn{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;width:38px;height:38px;font-size:1.1rem;cursor:pointer}
+
+/* hero */
+.hero{margin:18px 0 8px;border-radius:22px;padding:26px 20px;color:#fff;background:linear-gradient(135deg,#6c5ce7,#00b4d8 60%,#00c9a7);box-shadow:var(--shadow)}
+.hero h1{margin:0 0 6px;font-size:1.9rem;line-height:1.2}
+.hero p{margin:4px 0;font-size:1.02rem;opacity:.96}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.legend span{background:rgba(255,255,255,.2);border-radius:999px;padding:4px 12px;font-size:.85rem}
+
+/* sections */
+section{margin:26px 0;scroll-margin-top:70px}
+h2{font-size:1.45rem;line-height:1.3;margin:0 0 12px;display:flex;align-items:center;gap:10px}
+h2 .num{flex:0 0 auto;width:38px;height:38px;border-radius:12px;background:var(--c1);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:1.05rem}
+h3{margin:18px 0 8px;font-size:1.1rem}
+p{margin:8px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin:12px 0;box-shadow:var(--shadow)}
+.card>:first-child{margin-top:0}.card>:last-child{margin-bottom:0}
+.analogy{background:var(--t4);border-color:transparent}
+.key{background:var(--t2);border-color:transparent}
+.warn{background:var(--t3);border-color:transparent}
+.info-card{background:var(--t5);border-color:transparent}
+.tag{display:inline-block;font-weight:700;font-size:.8rem;letter-spacing:.02em;text-transform:uppercase;margin-bottom:4px;color:var(--muted)}
+ul.clean{padding-left:1.2em;margin:6px 0}
+ul.clean li{margin:4px 0}
+
+/* buttons */
+.btn{font:inherit;font-weight:700;font-size:.95rem;border:0;border-radius:12px;padding:10px 16px;background:var(--c1);color:#fff;cursor:pointer;min-height:42px;touch-action:manipulation}
+.btn:active{transform:scale(.97)}
+.btn.small{padding:7px 14px;font-size:.88rem;min-height:36px;background:var(--c5)}
+.btn.ghost{background:var(--t1);color:var(--text)}
+.btn.green{background:#00916f}
+.btn.red{background:#d63a46}
+.btn:focus-visible,.iconbtn:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--c4);outline-offset:2px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+
+/* code + program widget */
+.prog{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px;margin:14px 0;box-shadow:var(--shadow)}
+.prog-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;font-weight:700;margin-bottom:8px}
+.prog-head small{font-weight:500;color:var(--muted)}
+.codebox,pre.code{background:var(--code-bg);color:var(--code-text);border-radius:14px;padding:8px 0;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.84rem;line-height:1.6;-webkit-overflow-scrolling:touch}
+pre.code{margin:8px 0;padding:10px 14px;white-space:pre}
+.ln{display:flex;cursor:pointer;padding:0 10px 0 0;min-width:max-content;border-left:4px solid transparent}
+.ln:hover{background:var(--code-line)}
+.ln .no{flex:0 0 2.4em;text-align:right;padding-right:10px;color:#7b82b8;user-select:none}
+.ln .tx{white-space:pre}
+.ln.sel{border-left-color:#5db4ff;background:var(--code-line)}
+.ln.run{background:var(--run-bg);color:var(--run-text);border-left-color:#ff7a00}
+.ln.run .no{color:#7a5a00}
+.ln.run .tx span{color:inherit}
+.t-k{color:var(--k);font-weight:600}.t-s{color:var(--s)}.t-c{color:var(--c);font-style:italic}.t-n{color:var(--n)}.t-p{color:var(--p)}
+.info{margin:10px 0 0;padding:10px 12px;border-radius:12px;background:var(--t5);font-size:.95rem;min-height:3.2em}
+.console{margin-top:10px;background:#0b0d20;color:#9dffb5;border-radius:12px;padding:10px 14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.88rem;min-height:3em}
+.console .ph{color:#6f78a8}
+.console .err{color:#ff8a93}
+.console .ol::before{content:"> ";color:#6f78a8}
+.ltable{margin-top:10px;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+th{background:var(--t1)}
+td.no{color:var(--muted);width:2.2em;text-align:right}
+.tablewrap{overflow-x:auto;margin:8px 0}
+
+/* demos */
+.demo{background:var(--t1);border-radius:18px;padding:14px;margin:12px 0}
+.demo .tag{color:var(--c1)}
+.demo input[type=text]{font:inherit;padding:9px 12px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--text);min-width:0;width:100%;max-width:260px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.outbox{background:#0b0d20;color:#9dffb5;border-radius:12px;padding:8px 12px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9rem;min-height:2.4em;margin-top:8px}
+.family{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:600px){.family{grid-template-columns:1fr 1fr}}
+.fbox{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:10px 12px;transition:all .3s}
+.fbox h4{margin:0 0 6px}
+.trait{display:inline-block;background:var(--t2);border-radius:999px;padding:3px 10px;margin:3px 3px 3px 0;font-size:.88rem}
+.trait.own{background:var(--t4)}
+.trait.inh{background:var(--t1);border:2px dashed var(--c1)}
+.fbox.glow{border-color:var(--c2);box-shadow:0 0 0 4px rgba(0,200,150,.18)}
+.diagram{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--card);border:2px dashed var(--line);border-radius:14px;padding:10px 14px;margin:10px 0;white-space:pre;overflow-x:auto;line-height:1.4;font-size:.95rem}
+.diagram b{color:var(--c1)}
+.reveal-btn{width:100%;text-align:left;display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--card);color:var(--text);border:2px solid var(--line);border-radius:14px;padding:12px 14px;font:inherit;font-weight:700;cursor:pointer;margin-top:8px;min-height:48px}
+.reveal-btn[aria-expanded="true"]{border-color:var(--c1)}
+.reveal-body{background:var(--card);border:2px solid var(--line);border-top:0;border-radius:0 0 14px 14px;padding:8px 14px 12px;margin-top:-6px}
+.mem{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+.mem .part{background:var(--card);border:2px solid var(--line);border-radius:12px;padding:8px;text-align:center;font-size:.9rem}
+.mem .mini{background:var(--t4);border-radius:8px;padding:6px;margin:6px 0;font-size:.85rem}
+.mem .mini.one{grid-column:1/-1}
+.tabox{border:3px solid var(--c1);border-radius:16px;padding:10px;background:var(--card)}
+.tabox .ttl{font-weight:700;text-align:center;margin-bottom:8px}
+.shared{background:var(--t2);border:2px solid var(--c2);border-radius:10px;padding:8px;text-align:center;margin-bottom:8px;font-size:.9rem}
+.msg{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--t5);min-height:3em}
+.msg.bad{background:var(--t3)}.msg.good{background:var(--t2)}
+.shake{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.seg{display:inline-flex;border:2px solid var(--c1);border-radius:12px;overflow:hidden}
+.seg button{border:0;background:var(--card);color:var(--text);font:inherit;font-weight:700;padding:9px 14px;cursor:pointer;min-height:42px}
+.seg button.on{background:var(--c1);color:#fff}
+.syn span.b{color:var(--c3);font-weight:700}.syn span.d{color:var(--c2);font-weight:700}
+
+/* questions */
+.qa{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin:10px 0;box-shadow:var(--shadow)}
+.qa.try{background:var(--t1);border-color:transparent}
+.q{display:flex;gap:10px;align-items:flex-start}
+.qn{flex:0 0 auto;min-width:30px;height:30px;border-radius:9px;background:var(--c1);color:#fff;font-weight:700;font-size:.85rem;display:inline-flex;align-items:center;justify-content:center;padding:0 6px}
+.qt{flex:1;min-width:0}
+.qt pre.code{margin-top:8px}
+.qa>.btn{margin-top:10px}
+.ans{margin-top:10px;background:var(--t2);border-radius:12px;padding:10px 12px}
+.ans p:first-child{margin-top:0}
+.qgroup h3{background:var(--c1);color:#fff;border-radius:12px;padding:8px 14px;margin:26px 0 6px}
+.qbar{position:sticky;top:calc(env(safe-area-inset-top,0px) + 58px);z-index:20;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px 10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow)}
+.qbar span{flex:1;font-weight:700;min-width:120px}
+.to-top{position:fixed;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);z-index:60;width:46px;height:46px;border-radius:50%;border:0;background:var(--c1);color:#fff;font-size:1.3rem;cursor:pointer;box-shadow:var(--shadow)}
+footer{text-align:center;color:var(--muted);font-size:.9rem;margin:30px 0}
+@media(max-width:520px){body{font-size:16px}.hero h1{font-size:1.5rem}h2{font-size:1.25rem}}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.shake{animation:none}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="in">
+    <nav id="menu" aria-label="Sections">
+      <a href="#s1"><b>1</b>Refresher</a>
+      <a href="#s2"><b>2</b>Pointer</a>
+      <a href="#s3"><b>3</b>To object</a>
+      <a href="#s4"><b>4</b>new &amp; delete</a>
+      <a href="#s5"><b>5</b>this</a>
+      <a href="#s6"><b>6</b>this = address</a>
+      <a href="#s7"><b>7</b>this-&gt;</a>
+      <a href="#s8"><b>8</b>Base pointer</a>
+      <a href="#s9"><b>9</b>Surprise</a>
+      <a href="#s10"><b>10</b>virtual</a>
+      <a href="#s11"><b>11</b>Summary</a>
+      <a href="#s12"><b>12</b>Practice</a>
+    </nav>
+    <button class="iconbtn" id="themeBtn" aria-label="Switch light or dark mode" title="Light / Dark">🌓</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+<div class="hero">
+  <h1>📍 Pointers, <code style="background:rgba(255,255,255,.25);color:#fff">this</code> &amp; Derived Classes</h1>
+  <p>Pointers to objects • The this pointer • Pointers to derived classes</p>
+  <p>Made for complete beginners. Simple English. Real-life examples. Tap, type and try!</p>
+  <div class="legend"><span>🌍 Real-life analogy</span><span>💻 Step-by-step program</span><span>✍️ Try it now</span><span>📝 Practice questions</span></div>
+</div>
+
+<div class="card info-card">
+  <span class="tag">How to use this page</span>
+  <ul class="clean">
+    <li>Read the sections in order (use the menu on top).</li>
+    <li>In every program: <b>tap a line</b> to see what it means, or press <b>▶ Next step</b> to run it like a computer.</li>
+    <li>After each idea there is a <b>✍️ Try it now</b> question. Think first, then press <b>Show answer</b>.</li>
+    <li>Lots of practice questions are at the end (Section 12).</li>
+  </ul>
+</div>
+
+<!-- 1 -->
+<section id="s1">
+  <h2><span class="num">1</span> Quick Refresher 🏠</h2>
+  <p>Pointers work with classes and objects. So let us first meet the small words used in every program. Nothing else will appear in the code later!</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>A <b>class</b> is a <b>house plan</b> 📐. An <b>object</b> is a <b>real house</b> 🏠 built from that plan. <b>Inheritance</b> is a child class getting features from a parent class 👨‍👧.</p></div>
+  <div class="tablewrap"><table>
+    <tr><th>Word</th><th>Simple meaning</th></tr>
+    <tr><td><code>#include &lt;iostream&gt;</code></td><td>Brings in the tool for printing on the screen.</td></tr>
+    <tr><td><code>#include &lt;string&gt;</code></td><td>Brings in the tool for text.</td></tr>
+    <tr><td><code>using namespace std;</code></td><td>Lets us write <code>cout</code> instead of <code>std::cout</code>.</td></tr>
+    <tr><td><code>cout &lt;&lt; "Hi" &lt;&lt; endl;</code></td><td>Prints Hi. <code>endl</code> moves to a new line. You can chain many <code>&lt;&lt;</code>.</td></tr>
+    <tr><td><code>int</code> and <code>string</code></td><td><code>int</code> is a whole number like 5. <code>string</code> is text like "Tommy".</td></tr>
+    <tr><td><code>=</code>, <code>+</code>, <code>*</code></td><td><code>=</code> puts a value in a variable. <code>+</code> and <code>*</code> work like in maths. <code>int x = 10;</code> makes x and puts 10 in it at once.</td></tr>
+    <tr><td><code>class</code> ... <code>};</code></td><td>The blueprint. It ends with a semicolon.</td></tr>
+    <tr><td><code>public:</code></td><td>Everything below it can be used from outside the class.</td></tr>
+    <tr><td>data member / member function</td><td>A variable / a function inside a class. <code>void</code> means a function gives nothing back.</td></tr>
+    <tr><td>object and dot <code>.</code></td><td><code>Student s;</code> makes an object. <code>s.name</code> or <code>s.show()</code> reaches inside it.</td></tr>
+    <tr><td>constructor</td><td>A function with the <b>same name as the class</b> and no return type. It runs <b>by itself</b> when an object is created. It can receive values: <code>Student(string n)</code>.</td></tr>
+    <tr><td>destructor</td><td>Name = <code>~</code> + class name, like <code>~Student()</code>. It runs <b>by itself</b> when the object is removed.</td></tr>
+    <tr><td><code>class Dog : public Animal</code></td><td>Dog <b>inherits</b> from Animal. Animal is the <b>base</b> class. Dog is the <b>derived</b> class. Dog gets Animal's members.</td></tr>
+    <tr><td><code>{ };</code> empty body</td><td>A class body can be empty. Such a class still gets everything it inherits.</td></tr>
+    <tr><td><code>main()</code></td><td>The place where every program starts.</td></tr>
+  </table></div>
+  <div class="demo">
+    <span class="tag">🎮 Type &amp; see</span>
+    <div class="row">
+      <input type="text" id="d1name" value="Asha" maxlength="14" aria-label="Student name">
+      <button class="btn green" id="d1mk">🏗️ Create object</button>
+      <button class="btn red" id="d1rm">💥 End of main</button>
+    </div>
+    <div class="diagram" id="d1code" style="margin-bottom:0"></div>
+    <div class="outbox" id="d1out">Press Create object…</div>
+  </div>
+  <div class="prog" data-prog="basics"></div>
+  <div data-try="s1"></div>
+</section>
+
+<!-- 2 -->
+<section id="s2">
+  <h2><span class="num">2</span> What is a Pointer? 📍</h2>
+  <p>Every variable lives somewhere in the computer's memory. That place has an <b>address</b>. A <b>pointer</b> is a variable that stores an <b>address</b> of another variable.</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>A <b>house</b> 🏠 has things inside. A small <b>paper with the house address</b> 📝 is not the house. But with that paper you can <b>go to the house</b> and use what is inside. The paper is the <b>pointer</b>.</p></div>
+  <div class="card info-card">
+    <span class="tag">Two new symbols</span>
+    <ul class="clean">
+      <li><code>&amp;x</code> means "the <b>address</b> of x".</li>
+      <li><code>int* p</code> means "p is a <b>pointer</b> to an int". It can store the address of an int.</li>
+      <li><code>*p</code> means "the <b>value at</b> the address stored in p".</li>
+    </ul>
+    <div class="diagram" style="margin:8px 0 0">int x = 10;
+int* p = <b>&amp;</b>x;   // p stores the address of x
+cout &lt;&lt; <b>*</b>p;     // goes to that address: prints 10</div>
+  </div>
+  <p>A pointer can be changed later to point to a different variable. If you print <code>p</code> itself, you see an address like <code>0x7ffe...</code>. We will not print addresses here.</p>
+  <div class="demo">
+    <span class="tag">🎮 Tap the steps</span>
+    <div class="mem">
+      <div class="part"><b>x</b> (address <b>#A1</b>)<div class="mini">value: <b id="pX">10</b></div></div>
+      <div class="part"><b>p</b> (a pointer)<div class="mini">stores: <b id="pP">nothing yet</b></div></div>
+    </div>
+    <div class="ctrl">
+      <button class="btn" id="pB1"><code style="background:none;color:inherit">int* p = &amp;x;</code></button>
+      <button class="btn" id="pB2"><code style="background:none;color:inherit">cout &lt;&lt; *p;</code></button>
+      <button class="btn" id="pB3"><code style="background:none;color:inherit">*p = 20;</code></button>
+      <button class="btn ghost" id="pB4">↺ Reset</button>
+    </div>
+    <div class="msg" id="pMsg">Press the first button to make p store the address of x.</div>
+  </div>
+  <div class="prog" data-prog="intptr"></div>
+  <div data-try="s2"></div>
+</section>
+
+<!-- 3 -->
+<section id="s3">
+  <h2><span class="num">3</span> Pointer to an Object &amp; the Arrow -&gt; 🏹</h2>
+  <p>A pointer can also store the address of an <b>object</b>. A pointer to a Student is written <code>Student* p</code>.</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>A <b>remote control</b> 📺 is not the TV, but it works the TV. A pointer works the object it points to. With an object we use the <b>dot</b> . With a pointer we use the <b>arrow</b> -&gt;</p></div>
+  <div class="card key">
+    <span class="tag">✅ Dot or arrow?</span>
+    <div class="diagram" style="margin:6px 0">Student s;          // object ➜ use dot
+s<b>.</b>show();
+
+Student* p = &amp;s;   // pointer ➜ use arrow
+p<b>-&gt;</b>show();</div>
+    <p><code>p-&gt;show()</code> means the same as <code>(*p).show()</code>: "go to the object and call show()". The arrow is just shorter.</p>
+  </div>
+  <div class="demo">
+    <span class="tag">🎮 Dot or arrow? Tap your answer</span>
+    <p><code>Student s;</code> is an object. <code>Student* p = &amp;s;</code> is a pointer.</p>
+    <div id="dotGame"></div>
+  </div>
+  <div class="prog" data-prog="objptr"></div>
+  <div class="card key"><span class="tag">✅ Look carefully</span><p><code>p-&gt;marks = 95;</code> changed the <b>object s itself</b>, because p points to s. So <code>s.show()</code> printed 95.</p></div>
+  <div data-try="s3"></div>
+</section>
+
+<!-- 4 -->
+<section id="s4">
+  <h2><span class="num">4</span> Making Objects with new &amp; delete 🏨</h2>
+  <p>We can create an object <b>on demand</b> using <code>new</code>. It gives us the <b>address</b> of the new object, so we keep it in a pointer. When we are done, we must remove it with <code>delete</code>.</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>You <b>book a function hall</b> 🏨 when you need it (<code>new</code>). You get a <b>booking slip</b> (the address). After the function you must <b>return the hall</b> (<code>delete</code>). If you forget, the hall stays booked for nobody!</p></div>
+  <div class="card key">
+    <ul class="clean">
+      <li><code>Student* p = new Student("Asha");</code> makes the object and stores its address in p.</li>
+      <li>If the constructor needs no values, just write <code>new Book</code>.</li>
+      <li>Use it with the arrow: <code>p-&gt;name</code></li>
+      <li><code>delete p;</code> removes the object. Its destructor runs <b>right then</b>.</li>
+      <li>Objects made with <code>new</code> are <b>not</b> removed by themselves. If you forget <code>delete</code>, the destructor never runs. This mistake is called a <b>memory leak</b>.</li>
+    </ul>
+  </div>
+  <div class="demo">
+    <span class="tag">🎮 Book and return the hall</span>
+    <div class="ctrl">
+      <button class="btn green" id="nwNew"><code style="background:none;color:inherit">new Student</code> 🏨 Book</button>
+      <button class="btn" id="nwDel"><code style="background:none;color:inherit">delete p;</code> ↩️ Return</button>
+      <button class="btn red" id="nwEnd">🏁 End of main</button>
+      <button class="btn ghost" id="nwRs">↺ Reset</button>
+    </div>
+    <div class="outbox" id="nwOut">Objects alive: 0</div>
+    <div class="msg" id="nwMsg">Press a button to try.</div>
+  </div>
+  <div class="prog" data-prog="newdel"></div>
+  <div data-try="s4"></div>
+</section>
+
+<!-- 5 -->
+<section id="s5">
+  <h2><span class="num">5</span> The this Pointer: "Who is calling me?" 🙋</h2>
+  <p>Many objects of one class share the <b>same functions</b>. So how does a function know <b>which object</b> called it? C++ secretly gives every member function a hidden pointer named <code>this</code>. It <b>points to the object that called the function</b>.</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>Many people use the same office phone ☎️. When someone says <b>"I"</b> or <b>"me"</b>, it means whoever is speaking right now. <code>this</code> is the object's way of saying "me".</p></div>
+  <div class="card key">
+    <ul class="clean">
+      <li><code>this</code> is a <b>pointer</b>, so we use the arrow: <code>this-&gt;name</code>.</li>
+      <li>It exists only <b>inside member functions</b>.</li>
+      <li>We never create it. C++ gives it to us.</li>
+    </ul>
+  </div>
+  <div class="demo">
+    <span class="tag">🎮 Who is calling?</span>
+    <div class="family">
+      <div class="fbox" id="tw1"><h4>🧑 s1</h4><span class="trait">name = Asha</span></div>
+      <div class="fbox" id="tw2"><h4>🧑 s2</h4><span class="trait">name = Ravi</span></div>
+    </div>
+    <div class="ctrl">
+      <button class="btn green" id="twB1"><code style="background:none;color:inherit">s1.whoAmI();</code></button>
+      <button class="btn green" id="twB2"><code style="background:none;color:inherit">s2.whoAmI();</code></button>
+    </div>
+    <div class="outbox" id="twOut">Press a button…</div>
+    <div class="msg" id="twMsg"></div>
+  </div>
+  <div class="prog" data-prog="whoami"></div>
+  <div data-try="s5"></div>
+</section>
+
+<!-- 6 -->
+<section id="s6">
+  <h2><span class="num">6</span> this is the Address of the Object 🔬</h2>
+  <p>Let us <b>prove</b> that <code>this</code> holds the object's address. We will return it from a function. A function that returns a pointer to a Student has the return type <code>Student*</code>.</p>
+  <div class="card info-card"><span class="tag">New symbol: ==</span><p><code>==</code> checks if two things are equal. The answer is printed as <b>1</b> for yes and <b>0</b> for no. We write it inside brackets: <code>cout &lt;&lt; (a == b);</code></p></div>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>You ask a house to <b>tell you its own address</b> 🏠➜📝. Then you compare it with the addresses of two houses. It will match <b>only its own</b> address.</p></div>
+  <div class="demo">
+    <span class="tag">🎮 Compare the addresses</span>
+    <p>Here <code>p = s1.getThis();</code> so p holds the address of s1.</p>
+    <div class="ctrl">
+      <button class="btn" id="eqB1"><code style="background:none;color:inherit">(p == &amp;s1)</code></button>
+      <button class="btn" id="eqB2"><code style="background:none;color:inherit">(p == &amp;s2)</code></button>
+    </div>
+    <div class="outbox" id="eqOut">Press a button…</div>
+  </div>
+  <div class="prog" data-prog="getthis"></div>
+  <div data-try="s6"></div>
+</section>
+
+<!-- 7 -->
+<section id="s7">
+  <h2><span class="num">7</span> Using this When Names Clash ⚔️</h2>
+  <p>The most common use of <code>this</code>: a constructor's <b>parameter</b> has the <b>same name</b> as a <b>data member</b>. Then <code>name = name;</code> is confusing. Plain <code>name</code> means the <b>parameter</b>. We write <code>this-&gt;name</code> for the <b>member of the object</b>.</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>Two people in a room are both called Ravi. To talk about yourself you say <b>"my name"</b> (<code>this-&gt;name</code>). To talk about the visitor you say <b>"the visitor's name"</b> (<code>name</code>, the parameter).</p></div>
+  <div class="demo">
+    <span class="tag">🎮 Switch this-&gt; ON / OFF</span>
+    <div class="seg" role="group" aria-label="this switch"><button id="thOff" class="on">without this-&gt;</button><button id="thOn">with this-&gt;</button></div>
+    <div class="diagram" id="thCode" style="margin:10px 0 0"></div>
+    <div class="msg" id="thMsg"></div>
+  </div>
+  <div class="prog" data-prog="thisname"></div>
+  <div data-try="s7"></div>
+</section>
+
+<!-- 8 -->
+<section id="s8">
+  <h2><span class="num">8</span> Pointer to a Derived Class: Base Pointer 🦴</h2>
+  <p>A <b>base class pointer</b> can hold the address of a <b>derived class object</b>. This is allowed because a Dog <b>is an</b> Animal. But the pointer only knows about <b>Animal</b>, so through it we can use <b>only the base class members</b>.</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>A <b>general remote</b> 📺 labelled "Animal" has only the common buttons: eat, sleep. Even if the thing in front is a Dog, the remote has <b>no bark button</b>. A special Dog remote would have it.</p></div>
+  <div class="card key">
+    <span class="tag">✅ Rules</span>
+    <ul class="clean">
+      <li><code>Animal* p = &amp;d;</code> ✅ base pointer ➜ derived object (allowed).</li>
+      <li><code>p-&gt;eat()</code> ✅ eat() is in Animal.</li>
+      <li><code>p-&gt;bark()</code> ❌ bark() is only in Dog. The pointer cannot see it.</li>
+      <li><code>Dog* q = &amp;a;</code> ❌ derived pointer ➜ base object (not allowed). Not every Animal is a Dog!</li>
+    </ul>
+  </div>
+  <div class="demo">
+    <span class="tag">🎮 OK or error? Tap your answer</span>
+    <p><code>Animal a;</code> and <code>Dog d;</code> are objects. Dog has <code>bark()</code>. Animal has <code>eat()</code>.</p>
+    <div id="okGame"></div>
+  </div>
+  <div class="prog" data-prog="baseptr"></div>
+  <p>Here are the two mistakes, so you can see the errors:</p>
+  <div class="prog" data-prog="err1"></div>
+  <div class="prog" data-prog="err2"></div>
+  <div data-try="s8"></div>
+</section>
+
+<!-- 9 -->
+<section id="s9">
+  <h2><span class="num">9</span> The Surprise: Same Function Name 😲</h2>
+  <p>A derived class may write a function with the <b>same name</b> as one in the base class. A Dog object then uses its <b>own</b> version. But through a <b>base pointer</b>, C++ looks only at the <b>pointer's type</b>, so it calls the <b>base</b> version!</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>A box 📦 has a label "Animal" but a Dog is inside. If C++ only <b>trusts the label</b>, it treats the Dog like a general animal. The pointer's type is the label.</p></div>
+  <div class="demo">
+    <span class="tag">🎮 Call it two ways</span>
+    <div class="ctrl">
+      <button class="btn green" id="sbB1"><code style="background:none;color:inherit">d.sound();</code></button>
+      <button class="btn green" id="sbB2"><code style="background:none;color:inherit">p-&gt;sound();</code> (p = &amp;d)</button>
+    </div>
+    <div class="outbox" id="sbOut">Press a button…</div>
+    <div class="msg" id="sbMsg"></div>
+  </div>
+  <div class="prog" data-prog="surprise"></div>
+  <div data-try="s9"></div>
+</section>
+
+<!-- 10 -->
+<section id="s10">
+  <h2><span class="num">10</span> virtual: Look at the Real Object ✅</h2>
+  <p>We can fix the surprise. Write the word <code>virtual</code> before the function in the <b>base</b> class. Now, through a base pointer, C++ looks at the <b>real object</b> and calls <b>its own version</b>.</p>
+  <div class="card analogy"><span class="tag">🌍 Real-life analogy</span><p>This time C++ <b>opens the box</b> 📦 and looks at what is really inside. A Dog says Woof 🐶 and a Cat says Meow 🐱, even though both boxes are labelled "Animal".</p></div>
+  <div class="card key"><span class="tag">✅ Remember</span>
+    <ul class="clean">
+      <li><code>virtual void sound()</code> is written in the <b>base</b> class.</li>
+      <li>Not virtual ➜ the <b>pointer's type</b> decides.</li>
+      <li>Virtual ➜ the <b>real object's type</b> decides.</li>
+      <li>A pointer can be changed to point to another object: <code>p = &amp;c;</code>. One pointer, many forms!</li>
+    </ul>
+  </div>
+  <div class="demo">
+    <span class="tag">🎮 Switch virtual ON / OFF</span>
+    <div class="seg" role="group" aria-label="virtual switch"><button id="vtOff" class="on">virtual OFF</button><button id="vtOn">virtual ON</button></div>
+    <div class="diagram" id="vtCode" style="margin:10px 0 0"></div>
+    <div class="outbox" id="vtOut"></div>
+    <div class="msg" id="vtMsg"></div>
+  </div>
+  <div class="prog" data-prog="virt"></div>
+  <div data-try="s10"></div>
+</section>
+
+<!-- 11 -->
+<section id="s11">
+  <h2><span class="num">11</span> Quick Summary 📌</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Idea</th><th>One line</th><th>Syntax</th></tr>
+    <tr><td><b>Pointer</b></td><td>Stores an address</td><td><code>int* p = &amp;x;</code></td></tr>
+    <tr><td><b>Value at address</b></td><td>Go to the address</td><td><code>*p</code></td></tr>
+    <tr><td><b>Pointer to object</b></td><td>Use the arrow</td><td><code>Student* p = &amp;s; p-&gt;show();</code></td></tr>
+    <tr><td><b>new / delete</b></td><td>Make / remove an object by hand</td><td><code>new Student("Asha")</code> and <code>delete p;</code></td></tr>
+    <tr><td><b>this pointer</b></td><td>Address of the calling object</td><td><code>this-&gt;name = name;</code></td></tr>
+    <tr><td><b>Base pointer</b></td><td>Can hold a derived object. Sees only base members.</td><td><code>Animal* p = &amp;d;</code></td></tr>
+    <tr><td><b>Without virtual</b></td><td>Pointer's type decides</td><td><code>void sound()</code></td></tr>
+    <tr><td><b>With virtual</b></td><td>Real object's type decides</td><td><code>virtual void sound()</code></td></tr>
+  </table></div>
+  <div class="card key">
+    <span class="tag">✅ Five golden rules</span>
+    <ul class="clean">
+      <li>A pointer stores an <b>address</b>. <code>&amp;</code> gets it and <code>*</code> follows it.</li>
+      <li>Object ➜ dot <code>.</code> &nbsp; Pointer ➜ arrow <code>-&gt;</code></li>
+      <li>Every <code>new</code> needs a <code>delete</code>.</li>
+      <li><code>this</code> is a hidden pointer to the object that called the function.</li>
+      <li>A base pointer can point to a derived object. Use <code>virtual</code> so the derived version runs.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 12 -->
+<section id="s12">
+  <h2><span class="num">12</span> Practice Questions 📝</h2>
+  <p>Try to answer each question in your notebook first. Then press <b>Show answer</b>. All answers are hidden now.</p>
+  <div class="qbar">
+    <span>📚 All answers</span>
+    <button class="btn green small" data-all="show" style="background:#00916f">👀 Show all answers</button>
+    <button class="btn red small" data-all="hide" style="background:#d63a46">🙈 Hide all</button>
+  </div>
+  <div id="qRoot"></div>
+  <div class="qbar" style="position:static;margin-top:20px">
+    <span>📚 All answers</span>
+    <button class="btn green small" data-all="show" style="background:#00916f">👀 Show all answers</button>
+    <button class="btn red small" data-all="hide" style="background:#d63a46">🙈 Hide all</button>
+  </div>
+</section>
+
+<footer>🎉 Great job! Keep practising — pointers will soon feel easy.</footer>
+</main>
+
+<button class="to-top" id="toTop" aria-label="Back to top">↑</button>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- helpers ---------- */
+function $(s,r){return (r||document).querySelector(s);}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+var KW=/^(class|public|virtual|void|int|string|return|using|namespace)$/;
+function hl(s){
+  var re=/(\/\/.*$)|("(?:[^"\\]|\\.)*")|(#include\s*<[^>]*>)|([A-Za-z_]\w*)|(\d+)/g,out="",last=0,m;
+  while((m=re.exec(s))){
+    out+=esc(s.slice(last,m.index));
+    var t=m[0],cls=null;
+    if(m[1])cls="c";else if(m[2])cls="s";else if(m[3])cls="p";else if(m[4]){if(KW.test(t))cls="k";}else if(m[5])cls="n";
+    out+=cls?'<span class="t-'+cls+'">'+esc(t)+'</span>':esc(t);
+    last=m.index+t.length;
+  }
+  return out+esc(s.slice(last));
+}
+
+/* ---------- program data ---------- */
+function mk(title,rows,trace,out){
+  var lines=rows.replace(/^\n+|\n+$/g,"").split("\n").map(function(r){
+    var i=r.indexOf(" ||| ");
+    if(i<0){ if(r.slice(-4)===" |||"){return [r.slice(0,-4),""];} return [r,""]; }
+    return [r.slice(0,i),r.slice(i+5)];
+  });
+  return {title:title,lines:lines,trace:trace||[],out:out};
+}
+var H2="#include <iostream> ||| Brings in the tool for printing (cout).\nusing namespace std; ||| Lets us write cout instead of std::cout.\n";
+var H3="#include <iostream> ||| Brings in the tool for printing (cout).\n#include <string> ||| Brings in the tool for text (string).\nusing namespace std; ||| Lets us write cout instead of std::cout.\n";
+var MAIN_START=["int main() {","","The program starts at main()."];
+var RET=["return 0;","","main() finishes. The program ends. 🎉"];
+
+var PROGS={};
+PROGS.basics=mk("Refresher: class, constructor, destructor",H3+`
+class Student { ||| A class named Student.
+public: ||| Open for everyone.
+    string name; ||| Data member: the name.
+    Student(string n) { ||| Constructor: same name as the class. It receives a name.
+        name = n; ||| Store the received name.
+        cout << name << " joined" << endl; ||| Prints a message when the object is created.
+    } ||| End of the constructor.
+    ~Student() { ||| Destructor: ~ and the class name.
+        cout << name << " left" << endl; ||| Prints a message when the object is removed.
+    } ||| End of the destructor.
+    void show() { ||| A member function.
+        cout << "I am " << name << endl; ||| Prints the name.
+    } ||| End of show().
+}; ||| End of the class.
+
+int main() { ||| The program starts here.
+    Student s("Asha"); ||| Make object s and send Asha to the constructor.
+    s.show(); ||| Call show() with the dot.
+    return 0; ||| main ends, so s is removed and the destructor runs.
+} ||| End of main().`,
+[MAIN_START,
+ ["Student s(\"Asha\");","","Object s is created. The constructor runs by itself with n = Asha."],
+ ["name = n;","","name now holds Asha."],
+ ["cout << name << \" joined\"","Asha joined","The constructor prints."],
+ ["s.show();","","We call show() on s."],
+ ["cout << \"I am \"","I am Asha","Prints the name."],
+ ["return 0;","","main is ending, so s is removed. The destructor runs by itself."],
+ ["cout << name << \" left\"","Asha left","The destructor prints."]]);
+
+PROGS.intptr=mk("A pointer to an int",H2+`
+int main() { ||| The program starts here.
+    int x = 10; ||| Make x and put 10 in it.
+    int* p = &x; ||| p is a pointer to an int. It stores the address of x (&x).
+    cout << "x is " << x << endl; ||| Prints the value of x.
+    cout << "*p is " << *p << endl; ||| *p goes to the address in p and prints the value there.
+    *p = 20; ||| Go to the address in p and put 20 there. This changes x!
+    cout << "x is now " << x << endl; ||| Prints x again.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[MAIN_START,
+ ["int x = 10;","","x is created and holds 10."],
+ ["int* p = &x;","","p stores the address of x. p now points to x."],
+ ["cout << \"x is \"","x is 10","Prints 10."],
+ ["cout << \"*p is \"","*p is 10","*p follows the address to x, so it prints 10 too."],
+ ["*p = 20;","","We go to x through p and put 20 there."],
+ ["cout << \"x is now \"","x is now 20","x really changed, because p points to x."],
+ RET]);
+
+PROGS.objptr=mk("A pointer to an object and the arrow ->",H3+`
+class Student { ||| A class named Student.
+public: ||| Open for everyone.
+    string name; ||| Data member: the name.
+    int marks; ||| Data member: the marks.
+    void show() { ||| Member function.
+        cout << name << " has " << marks << " marks" << endl; ||| Prints the details.
+    } ||| End of show().
+}; ||| End of Student.
+
+int main() { ||| The program starts here.
+    Student s; ||| Make an object s.
+    s.name = "Asha"; ||| Object ➜ use the dot.
+    s.marks = 90; ||| Set the marks.
+    Student* p = &s; ||| p is a pointer to a Student. It stores the address of s.
+    p->show(); ||| Pointer ➜ use the arrow. Calls show() of s.
+    p->marks = 95; ||| Change the marks of s through the pointer.
+    s.show(); ||| Call show() with the dot. It shows the new marks.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[MAIN_START,
+ ["Student s;","","Object s is created."],
+ ["s.name =","","We use the dot because s is an object."],
+ ["s.marks =","","marks becomes 90."],
+ ["Student* p = &s;","","p now stores the address of s."],
+ ["p->show();","","We use the arrow because p is a pointer. This calls show() of s."],
+ ["cout << name << \" has \"","Asha has 90 marks","Prints the details of s."],
+ ["p->marks = 95;","","Through p we change the marks of s itself."],
+ ["s.show();","","We call show() again, using the dot."],
+ ["cout << name << \" has \"","Asha has 95 marks","The marks are now 95."],
+ RET]);
+
+PROGS.newdel=mk("Making an object with new and removing it with delete",H3+`
+class Student { ||| A class named Student.
+public: ||| Open for everyone.
+    string name; ||| Data member: the name.
+    Student(string n) { ||| Constructor with one value.
+        name = n; ||| Store the name.
+        cout << name << " joined" << endl; ||| Prints a message.
+    } ||| End of the constructor.
+    ~Student() { ||| Destructor.
+        cout << name << " left" << endl; ||| Prints a message.
+    } ||| End of the destructor.
+}; ||| End of Student.
+
+int main() { ||| The program starts here.
+    Student* p = new Student("Asha"); ||| new makes the object and gives its address. We keep it in pointer p.
+    cout << "Using " << p->name << endl; ||| Use the object through the pointer with the arrow.
+    delete p; ||| Remove the object now. Its destructor runs right here.
+    cout << "End" << endl; ||| Prints End.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[MAIN_START,
+ ["Student* p = new Student(\"Asha\");","","new builds a Student, so the constructor runs. The address goes into p."],
+ ["name = n;","","Inside the constructor: name becomes Asha."],
+ ["cout << name << \" joined\"","Asha joined","The constructor prints."],
+ ["cout << \"Using \"","Using Asha","We reach the object through p with the arrow."],
+ ["delete p;","","delete removes the object. The destructor runs right now."],
+ ["cout << name << \" left\"","Asha left","The destructor prints."],
+ ["cout << \"End\"","End","Now the program prints End."],
+ RET]);
+
+PROGS.whoami=mk("The this pointer: who is calling?",H3+`
+class Student { ||| A class named Student.
+public: ||| Open for everyone.
+    string name; ||| Data member: the name.
+    void whoAmI() { ||| One function shared by all Student objects.
+        cout << "I am " << this->name << endl; ||| this points to the object that called. this->name is ITS name.
+    } ||| End of whoAmI().
+}; ||| End of Student.
+
+int main() { ||| The program starts here.
+    Student s1; ||| First object.
+    Student s2; ||| Second object.
+    s1.name = "Asha"; ||| Name of s1.
+    s2.name = "Ravi"; ||| Name of s2.
+    s1.whoAmI(); ||| s1 calls the function. this points to s1.
+    s2.whoAmI(); ||| s2 calls the function. this points to s2.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[MAIN_START,
+ ["Student s1;","","Object s1 is created."],
+ ["Student s2;","","Object s2 is created."],
+ ["s1.name =","","s1's name is Asha."],
+ ["s2.name =","","s2's name is Ravi."],
+ ["s1.whoAmI();","","s1 calls whoAmI(). Inside it, this points to s1."],
+ ["cout << \"I am \"","I am Asha","this->name is the name of s1."],
+ ["s2.whoAmI();","","s2 calls the same function. Now this points to s2."],
+ ["cout << \"I am \"","I am Ravi","this->name is the name of s2."],
+ RET]);
+
+PROGS.getthis=mk("Proof: this is the address of the object",H3+`
+class Student { ||| A class named Student.
+public: ||| Open for everyone.
+    string name; ||| Data member: the name.
+    Student* getThis() { ||| Return type Student*: this function gives back a pointer to a Student.
+        return this; ||| Give back this, the address of the calling object.
+    } ||| End of getThis().
+}; ||| End of Student.
+
+int main() { ||| The program starts here.
+    Student s1; ||| First object.
+    Student s2; ||| Second object.
+    Student* p = s1.getThis(); ||| Ask s1 for its own address and keep it in p.
+    cout << (p == &s1) << endl; ||| Is p equal to the address of s1? Prints 1 for yes.
+    cout << (p == &s2) << endl; ||| Is p equal to the address of s2? Prints 0 for no.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[MAIN_START,
+ ["Student s1;","","Object s1 is created."],
+ ["Student s2;","","Object s2 is created."],
+ ["Student* p = s1.getThis();","","s1 calls getThis(). Inside it, this is the address of s1, and it is returned."],
+ ["return this;","","The address of s1 is handed back to main."],
+ ["cout << (p == &s1)","1","p and &s1 are the same address, so the answer is 1 (yes)."],
+ ["cout << (p == &s2)","0","p and &s2 are different addresses, so the answer is 0 (no)."],
+ RET]);
+
+PROGS.thisname=mk("Using this when the names are the same",H3+`
+class Student { ||| A class named Student.
+public: ||| Open for everyone.
+    string name; ||| Data member called name.
+    int marks; ||| Data member called marks.
+    Student(string name, int marks) { ||| The parameters have the SAME names as the data members.
+        this->name = name; ||| this->name is the member. name (alone) is the parameter. Copy parameter into member.
+        this->marks = marks; ||| Same idea for marks.
+    } ||| End of the constructor.
+    void show() { ||| Prints the details.
+        cout << name << " " << marks << endl; ||| Here name and marks are the members.
+    } ||| End of show().
+}; ||| End of Student.
+
+int main() { ||| The program starts here.
+    Student s("Asha", 90); ||| Make s and send two values.
+    s.show(); ||| Prints the stored values.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[MAIN_START,
+ ["Student s(\"Asha\", 90);","","Two values go in: the parameter name = Asha and the parameter marks = 90."],
+ ["this->name = name;","","Left side: the member of this object. Right side: the parameter. Asha is stored."],
+ ["this->marks = marks;","","The same for marks. 90 is stored."],
+ ["s.show();","","We call show()."],
+ ["cout << name << \" \"","Asha 90","Prints the stored name and marks."],
+ RET]);
+
+PROGS.baseptr=mk("A base class pointer to a derived object",H3+`
+class Animal { ||| The base class.
+public: ||| Open for everyone.
+    string name; ||| Data member: the name.
+    void eat() { ||| Base class function.
+        cout << name << " is eating" << endl; ||| Prints a message.
+    } ||| End of eat().
+}; ||| End of Animal.
+
+class Dog : public Animal { ||| Dog inherits Animal.
+public: ||| Open for everyone.
+    void bark() { ||| Dog's own function.
+        cout << name << " says Woof!" << endl; ||| Prints a message.
+    } ||| End of bark().
+}; ||| End of Dog.
+
+int main() { ||| The program starts here.
+    Dog d; ||| Make a Dog object.
+    d.name = "Tommy"; ||| Set the name.
+    Animal* p = &d; ||| A pointer to Animal holds the address of a Dog. Allowed!
+    p->eat(); ||| eat() is in Animal, so the base pointer can use it.
+    d.bark(); ||| bark() is only in Dog. We call it with the Dog object itself.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[MAIN_START,
+ ["Dog d;","","A Dog object d is created."],
+ ["d.name =","","The name of d is Tommy."],
+ ["Animal* p = &d;","","p is an Animal pointer, but it holds the address of the Dog. This is allowed."],
+ ["p->eat();","","Through p we call eat(). It belongs to Animal, so the pointer can see it."],
+ ["cout << name << \" is eating\"","Tommy is eating","Prints the message."],
+ ["d.bark();","","bark() needs the Dog itself, so we use d with the dot."],
+ ["cout << name << \" says Woof!\"","Tommy says Woof!","Prints the message."],
+ RET]);
+
+PROGS.err1=mk("Mistake 1: base pointer calling a derived function (ERROR)",H2+`
+class Animal { ||| The base class.
+public: ||| Open for everyone.
+    void eat() { ||| Base class function.
+        cout << "Eating" << endl; ||| Prints a message.
+    } ||| End of eat().
+}; ||| End of Animal.
+
+class Dog : public Animal { ||| Dog inherits Animal.
+public: ||| Open for everyone.
+    void bark() { ||| Only Dog has bark().
+        cout << "Woof!" << endl; ||| Prints a message.
+    } ||| End of bark().
+}; ||| End of Dog.
+
+int main() { ||| The program starts here.
+    Dog d; ||| Make a Dog.
+    Animal* p = &d; ||| Base pointer to the Dog. Allowed.
+    p->bark(); ||| ERROR! An Animal pointer knows nothing about bark().
+    return 0; ||| We never reach this line.
+} ||| End of main().`,
+[MAIN_START,
+ ["Dog d;","","A Dog object is created."],
+ ["Animal* p = &d;","","p is an Animal pointer holding the Dog's address. Allowed."],
+ ["p->bark();","❌ Compile error: 'class Animal' has no member named 'bark'","The pointer's type is Animal. It can only see Animal's members, and bark() is not one of them."]]);
+PROGS.err1.endMsg="💥 The program stopped with an error. Press Reset to see it again.";
+
+PROGS.err2=mk("Mistake 2: derived pointer to a base object (ERROR)",H2+`
+class Animal { ||| The base class.
+public: ||| Open for everyone.
+    void eat() { ||| Base class function.
+        cout << "Eating" << endl; ||| Prints a message.
+    } ||| End of eat().
+}; ||| End of Animal.
+
+class Dog : public Animal { ||| Dog inherits Animal.
+public: ||| Open for everyone.
+    void bark() { ||| Only Dog has bark().
+        cout << "Woof!" << endl; ||| Prints a message.
+    } ||| End of bark().
+}; ||| End of Dog.
+
+int main() { ||| The program starts here.
+    Animal a; ||| Make a plain Animal object.
+    Dog* q = &a; ||| ERROR! A Dog pointer cannot hold the address of a plain Animal.
+    return 0; ||| We never reach this line.
+} ||| End of main().`,
+[MAIN_START,
+ ["Animal a;","","A plain Animal object is created. It is not a Dog."],
+ ["Dog* q = &a;","❌ Compile error: invalid conversion from 'Animal*' to 'Dog*'","A Dog pointer expects a Dog (with bark()). A plain Animal has no bark(), so C++ says no."]]);
+PROGS.err2.endMsg="💥 The program stopped with an error. Press Reset to see it again.";
+
+PROGS.surprise=mk("Same function name, no virtual: the pointer's type decides",H2+`
+class Animal { ||| The base class.
+public: ||| Open for everyone.
+    void sound() { ||| Base version of sound().
+        cout << "Some animal sound" << endl; ||| Prints a general message.
+    } ||| End of sound().
+}; ||| End of Animal.
+
+class Dog : public Animal { ||| Dog inherits Animal.
+public: ||| Open for everyone.
+    void sound() { ||| Dog writes its own sound() with the same name.
+        cout << "Woof" << endl; ||| Prints Woof.
+    } ||| End of sound().
+}; ||| End of Dog.
+
+int main() { ||| The program starts here.
+    Dog d; ||| Make a Dog object.
+    d.sound(); ||| The Dog object uses its own version.
+    Animal* p = &d; ||| A base pointer holds the address of the Dog.
+    p->sound(); ||| Surprise! The pointer type is Animal, so Animal's version runs.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[MAIN_START,
+ ["Dog d;","","A Dog object is created."],
+ ["d.sound();","","We call sound() with the Dog object. Dog's own version is used."],
+ ["cout << \"Woof\"","Woof","Dog's version prints Woof."],
+ ["Animal* p = &d;","","p is an Animal pointer holding the address of the Dog."],
+ ["p->sound();","","We call sound() through the Animal pointer. C++ looks at the pointer's type only."],
+ ["cout << \"Some animal sound\"","Some animal sound","The base version runs, even though the object is a Dog!"],
+ RET]);
+
+PROGS.virt=mk("virtual: the real object decides",H2+`
+class Animal { ||| The base class.
+public: ||| Open for everyone.
+    virtual void sound() { ||| virtual: "look at the real object when called through a pointer".
+        cout << "Some animal sound" << endl; ||| Base version.
+    } ||| End of sound().
+}; ||| End of Animal.
+
+class Dog : public Animal { ||| Dog inherits Animal.
+public: ||| Open for everyone.
+    void sound() { ||| Dog's own version.
+        cout << "Woof" << endl; ||| Prints Woof.
+    } ||| End of sound().
+}; ||| End of Dog.
+
+class Cat : public Animal { ||| Cat inherits Animal.
+public: ||| Open for everyone.
+    void sound() { ||| Cat's own version.
+        cout << "Meow" << endl; ||| Prints Meow.
+    } ||| End of sound().
+}; ||| End of Cat.
+
+int main() { ||| The program starts here.
+    Dog d; ||| Make a Dog.
+    Cat c; ||| Make a Cat.
+    Animal* p = &d; ||| p holds the address of the Dog.
+    p->sound(); ||| virtual ➜ C++ sees a Dog inside, so Woof.
+    p = &c; ||| Change p. Now it holds the address of the Cat.
+    p->sound(); ||| Same line of code, but now it is a Cat, so Meow.
+    return 0; ||| The program ends well.
+} ||| End of main().`,
+[MAIN_START,
+ ["Dog d;","","A Dog object is created."],
+ ["Cat c;","","A Cat object is created."],
+ ["Animal* p = &d;","","p (an Animal pointer) holds the address of the Dog."],
+ ["p->sound();","","We call sound() through p. Because sound() is virtual, C++ checks the real object: a Dog."],
+ ["cout << \"Woof\"","Woof","Dog's version runs."],
+ ["p = &c;","","We change p so it now points to the Cat."],
+ [30,"","The same call again. The real object is now a Cat."],
+ ["cout << \"Meow\"","Meow","Cat's version runs."],
+ RET]);
+
+var GUESS=[
+ mk("",H2+`
+int main() {
+    int a = 5;
+    int* p = &a;
+    *p = *p + 3;
+    cout << a << endl;
+    return 0;
+}`,[],"8"),
+ mk("",H2+`
+class Box {
+public:
+    int n;
+};
+
+int main() {
+    Box b;
+    b.n = 4;
+    Box* p = &b;
+    p->n = p->n * 2;
+    cout << b.n << endl;
+    return 0;
+}`,[],"8"),
+ mk("",H2+`
+class T {
+public:
+    T() {
+        cout << "start" << endl;
+    }
+    ~T() {
+        cout << "end" << endl;
+    }
+};
+
+int main() {
+    T* p = new T;
+    cout << "middle" << endl;
+    delete p;
+    cout << "after" << endl;
+    return 0;
+}`,[],"start\nmiddle\nend\nafter"),
+ mk("",H2+`
+class P {
+public:
+    int x;
+    void set(int x) {
+        this->x = x;
+    }
+};
+
+int main() {
+    P a;
+    a.set(7);
+    cout << a.x << endl;
+    return 0;
+}`,[],"7"),
+ mk("",H2+`
+class Animal {
+public:
+    void sound() {
+        cout << "Animal" << endl;
+    }
+};
+
+class Dog : public Animal {
+public:
+    void sound() {
+        cout << "Dog" << endl;
+    }
+};
+
+int main() {
+    Dog d;
+    Animal* p = &d;
+    p->sound();
+    return 0;
+}`,[],"Animal"),
+ mk("",H2+`
+class Animal {
+public:
+    virtual void sound() {
+        cout << "Animal" << endl;
+    }
+};
+
+class Dog : public Animal {
+public:
+    void sound() {
+        cout << "Dog" << endl;
+    }
+};
+
+class Cat : public Animal {
+public:
+    void sound() {
+        cout << "Cat" << endl;
+    }
+};
+
+int main() {
+    Dog d;
+    Cat c;
+    Animal* p = &d;
+    p->sound();
+    p = &c;
+    p->sound();
+    return 0;
+}`,[],"Dog\nCat")
+];
+var GUESS_WHY=[
+ "<code>p</code> holds the address of <code>a</code>. <code>*p = *p + 3;</code> goes to a, reads 5, adds 3 and stores 8 back in a. So a is 8.",
+ "<code>p</code> points to <code>b</code>. <code>p-&gt;n * 2</code> is 4 * 2 = 8, stored back into <code>b.n</code> through the pointer. So <code>b.n</code> is 8.",
+ "<code>new T</code> runs the constructor: <b>start</b>. Then <b>middle</b> prints. <code>delete p;</code> runs the destructor at once: <b>end</b>. Finally <b>after</b> prints.",
+ "<code>a.set(7)</code> is called, so <code>this</code> points to a. <code>this-&gt;x = x;</code> copies the parameter 7 into the member x of a. So <code>a.x</code> is 7.",
+ "Animal's <code>sound()</code> is <b>not</b> virtual. Through a base pointer, the pointer's type (Animal) decides. So it prints <b>Animal</b>, not Dog.",
+ "Now <code>sound()</code> is virtual, so the real object decides. First p points to the Dog: <b>Dog</b>. Then p is changed to point to the Cat: <b>Cat</b>."
+];
+
+var WRITE=[
+ {t:"Write a program: make an <code>int x</code> with value 10, a pointer <code>p</code> to x, change x to 25 using <code>*p</code>, and print x.",
+  p:mk("",H2+`
+int main() { ||| Program starts.
+    int x = 10; ||| Make x with value 10.
+    int* p = &x; ||| p stores the address of x.
+    *p = 25; ||| Go to x through p and put 25.
+    cout << "x = " << x << endl; ||| Prints the new value.
+    return 0; ||| End well.
+} ||| End of main().`,[],"x = 25")},
+ {t:"Make a class <code>Student</code> with <code>string name</code>, <code>int marks</code> and a function <code>show()</code>. In <code>main()</code> create an object and a pointer to it. Set Asha and 90 using the <b>pointer</b>, then call <code>show()</code> using the pointer.",
+  p:mk("",H3+`
+class Student { ||| A class named Student.
+public: ||| Open for everyone.
+    string name; ||| Data member.
+    int marks; ||| Data member.
+    void show() { ||| Prints the details.
+        cout << "Name: " << name << " Marks: " << marks << endl; ||| Prints both values.
+    } ||| End of show().
+}; ||| End of Student.
+
+int main() { ||| Program starts.
+    Student s; ||| Make an object.
+    Student* p = &s; ||| Pointer to the object.
+    p->name = "Asha"; ||| Arrow, because p is a pointer.
+    p->marks = 90; ||| Set the marks.
+    p->show(); ||| Call show() with the arrow.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Name: Asha Marks: 90")},
+ {t:"Make a class <code>Rectangle</code> with <code>int width</code>, <code>int height</code> and a function <code>area()</code> that prints width × height. Use a pointer to a Rectangle object with width 4 and height 6.",
+  p:mk("",H2+`
+class Rectangle { ||| A class named Rectangle.
+public: ||| Open for everyone.
+    int width; ||| Width.
+    int height; ||| Height.
+    void area() { ||| Prints the area.
+        cout << "Area: " << width * height << endl; ||| Width times height.
+    } ||| End of area().
+}; ||| End of Rectangle.
+
+int main() { ||| Program starts.
+    Rectangle r; ||| Make an object.
+    Rectangle* p = &r; ||| Pointer to the object.
+    p->width = 4; ||| Set width through the pointer.
+    p->height = 6; ||| Set height through the pointer.
+    p->area(); ||| Prints Area: 24.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Area: 24")},
+ {t:"Make a class <code>Book</code> with a constructor that prints <code>Book created</code> and a destructor that prints <code>Book removed</code>. In <code>main()</code> create a Book with <code>new</code> and remove it with <code>delete</code>.",
+  p:mk("",H2+`
+class Book { ||| A class named Book.
+public: ||| Open for everyone.
+    Book() { ||| Constructor.
+        cout << "Book created" << endl; ||| Runs when the object is made.
+    } ||| End of constructor.
+    ~Book() { ||| Destructor.
+        cout << "Book removed" << endl; ||| Runs when the object is removed.
+    } ||| End of destructor.
+}; ||| End of Book.
+
+int main() { ||| Program starts.
+    Book* b = new Book; ||| new makes a Book. Constructor runs.
+    delete b; ||| Removes the Book. Destructor runs.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Book created\nBook removed")},
+ {t:"Make a class <code>Student</code> with a constructor that takes <code>string n</code> and prints <code>Hello &lt;n&gt;</code>, and a destructor that prints <code>Bye &lt;n&gt;</code>. Create <code>new Student(\"Meena\")</code> and delete it. (Store the name in a data member.)",
+  p:mk("",H3+`
+class Student { ||| A class named Student.
+public: ||| Open for everyone.
+    string name; ||| Data member.
+    Student(string n) { ||| Constructor with one value.
+        name = n; ||| Store the name.
+        cout << "Hello " << name << endl; ||| Greets.
+    } ||| End of constructor.
+    ~Student() { ||| Destructor.
+        cout << "Bye " << name << endl; ||| Says goodbye.
+    } ||| End of destructor.
+}; ||| End of Student.
+
+int main() { ||| Program starts.
+    Student* p = new Student("Meena"); ||| Make the object with new and send Meena.
+    delete p; ||| Remove it. The destructor runs now.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Hello Meena\nBye Meena")},
+ {t:"Make a class <code>Point</code> with <code>int x</code>, <code>int y</code>, a function <code>set(int x, int y)</code> that uses <code>this-&gt;</code>, and a function <code>show()</code>. Set 3 and 4 and print them.",
+  p:mk("",H2+`
+class Point { ||| A class named Point.
+public: ||| Open for everyone.
+    int x; ||| Data member x.
+    int y; ||| Data member y.
+    void set(int x, int y) { ||| Parameters have the same names as the members.
+        this->x = x; ||| Member x gets the parameter x.
+        this->y = y; ||| Member y gets the parameter y.
+    } ||| End of set().
+    void show() { ||| Prints the point.
+        cout << x << " " << y << endl; ||| Here x and y are the members.
+    } ||| End of show().
+}; ||| End of Point.
+
+int main() { ||| Program starts.
+    Point pt; ||| Make an object.
+    pt.set(3, 4); ||| Send 3 and 4.
+    pt.show(); ||| Prints 3 4.
+    return 0; ||| End well.
+} ||| End of main().`,[],"3 4")},
+ {t:"Make a class <code>Box</code> with a function <code>getThis()</code> that returns <code>this</code>. In <code>main()</code> create a Box <code>b</code>, store <code>b.getThis()</code> in a pointer <code>p</code> and print whether <code>p == &amp;b</code>.",
+  p:mk("",H2+`
+class Box { ||| A class named Box.
+public: ||| Open for everyone.
+    Box* getThis() { ||| Returns a pointer to a Box.
+        return this; ||| Gives back the address of the calling object.
+    } ||| End of getThis().
+}; ||| End of Box.
+
+int main() { ||| Program starts.
+    Box b; ||| Make an object.
+    Box* p = b.getThis(); ||| p gets the address of b.
+    cout << "Same object: " << (p == &b) << endl; ||| Prints 1 because they are equal.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Same object: 1")},
+ {t:"Make a base class <code>Animal</code> with <code>string name</code> and a function <code>eat()</code>, and a derived class <code>Dog</code>. Make a Dog object, store its address in an <code>Animal*</code> and use the pointer to set the name to Tommy and call <code>eat()</code>.",
+  p:mk("",H3+`
+class Animal { ||| Base class.
+public: ||| Open for everyone.
+    string name; ||| Data member.
+    void eat() { ||| Base function.
+        cout << name << " is eating" << endl; ||| Prints a message.
+    } ||| End of eat().
+}; ||| End of Animal.
+
+class Dog : public Animal { ||| Derived class.
+}; ||| Empty body. Dog still gets everything from Animal.
+
+int main() { ||| Program starts.
+    Dog d; ||| Make a Dog.
+    Animal* p = &d; ||| Base pointer holds the address of the Dog.
+    p->name = "Tommy"; ||| Set the name through the pointer.
+    p->eat(); ||| Call eat() through the pointer.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Tommy is eating")},
+ {t:"Make a base class <code>Person</code> with a <b>virtual</b> function <code>intro()</code> that prints <code>I am a person</code>. Derive <code>Teacher</code> (prints <code>I am a teacher</code>) and <code>Student</code> (prints <code>I am a student</code>). Use one <code>Person*</code> to call <code>intro()</code> for a Teacher and then for a Student.",
+  p:mk("",H2+`
+class Person { ||| Base class.
+public: ||| Open for everyone.
+    virtual void intro() { ||| virtual, so the real object decides.
+        cout << "I am a person" << endl; ||| Base version.
+    } ||| End of intro().
+}; ||| End of Person.
+
+class Teacher : public Person { ||| Derived class 1.
+public: ||| Open for everyone.
+    void intro() { ||| Teacher's version.
+        cout << "I am a teacher" << endl; ||| Prints a message.
+    } ||| End of intro().
+}; ||| End of Teacher.
+
+class Student : public Person { ||| Derived class 2.
+public: ||| Open for everyone.
+    void intro() { ||| Student's version.
+        cout << "I am a student" << endl; ||| Prints a message.
+    } ||| End of intro().
+}; ||| End of Student.
+
+int main() { ||| Program starts.
+    Teacher t; ||| Make a Teacher.
+    Student s; ||| Make a Student.
+    Person* p = &t; ||| p holds the address of the Teacher.
+    p->intro(); ||| Teacher's version runs.
+    p = &s; ||| Change p to the Student.
+    p->intro(); ||| Student's version runs.
+    return 0; ||| End well.
+} ||| End of main().`,[],"I am a teacher\nI am a student")},
+ {t:"Make a class <code>Counter</code> with <code>int count</code> and a function <code>add()</code> that adds 1 to count and <b>returns this</b>. In <code>main()</code> set count to 0, call <code>c.add()</code> and keep the result in a pointer <code>p</code>, then call <code>p-&gt;add()</code> and print count.",
+  p:mk("",H2+`
+class Counter { ||| A class named Counter.
+public: ||| Open for everyone.
+    int count; ||| Data member.
+    Counter* add() { ||| Returns a pointer to a Counter.
+        count = count + 1; ||| Add 1 to count.
+        return this; ||| Give back the address of this object.
+    } ||| End of add().
+}; ||| End of Counter.
+
+int main() { ||| Program starts.
+    Counter c; ||| Make an object.
+    c.count = 0; ||| Start at 0.
+    Counter* p = c.add(); ||| count becomes 1. p holds the address of c.
+    p->add(); ||| count becomes 2, because p points to c.
+    cout << "Count: " << c.count << endl; ||| Prints 2.
+    return 0; ||| End well.
+} ||| End of main().`,[],"Count: 2")}
+];
+
+/* ---------- program widget ---------- */
+function tableHtml(def){
+  var r="<table><tr><th>#</th><th>Code line</th><th>Meaning</th></tr>";
+  def.lines.forEach(function(l,i){
+    if(!l[0].trim())return;
+    r+='<tr><td class="no">'+(i+1)+'</td><td><code>'+hl(l[0].trim())+'</code></td><td>'+esc(l[1])+'</td></tr>';
+  });
+  return r+"</table>";
+}
+function codeLinesHtml(def){
+  return def.lines.map(function(l,i){
+    return '<div class="ln" data-i="'+i+'"><span class="no">'+(i+1)+'</span><span class="tx">'+(hl(l[0])||"&nbsp;")+'</span></div>';
+  }).join("");
+}
+function plainCodeHtml(def){
+  return '<pre class="code">'+def.lines.map(function(l){return hl(l[0]);}).join("\n")+'</pre>';
+}
+function outputHtml(text){
+  return '<div class="console" style="margin-top:6px">'+text.split("\n").map(function(t){return '<div class="ol">'+esc(t)+'</div>';}).join("")+'</div>';
+}
+function resolveTrace(def){
+  return def.trace.map(function(t){
+    var idx=-1;
+    if(typeof t[0]==="number")idx=t[0];
+    else for(var i=0;i<def.lines.length;i++){if(def.lines[i][0].trim().indexOf(t[0])>=0){idx=i;break;}}
+    if(idx<0)throw new Error("Trace line not found: "+t[0]+" in "+def.title);
+    return {i:idx,out:t[1]||"",note:t[2]||""};
+  });
+}
+function buildProg(host,def){
+  var trace=resolveTrace(def);
+  host.innerHTML=
+    '<div class="prog-head"><span>💻 '+esc(def.title)+'</span><small>tap a line 👆 or run step by step</small></div>'+
+    '<div class="codebox">'+codeLinesHtml(def)+'</div>'+
+    '<div class="info" aria-live="polite"></div>'+
+    '<div class="ctrl"><button class="btn green go">▶ Next step</button><button class="btn ghost rs">↺ Reset</button><button class="btn ghost tb">📖 Line-by-line table</button></div>'+
+    '<div class="console" aria-label="Program output"></div>'+
+    '<div class="ltable" hidden>'+tableHtml(def)+'</div>';
+  var info=$(".info",host),con=$(".console",host),go=$(".go",host),lns=$$(".ln",host),step=0;
+  var hint="👆 Tap any line to see what it means, or press ▶ Next step.";
+  function clearMarks(c){lns.forEach(function(l){l.classList.remove(c);});}
+  function reset(){
+    step=0;clearMarks("run");clearMarks("sel");
+    info.textContent=hint;
+    con.innerHTML='<div class="ph">Output will appear here…</div>';
+    go.textContent="▶ Next step";
+  }
+  function next(){
+    if(step>=trace.length){info.textContent=def.endMsg||"🎉 Program finished! Press ↺ Reset to play again.";return;}
+    var t=trace[step];
+    clearMarks("run");clearMarks("sel");
+    lns[t.i].classList.add("run");
+    var m=def.lines[t.i][1];
+    info.textContent="Step "+(step+1)+" of "+trace.length+" — line "+(t.i+1)+": "+(t.note||m);
+    if(t.out){
+      var ph=$(".ph",con);if(ph)con.removeChild(ph);
+      var d=document.createElement("div");d.className="ol"+(t.out.indexOf("❌")===0?" err":"");d.textContent=t.out;con.appendChild(d);
+    }
+    if(lns[t.i].scrollIntoView&&false){lns[t.i].scrollIntoView({block:"nearest"});}
+    step++;
+    if(step>=trace.length)go.textContent="✅ Done — press Reset";
+  }
+  lns.forEach(function(l){
+    l.addEventListener("click",function(){
+      var i=+l.getAttribute("data-i");
+      clearMarks("sel");l.classList.add("sel");
+      var code=def.lines[i][0].trim();
+      info.textContent=code?("Line "+(i+1)+" → "+(def.lines[i][1]||"")):"Line "+(i+1)+" is empty. A blank line just keeps the code neat.";
+    });
+  });
+  go.addEventListener("click",next);
+  $(".rs",host).addEventListener("click",reset);
+  $(".tb",host).addEventListener("click",function(){var t=$(".ltable",host);t.hidden=!t.hidden;this.textContent=t.hidden?"📖 Line-by-line table":"🙈 Hide table";});
+  reset();
+}
+$$("[data-prog]").forEach(function(h){buildProg(h,PROGS[h.getAttribute("data-prog")]);});
+
+/* ---------- question blocks ---------- */
+function qa(label,q,a,cls){
+  return '<div class="qa '+(cls||"")+'"><div class="q">'+(label?'<span class="qn">'+label+'</span>':'')+'<div class="qt">'+q+'</div></div>'+
+    '<button class="btn small show" aria-expanded="false">👀 Show answer</button><div class="ans" hidden>'+a+'</div></div>';
+}
+function fullAns(def){
+  return '<p><b>Full program:</b></p>'+plainCodeHtml(def)+'<p><b>Output:</b></p>'+outputHtml(def.out)+'<p><b>Line-by-line explanation:</b></p><div class="tablewrap">'+tableHtml(def)+'</div>';
+}
+function tryAns(id){return PROGS[id]?outputHtml(PROGS[id].out||""):"";}
+
+var TRY={
+ s1:["Write the name of the destructor of a class called <code>Cat</code>.","<code>~Cat()</code>. It is a tilde <code>~</code> followed by the class name, with no return type and no values."],
+ s2:["What does this print?<pre class=\"code\">"+hl("int x = 5;")+"\n"+hl("int* p = &x;")+"\n"+hl("*p = 8;")+"\n"+hl("cout << x;")+"</pre>","It prints <b>8</b>. p holds the address of x, and <code>*p = 8;</code> puts 8 into x."],
+ s3:["Fill in the blank: <code>Student* p = &amp;s;</code> then <code>p ___ marks = 80;</code>","The arrow: <code>p-&gt;marks = 80;</code>. We use the arrow with a pointer and the dot with an object."],
+ s4:["What happens if we create an object with <code>new</code> but forget <code>delete</code>?","The object is <b>never removed</b> and its destructor never runs. This is called a <b>memory leak</b>."],
+ s5:["<code>s1</code> and <code>s2</code> both call <code>whoAmI()</code>. What does <code>this</code> point to when <code>s2.whoAmI()</code> runs?","To <b>s2</b>, the object that made the call."],
+ s6:["If <code>p</code> holds the address of <code>s1</code>, what does <code>cout &lt;&lt; (p == &amp;s1);</code> print?","It prints <b>1</b> (yes, they are the same address)."],
+ s7:["Why do we write <code>this-&gt;name = name;</code> instead of <code>name = name;</code> when the parameter is also called name?","Plain <code>name</code> means the <b>parameter</b>, so <code>name = name;</code> copies the parameter into itself and the member is never set. <code>this-&gt;name</code> means the <b>member of the object</b>."],
+ s8:["Dog has <code>bark()</code>. After <code>Animal* p = &amp;d;</code>, can we write <code>p-&gt;bark();</code>? Why?","<b>No.</b> The pointer's type is Animal, so it can only use Animal's members. bark() is only in Dog."],
+ s9:["Animal's <code>sound()</code> is not virtual. With <code>Animal* p = &amp;d;</code> (d is a Dog), which <code>sound()</code> does <code>p-&gt;sound()</code> call?","<b>Animal's</b> version. Without virtual, the pointer's type decides."],
+ s10:["Which keyword must be written in the base class so that <code>p-&gt;sound()</code> calls the Dog's version?","<code>virtual</code>, written before the function in the base class: <code>virtual void sound()</code>"]
+};
+$$("[data-try]").forEach(function(h){
+  var d=TRY[h.getAttribute("data-try")];
+  h.outerHTML=qa("✍️ Try it now",d[0],d[1],"try");
+});
+
+var ONE=[
+ ["What is a pointer?","A variable that stores the address of another variable (or object)."],
+ ["Which symbol gives the address of a variable?","The ampersand <code>&amp;</code>, like <code>&amp;x</code>."],
+ ["Which symbol gives the value at the address stored in a pointer?","The star <code>*</code>, like <code>*p</code>."],
+ ["Write a line to declare a pointer <code>p</code> to an int.","<code>int* p;</code>"],
+ ["Which operator is used to reach a member through a pointer to an object?","The arrow operator <code>-&gt;</code>"],
+ ["Which operator is used to reach a member through an object?","The dot operator <code>.</code>"],
+ ["<code>p-&gt;show()</code> is the same as writing what?","<code>(*p).show()</code>"],
+ ["Write a line to declare a pointer <code>p</code> that holds the address of a Student object <code>s</code>.","<code>Student* p = &amp;s;</code>"],
+ ["Which keyword creates an object when the program needs it?","<code>new</code>"],
+ ["Which keyword removes an object created with <code>new</code>?","<code>delete</code>"],
+ ["What does <code>new</code> give back?","The address of the new object."],
+ ["What happens if we forget <code>delete</code> for an object made with <code>new</code>?","The object is never removed and its destructor never runs (memory leak)."],
+ ["When does the destructor run for an object removed with <code>delete p;</code>?","Right at the <code>delete</code> line."],
+ ["What is the <code>this</code> pointer?","A hidden pointer inside every member function. It holds the address of the object that called the function."],
+ ["Which operator do we use with <code>this</code> to reach a member?","The arrow <code>-&gt;</code>, like <code>this-&gt;name</code>."],
+ ["Can <code>this</code> be used outside the member functions of a class?","No. It exists only inside member functions."],
+ ["Why do we write <code>this-&gt;name = name;</code> in a constructor?","To tell the member <code>name</code> apart from the parameter <code>name</code>."],
+ ["What is the type of <code>this</code> inside a function of class <code>Student</code>?","<code>Student*</code> (a pointer to Student)."],
+ ["What does <code>==</code> check?","Whether two things are equal. It gives 1 for yes and 0 for no."],
+ ["Can a base class pointer hold the address of a derived class object?","Yes."],
+ ["Can a derived class pointer hold the address of a base class object?","No."],
+ ["Through a base pointer, which members can we use?","Only the members of the base class."],
+ ["Which keyword makes a base pointer call the derived class's version of a function?","<code>virtual</code>"],
+ ["Without <code>virtual</code>, what decides which function runs through a pointer?","The type of the pointer."],
+ ["With <code>virtual</code>, what decides which function runs through a pointer?","The type of the real object."],
+ ["Can one base pointer point to different derived objects at different times?","Yes, for example <code>p = &amp;d;</code> and later <code>p = &amp;c;</code>."],
+ ["<code>int* p = &amp;x;</code> What does <code>p</code> store?","The address of <code>x</code>."]
+];
+var TF=[
+ ["A pointer stores the address of a variable.",true,"That is exactly what a pointer is."],
+ ["We use the dot operator with a pointer to an object.",false,"We use the arrow <code>-&gt;</code> with a pointer. The dot is for objects."],
+ ["<code>p-&gt;show()</code> calls show() on the object that p points to.",true,"The arrow goes to the object and calls the function."],
+ ["<code>delete</code> is used to remove an object created with <code>new</code>.",true,"Every <code>new</code> needs a <code>delete</code>."],
+ ["An object made with <code>new</code> is removed automatically at the end of main().",false,"We must remove it ourselves with <code>delete</code>, otherwise there is a memory leak."],
+ ["The <code>this</code> pointer is available inside every member function.",true,"C++ gives it automatically."],
+ ["A derived class pointer can hold the address of a base class object.",false,"Not every Animal is a Dog, so this is an error."],
+ ["A base class pointer can point to a derived class object.",true,"A Dog is an Animal, so this is allowed."],
+ ["Without <code>virtual</code>, a base pointer calls the derived class's function.",false,"Without virtual, the pointer's type (base) decides, so the base function runs."],
+ ["With <code>virtual</code>, the function that runs depends on the real object.",true,"That is the purpose of virtual."],
+ ["<code>*p = 20;</code> changes the value of the variable that p points to.",true,"The star goes to the address and puts 20 there."]
+];
+var TWO=[
+ ["What is a pointer? Write an example.","<p>A pointer is a variable that stores the address of another variable.</p><p>Example: <code>int x = 10; int* p = &amp;x;</code> Here p stores the address of x.</p>"],
+ ["Write the difference between the dot operator and the arrow operator.","<p>The <b>dot</b> <code>.</code> is used with an <b>object</b>: <code>s.show()</code>.</p><p>The <b>arrow</b> <code>-&gt;</code> is used with a <b>pointer</b> to an object: <code>p-&gt;show()</code>.</p>"],
+ ["What is the <code>this</code> pointer?","<p>A hidden pointer available inside every member function. It holds the address of the object that called the function. Example: <code>this-&gt;name</code></p>"],
+ ["What are <code>new</code> and <code>delete</code>?","<p><code>new</code> creates an object when needed and gives its address. <code>delete</code> removes that object. Example: <code>Student* p = new Student(\"Asha\"); delete p;</code></p>"],
+ ["What is a base class pointer to a derived object? Give an example.","<p>A pointer of the base class type that holds the address of a derived class object.</p><p>Example: <code>Dog d; Animal* p = &amp;d;</code></p>"],
+ ["What is the use of the <code>virtual</code> keyword with base pointers?","<p>It makes a call through a base pointer run the <b>derived class's</b> version of the function (decided by the real object), not the base version.</p>"]
+];
+var THREE=[
+ ["Explain a pointer to an object with an example.","<p>A pointer to an object stores the address of an object. We reach the members with the arrow operator.</p><p>Example: <code>Student s; Student* p = &amp;s; p-&gt;marks = 95;</code> This changes the marks of s itself, because p points to s.</p>"],
+ ["Differentiate between an object and a pointer to an object.","<div class=\"tablewrap\"><table><tr><th>Object</th><th>Pointer to object</th></tr><tr><td><code>Student s;</code></td><td><code>Student* p = &amp;s;</code></td></tr><tr><td>Holds the data itself</td><td>Holds the address of the object</td></tr><tr><td>Uses the dot: <code>s.show()</code></td><td>Uses the arrow: <code>p-&gt;show()</code></td></tr></table></div>"],
+ ["Explain the <code>this</code> pointer with an example.","<p><code>this</code> is a hidden pointer inside every member function. It points to the object that called the function. It is mostly used when a parameter has the same name as a data member.</p><p>Example: <code>Student(string name) { this-&gt;name = name; }</code> Here <code>this-&gt;name</code> is the member and <code>name</code> is the parameter.</p>"],
+ ["Explain what happens when a function with the same name exists in the base and derived classes and it is called through a base pointer.","<p>Without <code>virtual</code>, the type of the pointer decides, so the <b>base</b> version runs even if the object is a Dog.</p><p>With <code>virtual</code> in the base class, the real object decides, so the <b>derived</b> version runs.</p>"]
+];
+var FIVE=[
+ ["Explain pointers to objects, the arrow operator, and <code>new</code> and <code>delete</code>. Write a program.","<p>A <b>pointer</b> stores an address. A pointer to an object lets us use the object with the arrow <code>-&gt;</code>. With <code>new</code> we create an object when needed and keep its address in a pointer. With <code>delete</code> we remove it. Without delete the destructor never runs (memory leak).</p>{{CODE:newdel}}<p><b>Output:</b></p>{{OUT:newdel}}"],
+ ["Explain the <code>this</code> pointer, its uses, and write a program.","<p><b>this</b> is a hidden pointer inside every member function that holds the address of the object that called the function.</p><p><b>Uses:</b> 1) to say clearly which object's member we mean, for example <code>this-&gt;name</code>. 2) to solve the clash when a parameter has the same name as a data member. 3) to return the address of the current object, <code>return this;</code>.</p>{{CODE:thisname}}<p><b>Output:</b></p>{{OUT:thisname}}"],
+ ["Explain pointers to derived classes. Show the problem without <code>virtual</code> and the solution with <code>virtual</code>. Write a program.","<p>A base pointer can hold the address of a derived object. Through it we can use only the base class members. If both classes have a function with the same name:</p><p><b>Without virtual</b> the pointer's type decides, so the base function runs.<br><b>With virtual</b> (written in the base class) the real object decides, so the derived function runs.</p><p>A derived pointer cannot hold the address of a base object.</p>{{CODE:virt}}<p><b>Output:</b></p>{{OUT:virt}}"]
+];
+function expand(h){
+  return h.replace(/\{\{CODE:(\w+)\}\}/g,function(_,n){return plainCodeHtml(PROGS[n]);})
+          .replace(/\{\{OUT:(\w+)\}\}/g,function(_,n){var t=PROGS[n].trace.map(function(x){return x.length>1?x[1]:"";}).filter(Boolean).join("\n");return outputHtml(t);});
+}
+function group(title,items){return '<div class="qgroup"><h3>'+title+'</h3>'+items.join("")+'</div>';}
+var html="";
+html+=group("A. 1-mark questions ("+ONE.length+")",ONE.map(function(q,i){return qa(i+1,q[0],q[1]);}));
+html+=group("B. True or False ("+TF.length+")",TF.map(function(q,i){return qa(i+1,q[0],(q[1]?"<b>✅ True.</b> ":"<b>❌ False.</b> ")+q[2]);}));
+html+=group("C. 2-mark short answers ("+TWO.length+")",TWO.map(function(q,i){return qa(i+1,q[0],q[1]);}));
+html+=group("D. 3-mark: explain / differentiate ("+THREE.length+")",THREE.map(function(q,i){return qa(i+1,q[0],q[1]);}));
+html+=group("E. 5-mark long answers ("+FIVE.length+")",FIVE.map(function(q,i){return qa(i+1,q[0],expand(q[1]));}));
+html+=group("F. Guess the output ("+GUESS.length+")",GUESS.map(function(g,i){
+  return qa(i+1,"What is the output of this program?"+plainCodeHtml(g),"<p><b>Output:</b></p>"+outputHtml(g.out)+"<p><b>Why?</b> "+GUESS_WHY[i]+"</p>");
+}));
+html+=group("G. Write a program ("+WRITE.length+")",WRITE.map(function(w,i){
+  return qa(i+1,w.t,fullAns(w.p));
+}));
+$("#qRoot").innerHTML=html;
+
+/* ---------- show / hide answers ---------- */
+function setAns(box,open){
+  var a=$(".ans",box),b=$(".show",box);
+  a.hidden=!open;
+  b.setAttribute("aria-expanded",open?"true":"false");
+  b.textContent=open?"🙈 Hide answer":"👀 Show answer";
+}
+document.addEventListener("click",function(e){
+  var t=e.target;
+  var sb=t.closest?t.closest(".show"):null;
+  if(sb){var box=sb.parentNode;setAns(box,box.querySelector(".ans").hidden);return;}
+  var all=t.closest?t.closest("[data-all]"):null;
+  if(all){var open=all.getAttribute("data-all")==="show";$$(".qa").forEach(function(b){setAns(b,open);});}
+});
+
+/* ---------- demos ---------- */
+function cleanText(s){return s.replace(/["\\]/g,"");}
+function lines(el,arr){
+  el.innerHTML="";
+  arr.forEach(function(t){var d=document.createElement("div");d.textContent=t;el.appendChild(d);});
+}
+function setMsg(el,t,c){el.className="msg "+(c||"");el.textContent=t;}
+function seg(onId,offId,on){$("#"+onId).classList.toggle("on",on);$("#"+offId).classList.toggle("on",!on);}
+
+/* section 1 */
+var d1made=false,d1log=[];
+function d1code(){$("#d1code").innerHTML=hl('Student s("'+cleanText($("#d1name").value)+'");');}
+$("#d1name").addEventListener("input",function(){d1code();});
+$("#d1mk").addEventListener("click",function(){
+  if(d1made){return;}
+  d1made=true;var n=cleanText($("#d1name").value).trim()||"(nobody)";
+  d1log=[n+" joined   ← constructor ran by itself"];lines($("#d1out"),d1log);
+});
+$("#d1rm").addEventListener("click",function(){
+  if(!d1made){$("#d1out").textContent="Create the object first.";return;}
+  var n=cleanText($("#d1name").value).trim()||"(nobody)";d1made=false;
+  d1log.push(n+" left     ← destructor ran by itself");lines($("#d1out"),d1log);
+});
+d1code();
+
+/* section 2 */
+var pSt=0,xv=10;
+function pRender(){
+  $("#pX").textContent=xv;$("#pP").textContent=pSt>=1?"#A1 (address of x)":"nothing yet";
+}
+$("#pB1").addEventListener("click",function(){pSt=1;pRender();setMsg($("#pMsg"),"✅ p now stores #A1, the address of x. We say p points to x.","good");});
+$("#pB2").addEventListener("click",function(){
+  if(pSt<1){setMsg($("#pMsg"),"p has no address yet. Press the first button.","bad");return;}
+  setMsg($("#pMsg"),"*p goes to #A1 and reads the value there: it prints "+xv+".","good");
+});
+$("#pB3").addEventListener("click",function(){
+  if(pSt<1){setMsg($("#pMsg"),"p has no address yet. Press the first button.","bad");return;}
+  xv=20;pRender();setMsg($("#pMsg"),"*p = 20; went to #A1 and put 20 there. So x is now 20!","good");
+});
+$("#pB4").addEventListener("click",function(){pSt=0;xv=10;pRender();setMsg($("#pMsg"),"Press the first button to make p store the address of x.","");});
+pRender();
+
+/* quick tap games */
+function gameBuild(hostId,items,labels,okText,badText){
+  var host=$("#"+hostId);
+  host.innerHTML=items.map(function(h,i){
+    return '<div class="row" style="justify-content:space-between"><b>'+h[0]+'</b><span><button class="btn small" data-gh="'+hostId+'" data-i="'+i+'" data-v="a">'+labels[0]+'</button> <button class="btn small ghost" data-gh="'+hostId+'" data-i="'+i+'" data-v="b">'+labels[1]+'</button></span></div><div class="msg" id="'+hostId+'m'+i+'" style="min-height:0;padding:4px 10px;margin:0 0 6px"></div>';
+  }).join("");
+  $$("[data-gh='"+hostId+"']").forEach(function(b){
+    b.addEventListener("click",function(){
+      var i=+b.getAttribute("data-i"),v=b.getAttribute("data-v"),h=items[i],m=$("#"+hostId+"m"+i);
+      var ok=v===h[1];
+      m.className="msg "+(ok?"good":"bad");
+      m.textContent=(ok?"✅ Correct! ":"❌ Not quite. ")+h[2];
+    });
+  });
+}
+gameBuild("dotGame",[
+ ["s ___ show();","a","s is an object, so we use the dot."],
+ ["p ___ show();","b","p is a pointer, so we use the arrow."],
+ ["p ___ marks = 80;","b","p is a pointer, so we use the arrow."],
+ ["s ___ name = \"Asha\";","a","s is an object, so we use the dot."]
+],[". dot","-> arrow"]);
+gameBuild("okGame",[
+ ["Animal* p = &d;","a","d is a Dog. A base pointer can hold a derived object."],
+ ["p->eat();","a","eat() is in Animal, so the Animal pointer can use it."],
+ ["p->bark();","b","bark() is only in Dog. An Animal pointer cannot see it."],
+ ["Dog* q = &a;","b","a is a plain Animal. A Dog pointer cannot hold a base object."],
+ ["Dog* q = &d;","a","A Dog pointer holding a Dog is perfectly fine."]
+],["✅ OK","❌ Error"]);
+
+/* section 4 */
+var nwAlive=0,nwLeak=false;
+function nwShow(extra){
+  var o=$("#nwOut");o.textContent="Objects alive: "+nwAlive+(extra?"   "+extra:"");
+}
+$("#nwNew").addEventListener("click",function(){nwAlive++;nwShow();setMsg($("#nwMsg"),"new built an object and gave you its address. Keep it in a pointer!","good");});
+$("#nwDel").addEventListener("click",function(){
+  if(nwAlive<=0){setMsg($("#nwMsg"),"Nothing to delete right now. Book something first.","bad");return;}
+  nwAlive--;nwShow();setMsg($("#nwMsg"),"delete removed the object and its destructor ran right then.","good");
+});
+$("#nwEnd").addEventListener("click",function(){
+  if(nwAlive>0){nwShow("⚠️");setMsg($("#nwMsg"),"⚠️ Memory leak! main ended but "+nwAlive+" object"+(nwAlive>1?"s were":" was")+" never deleted. Their destructors never ran.","bad");}
+  else{setMsg($("#nwMsg"),"✅ Clean finish. Every new had a delete.","good");}
+});
+$("#nwRs").addEventListener("click",function(){nwAlive=0;nwShow();setMsg($("#nwMsg"),"Press a button to try.","");});
+nwShow();
+
+/* section 5 */
+function twGo(n){
+  $("#tw1").classList.toggle("glow",n===1);$("#tw2").classList.toggle("glow",n===2);
+  var who=n===1?"Asha":"Ravi";
+  lines($("#twOut"),["I am "+who]);
+  setMsg($("#twMsg"),"s"+n+" made the call, so this points to s"+n+". this->name is "+who+".","good");
+}
+$("#twB1").addEventListener("click",function(){twGo(1);});
+$("#twB2").addEventListener("click",function(){twGo(2);});
+
+/* section 6 */
+$("#eqB1").addEventListener("click",function(){$("#eqOut").textContent="1   (p holds the address of s1, so they are equal)";});
+$("#eqB2").addEventListener("click",function(){$("#eqOut").textContent="0   (s2 has a different address, so they are not equal)";});
+
+/* section 7 */
+function thRender(on){
+  seg("thOn","thOff",on);
+  $("#thCode").textContent=on?
+    "Student(string name, int marks) {\n    this->name = name;\n    this->marks = marks;\n}":
+    "Student(string name, int marks) {\n    name = name;\n    marks = marks;\n}";
+  setMsg($("#thMsg"),on?"✅ The members get the values Asha and 90. this->name is the member and name is the parameter.":"❌ Both sides mean the parameter. The parameter is copied into itself and the members are never set. The name stays empty and marks holds a random leftover number.",on?"good":"bad");
+}
+$("#thOn").addEventListener("click",function(){thRender(true);});
+$("#thOff").addEventListener("click",function(){thRender(false);});
+thRender(false);
+
+/* section 9 */
+$("#sbB1").addEventListener("click",function(){$("#sbOut").textContent="Woof";setMsg($("#sbMsg"),"The Dog object uses its own sound().","good");});
+$("#sbB2").addEventListener("click",function(){$("#sbOut").textContent="Some animal sound";setMsg($("#sbMsg"),"Surprise! The pointer is an Animal pointer, so Animal's sound() ran.","bad");});
+
+/* section 10 */
+function vtRender(on){
+  seg("vtOn","vtOff",on);
+  $("#vtCode").textContent=(on?"virtual ":"")+"void sound()   // written in Animal\n\nAnimal* p = &d;  p->sound();\np = &c;          p->sound();";
+  lines($("#vtOut"),on?["Woof","Meow"]:["Some animal sound","Some animal sound"]);
+  setMsg($("#vtMsg"),on?"✅ virtual ON: C++ looks at the real object. Dog says Woof and Cat says Meow.":"❌ virtual OFF: C++ trusts the pointer's type (Animal). Both calls run the Animal version.",on?"good":"bad");
+}
+$("#vtOn").addEventListener("click",function(){vtRender(true);});
+$("#vtOff").addEventListener("click",function(){vtRender(false);});
+vtRender(false);
+
+/* ---------- theme, menu, top button ---------- */
+function isDark(){
+  var t=document.documentElement.getAttribute("data-theme");
+  if(t)return t==="dark";
+  return !!(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches);
+}
+$("#themeBtn").addEventListener("click",function(){
+  document.documentElement.setAttribute("data-theme",isDark()?"light":"dark");
+});
+$("#toTop").addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"});});
+var links=$$("#menu a");
+if("IntersectionObserver" in window){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){
+      if(en.isIntersecting){
+        links.forEach(function(a){
+          var on=a.getAttribute("href")==="#"+en.target.id;
+          a.classList.toggle("on",on);
+          if(on&&a.scrollIntoView&&$("#menu").scrollTo){
+            var nav=$("#menu");nav.scrollTo({left:a.offsetLeft-nav.clientWidth/2+a.clientWidth/2,behavior:"smooth"});
+          }
+        });
+      }
+    });
+  },{rootMargin:"-30% 0px -60% 0px"});
+  $$("section").forEach(function(s){io.observe(s);});
+}
+
+window.__data={PROGS:PROGS,GUESS:GUESS,WRITE:WRITE,TRY:TRY,counts:{one:ONE.length,tf:TF.length,two:TWO.length,three:THREE.length,five:FIVE.length,guess:GUESS.length,write:WRITE.length}};
+})();
+</script>
+</body>
+</html>
