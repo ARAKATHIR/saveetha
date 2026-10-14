@@ -1,5 +1,9 @@
 [
   {
+    "title": "Destructors. Defining Operator Overloading, Overloading Operators, Rules for Overloading Operators.",
+    "file": "pages/c-destructors-operator-overloading.html"
+  },
+  {
     "title": "Constructors, Parameterized Constructors, Constructor Overloading, Copy Constructors, Dynamic Constructors,",
     "file": "pages/c-constructors-made-easy.html"
   },
