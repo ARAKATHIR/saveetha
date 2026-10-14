@@ -1,5 +1,9 @@
 [
   {
+    "title": "Constructors, Parameterized Constructors, Constructor Overloading, Copy Constructors, Dynamic Constructors,",
+    "file": "pages/c-constructors-made-easy.html"
+  },
+  {
     "title": "Arrays of Objects, Friendly Functions.",
     "file": "pages/c-arrays-of-objects-friend-functions.html"
   },
